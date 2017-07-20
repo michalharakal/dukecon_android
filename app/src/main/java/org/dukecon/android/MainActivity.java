@@ -38,14 +38,14 @@ public class MainActivity extends AppCompatActivity implements Callback<Conferen
 
     private void downloadConferences() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.stackexchange.com")
+                .baseUrl("https://latest.dukecon.org/javaland/2017/rest/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         // prepare call in Retrofit 2.0
         ConferencesApi conferencesApi = retrofit.create(ConferencesApi.class);
 
-        Call<Conference> call = conferencesApi.getConference("");
+        Call<Conference> call = conferencesApi.getConference("jl2017");
         //asynchronous call
         call.enqueue(this);
     }

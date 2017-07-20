@@ -44,10 +44,10 @@ public class Event   {
   private String id = null;
 
   @SerializedName("start")
-  private DateTime start = null;
+  private String start = null;
 
   @SerializedName("end")
-  private DateTime end = null;
+  private String end = null;
 
   @SerializedName("title")
   private String title = null;
@@ -71,7 +71,7 @@ public class Event   {
   private String locationId = null;
 
   @SerializedName("speakerIds")
-  private List<Speaker> speakerIds = new ArrayList<Speaker>();
+  private List<String> speakerIds = new ArrayList<String>();
 
   @SerializedName("languageId")
   private String languageId = null;
@@ -94,7 +94,7 @@ public class Event   {
     this.id = id;
   }
 
-  public Event start(DateTime start) {
+  public Event start(String start) {
     this.start = start;
     return this;
   }
@@ -104,15 +104,15 @@ public class Event   {
    * @return start
   **/
   @ApiModelProperty(example = "null", value = "")
-  public DateTime getStart() {
+  public String getStart() {
     return start;
   }
 
-  public void setStart(DateTime start) {
+  public void setStart(String start) {
     this.start = start;
   }
 
-  public Event end(DateTime end) {
+  public Event end(String end) {
     this.end = end;
     return this;
   }
@@ -122,11 +122,11 @@ public class Event   {
    * @return end
   **/
   @ApiModelProperty(example = "null", value = "")
-  public DateTime getEnd() {
+  public String getEnd() {
     return end;
   }
 
-  public void setEnd(DateTime end) {
+  public void setEnd(String end) {
     this.end = end;
   }
 
@@ -256,12 +256,12 @@ public class Event   {
     this.locationId = locationId;
   }
 
-  public Event speakerIds(List<Speaker> speakerIds) {
+  public Event speakerIds(List<String> speakerIds) {
     this.speakerIds = speakerIds;
     return this;
   }
 
-  public Event addSpeakerIdsItem(Speaker speakerIdsItem) {
+  public Event addSpeakerIdsItem(String speakerIdsItem) {
     this.speakerIds.add(speakerIdsItem);
     return this;
   }
@@ -271,11 +271,11 @@ public class Event   {
    * @return speakerIds
   **/
   @ApiModelProperty(example = "null", value = "")
-  public List<Speaker> getSpeakerIds() {
+  public List<String> getSpeakerIds() {
     return speakerIds;
   }
 
-  public void setSpeakerIds(List<Speaker> speakerIds) {
+  public void setSpeakerIds(List<String> speakerIds) {
     this.speakerIds = speakerIds;
   }
 

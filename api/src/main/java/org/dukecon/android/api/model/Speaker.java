@@ -67,7 +67,7 @@ public class Speaker   {
   private Boolean defaultSpeaker = false;
 
   @SerializedName("eventIds")
-  private List<Event> eventIds = new ArrayList<Event>();
+  private List<String> eventIds = new ArrayList<String>();
 
   public Speaker id(String id) {
     this.id = id;
@@ -231,12 +231,12 @@ public class Speaker   {
     this.defaultSpeaker = defaultSpeaker;
   }
 
-  public Speaker eventIds(List<Event> eventIds) {
+  public Speaker eventIds(List<String> eventIds) {
     this.eventIds = eventIds;
     return this;
   }
 
-  public Speaker addEventIdsItem(Event eventIdsItem) {
+  public Speaker addEventIdsItem(String eventIdsItem) {
     this.eventIds.add(eventIdsItem);
     return this;
   }
@@ -246,11 +246,11 @@ public class Speaker   {
    * @return eventIds
   **/
   @ApiModelProperty(example = "null", value = "")
-  public List<Event> getEventIds() {
+  public List<String> getEventIds() {
     return eventIds;
   }
 
-  public void setEventIds(List<Event> eventIds) {
+  public void setEventIds(List<String> eventIds) {
     this.eventIds = eventIds;
   }
 
