@@ -1,24 +1,27 @@
 package org.dukecon.android;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
-import org.dukecon.android.api.model.Conference;
+import org.dukecon.android.api.model.Event;
 import org.dukecon.android.conference.ConferenceRepository;
+import org.dukecon.android.events.EventsListAdapter;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements Callback<Conference> {
+
+public class MainActivity extends AppCompatActivity {
 
     private ConferenceRepository conferenceRepository;
+    private RecyclerView list;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,14 +31,41 @@ public class MainActivity extends AppCompatActivity implements Callback<Conferen
         setSupportActionBar(toolbar);
 
         conferenceRepository = new ConferenceRepository();
+        renderView();
+        list.setLayoutManager(new LinearLayoutManager(this));
+    }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        conferenceRepository.getEvents(new ConferenceRepository.LoadEventsCallback() {
             @Override
-            public void onClick(View view) {
-                Log.d(MainActivity.class.getName(), conferenceRepository.getEventsForDay(0).toString());
+            public void onEventsLoaded(List<Event> events) {
+                setList(events);
+                progressBar.setVisibility(View.GONE);
             }
         });
+
+
+    }
+
+    public void renderView() {
+        list = (RecyclerView) findViewById(R.id.control_list);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
+    }
+
+    public void setList(List<Event> events) {
+        EventsListAdapter adapter = new EventsListAdapter(getApplicationContext(),
+                events,
+                new EventsListAdapter.OnItemClickListener() {
+                    @Override
+                    public void onClick(Event item) {
+
+                    }
+                });
+
+        list.setAdapter(adapter);
     }
 
     @Override
@@ -58,15 +88,5 @@ public class MainActivity extends AppCompatActivity implements Callback<Conferen
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onResponse(Call<Conference> call, Response<Conference> response) {
-
-    }
-
-    @Override
-    public void onFailure(Call<Conference> call, Throwable t) {
-
     }
 }
