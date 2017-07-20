@@ -2,23 +2,23 @@ package org.dukecon.android;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import org.dukecon.android.api.model.Conference;
-import org.dukecon.android.api.service.ConferencesApi;
+import org.dukecon.android.conference.ConferenceRepository;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements Callback<Conference> {
+
+    private ConferenceRepository conferenceRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,27 +27,15 @@ public class MainActivity extends AppCompatActivity implements Callback<Conferen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        conferenceRepository = new ConferenceRepository();
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                downloadConferences();
+                Log.d(MainActivity.class.getName(), conferenceRepository.getEventsForDay(0).toString());
             }
         });
-    }
-
-    private void downloadConferences() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://latest.dukecon.org/javaland/2017/rest/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        // prepare call in Retrofit 2.0
-        ConferencesApi conferencesApi = retrofit.create(ConferencesApi.class);
-
-        Call<Conference> call = conferencesApi.getConference("jl2017");
-        //asynchronous call
-        call.enqueue(this);
     }
 
     @Override
