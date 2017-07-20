@@ -4,10 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.dukecon.android.api.model.Conference;
-import org.dukecon.android.api.model.Event;
 import org.dukecon.android.api.service.ConferencesApi;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,13 +17,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class ConferenceRepository {
 
-    public interface LoadEventsCallback {
-        void onEventsLoaded(List<Event> events);
+    public interface LoadConferenceCallback {
+        void onConferenceLoaded(Conference conference);
     }
 
     private Conference conference = null;
 
-    private void getDataFromNetwork(@NonNull final LoadEventsCallback callback) {
+    private void getDataFromNetwork(@NonNull final LoadConferenceCallback callback) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://latest.dukecon.org/javaland/2017/rest/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -42,7 +39,7 @@ public class ConferenceRepository {
             public void onResponse(Call<Conference> call, Response<Conference> response) {
                 Log.d(ConferenceRepository.class.getName(), "Loaded conference data from " + response.raw().request().url());
                 ConferenceRepository.this.conference = response.body();
-                callback.onEventsLoaded(response.body().getEvents());
+                callback.onConferenceLoaded(response.body());
             }
 
             @Override
@@ -53,11 +50,10 @@ public class ConferenceRepository {
         });
     }
 
-    public void getEvents(@NonNull final LoadEventsCallback callback) {
-
+    public void getConference(@NonNull final LoadConferenceCallback callback) {
         // Respond immediately with cache if available and not dirty
         if (conference != null) {
-            callback.onEventsLoaded(conference.getEvents());
+            callback.onConferenceLoaded(conference);
             return;
         }
 

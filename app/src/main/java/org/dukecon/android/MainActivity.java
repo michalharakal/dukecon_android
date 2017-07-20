@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import org.dukecon.android.api.model.Conference;
 import org.dukecon.android.api.model.Event;
 import org.dukecon.android.conference.ConferenceRepository;
 import org.dukecon.android.events.EventsListAdapter;
@@ -22,12 +23,13 @@ public class MainActivity extends AppCompatActivity {
     private ConferenceRepository conferenceRepository;
     private RecyclerView list;
     private ProgressBar progressBar;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         conferenceRepository = new ConferenceRepository();
@@ -39,10 +41,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        conferenceRepository.getEvents(new ConferenceRepository.LoadEventsCallback() {
+        conferenceRepository.getConference(new ConferenceRepository.LoadConferenceCallback() {
             @Override
-            public void onEventsLoaded(List<Event> events) {
-                setList(events);
+            public void onConferenceLoaded(Conference conference) {
+                toolbar.setTitle(conference.getName());
+                setList(conference.getEvents());
                 progressBar.setVisibility(View.GONE);
             }
         });
