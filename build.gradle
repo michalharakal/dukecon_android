@@ -1,3 +1,5 @@
+apply from: "versions.gradle"
+
 buildscript {
     repositories {
         jcenter()
@@ -12,5 +14,9 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+    }
+    tasks.withType(JavaCompile) {
+        sourceCompatibility = JavaVersion.VERSION_1_7
+        targetCompatibility = JavaVersion.VERSION_1_7
     }
 }
