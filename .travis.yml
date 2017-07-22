@@ -1,0 +1,25 @@
+language: android
+sudo: false
+
+git:
+ depth: 3
+
+jdk:
+  - oraclejdk8
+
+env:
+ global:
+  - _JAVA_OPTIONS="-Xms48m -Xmx2048m"
+
+android:
+ components:
+  - tools
+  - build-tools-25.0.0
+  - android-25
+
+ licenses:
+  - 'android-sdk-license-.+'
+  - 'android-sdk-preview-license-.+'
+
+script:
+ - ./gradlew clean app:assembleDebug testDebug
