@@ -22,4 +22,4 @@ android:
   - 'android-sdk-preview-license-.+'
 
 script:
- - travis_wait ./travis.sh
+ - ./gradlew clean app:assembleDebug testDebug
