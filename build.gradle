@@ -3,11 +3,15 @@ apply from: "versions.gradle"
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.frogermcs.androiddevmetrics:androiddevmetrics-plugin:0.4'
+        classpath "gradle.plugin.org.detoeuf:swagger-codegen-plugin:1.7.2"
     }
 }
 
