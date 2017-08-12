@@ -22,11 +22,30 @@ android {
     }
 }
 
+task clientApi(dependsOn: ':dukecon-api:jar', type: Copy) {
+    from tasks.getByPath(':dukecon-api:jar')
+    into 'proglibs'
+}
+
+preBuild.dependsOn clientApi
+
+
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: '../api/build/libs')
+    compile fileTree(include: ['*.jar'], dir: 'proglibs')
+    compile(project(':core'))
+
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.google.code.findbugs'
     })
+
+    compile "com.google.dagger:dagger-android:$rootProject.daggerVersion"
+    compile "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
+    // if you use the support libraries
+    compile "com.google.dagger:dagger:$rootProject.daggerVersion"
+
+    annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
 
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:recyclerview-v7:25.3.1'
@@ -35,5 +54,4 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     testCompile 'junit:junit:4.12'
-    compile project(':api')
 }

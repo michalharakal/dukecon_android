@@ -1,1 +1,1 @@
-include ':api', ':app'
+include ':dukecon-api', ':core', ':app'

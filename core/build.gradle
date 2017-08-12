@@ -1,0 +1,26 @@
+apply plugin: 'java'
+
+task clientApi(dependsOn: ':dukecon-api:jar', type: Copy) {
+    from tasks.getByPath(':dukecon-api:jar')
+    into 'proglibs'
+}
+
+compileJava.dependsOn clientApi
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'proglibs')
+    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
+    compile "com.google.guava:guava:$rootProject.guavaVersion"
+    compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
+    compile "com.squareup.retrofit2:converter-scalars:$rootProject.retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
+    compile "io.swagger:swagger-annotations:$rootProject.swaggerAnnotationsVersion"
+    compile("org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:$rootProject.oltuVersion") {
+        exclude group: 'org.apache.oltu.oauth2', module: 'org.apache.oltu.oauth2.common'
+    }
+    compile "joda-time:joda-time:$rootProject.jodaTimeVersion"
+
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"

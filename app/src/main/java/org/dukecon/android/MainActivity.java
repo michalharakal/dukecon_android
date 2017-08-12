@@ -14,12 +14,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import org.dukecon.android.api.model.Conference;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.dukecon.android.api.DefaultApi;
 import org.dukecon.android.api.model.Event;
-import org.dukecon.android.conference.ConferenceRepository;
 import org.dukecon.android.events.EventsListAdapter;
+import org.dukecon.android.features.sessions.data.ConferenceRepository;
 
 import java.util.List;
+
+import dagger.Lazy;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -50,7 +58,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        conferenceRepository = new ConferenceRepository();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+        Gson gson = gsonBuilder.create();
+
+
+        Retrofit restAdapter = new Retrofit.Builder()
+                .baseUrl("https://jfs.dukecon.org/2017/rest/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        final DefaultApi defaultApi = restAdapter.create(DefaultApi.class);
+
+
+        conferenceRepository = new ConferenceRepository(new Lazy<DefaultApi>() {
+            @Override
+            public DefaultApi get() {
+                return defaultApi;
+            }
+        });
         list.setLayoutManager(new LinearLayoutManager(this));
 
     }
@@ -60,12 +86,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
 
-        conferenceRepository.getConference(new ConferenceRepository.LoadConferenceCallback() {
+        conferenceRepository.getEvents(new ConferenceRepository.LoadEventsCallback() {
             @Override
-            public void onConferenceLoaded(Conference conference) {
-                toolbar.setTitle(conference.getName());
-                setList(conference.getEvents());
+            public void onEventsLoaded(List<Event> events) {
+                //toolbar.setTitle(co.getName());
+                setList(events);
                 progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+
             }
         });
     }

@@ -23,7 +23,7 @@ ext {
     rulesVersion = '0.6'
     espressoVersion = '2.2.2'
     uiautomatorVersion = '2.1.1'
-
+    guavaVersion = '18.0'
 
     butterKnifeVersion = "8.1.0"
 
