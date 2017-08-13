@@ -14,29 +14,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import org.dukecon.android.api.DefaultApi;
 import org.dukecon.android.api.model.Event;
-import org.dukecon.android.events.EventsListAdapter;
-import org.dukecon.android.features.sessions.data.ConferenceRepository;
+import org.dukecon.android.app.DukeconApplication;
+import org.dukecon.android.features.sessions.SessionsContract;
+import org.dukecon.android.features.sessions.data.EventsListAdapter;
+import org.dukecon.android.features.sessions.di.SessionsModule;
 
 import java.util.List;
 
-import dagger.Lazy;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import javax.inject.Inject;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SessionsContract.View {
 
-    private ConferenceRepository conferenceRepository;
     private RecyclerView list;
     private Toolbar toolbar;
     private DrawerLayout drawer_layout;
     private ProgressBar progressBar;
+
+    @Inject
+    public SessionsContract.Presenter presenter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,28 +55,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
-        Gson gson = gsonBuilder.create();
-
-
-        Retrofit restAdapter = new Retrofit.Builder()
-                .baseUrl("https://jfs.dukecon.org/2017/rest/")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        final DefaultApi defaultApi = restAdapter.create(DefaultApi.class);
-
-
-        conferenceRepository = new ConferenceRepository(new Lazy<DefaultApi>() {
-            @Override
-            public DefaultApi get() {
-                return defaultApi;
-            }
-        });
+        inject();
         list.setLayoutManager(new LinearLayoutManager(this));
+    }
 
+    private void inject() {
+        DukeconApplication.get(this).getAppComponent().plus(new SessionsModule(this)).injects
+                (this);
     }
 
 
@@ -86,19 +69,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
 
-        conferenceRepository.getEvents(new ConferenceRepository.LoadEventsCallback() {
-            @Override
-            public void onEventsLoaded(List<Event> events) {
-                //toolbar.setTitle(co.getName());
-                setList(events);
-                progressBar.setVisibility(View.GONE);
-            }
+        presenter.onStart();
+    }
 
-            @Override
-            public void onDataNotAvailable() {
+    @Override
+    public void showWait() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
 
-            }
-        });
+    @Override
+    public void removeWait() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onFailure(String appErrorMessage) {
+
     }
 
     public void setList(List<Event> events) {
@@ -128,5 +114,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         drawer_layout.closeDrawer(GravityCompat.START);
         return false;
+    }
+
+    @Override
+    public void setPresenter(SessionsContract.Presenter presenter) {
+
+    }
+
+    @Override
+    public boolean isActive() {
+        return true;
     }
 }

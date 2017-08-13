@@ -20,6 +20,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
 }
 
 task clientApi(dependsOn: ':dukecon-api:jar', type: Copy) {
@@ -32,7 +37,9 @@ preBuild.dependsOn clientApi
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'proglibs')
-    compile(project(':core'))
+    compile(project(':core')) {
+        exclude group: 'joda-time', module: 'joda-time'
+    }
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -46,6 +53,14 @@ dependencies {
 
     annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+
+    compile 'net.danlew:android.joda:2.9.9'
+
+    compile ('com.fatboyindustrial.gson-jodatime-serialisers:gson-jodatime-serialisers:1.6.0') {
+        exclude group: 'joda-time', module: 'joda-time'
+    }
+
+    compile "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp3Version"
 
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:recyclerview-v7:25.3.1'
