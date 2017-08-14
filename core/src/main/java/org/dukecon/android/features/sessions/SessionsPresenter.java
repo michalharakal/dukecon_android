@@ -1,18 +1,16 @@
-package org.dukecon.android.features.sessions.data;
+package org.dukecon.android.features.sessions;
 
-import android.support.annotation.NonNull;
-
-import org.dukecon.android.domain.usecase.UseCase;
-import org.dukecon.android.domain.usecase.UseCaseHandler;
 
 import org.dukecon.android.api.model.Event;
-import org.dukecon.android.features.sessions.SessionsContract;
+import org.dukecon.android.domain.usecase.UseCase;
+import org.dukecon.android.domain.usecase.UseCaseHandler;
 import org.dukecon.android.features.sessions.domain.filter.AllSessionsFilter;
-import org.dukecon.android.features.sessions.domain.filter.DateFilter;
 import org.dukecon.android.features.sessions.domain.usecase.GetSessions;
 import org.joda.time.DateTime;
 
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 public class SessionsPresenter implements SessionsContract.Presenter {
 
@@ -21,8 +19,9 @@ public class SessionsPresenter implements SessionsContract.Presenter {
 
     private final UseCaseHandler useCaseHandler;
 
-    public SessionsPresenter(@NonNull UseCaseHandler useCaseHandler,
-                             @NonNull SessionsContract.View sessionsView, @NonNull GetSessions getSessions) {
+    public SessionsPresenter(@Nonnull UseCaseHandler useCaseHandler,
+                             @Nonnull SessionsContract.View sessionsView, @Nonnull GetSessions
+                                     getSessions) {
 
         this.sessionsView = sessionsView;
         this.getSessions = getSessions;

@@ -6,7 +6,7 @@ import org.dukecon.android.app.configuration.ConfigurationsProvider;
 import org.dukecon.android.app.di.FeatureScope;
 import org.dukecon.android.features.sessions.SessionsContract;
 import org.dukecon.android.features.sessions.data.ConferenceRepository;
-import org.dukecon.android.features.sessions.data.SessionsPresenter;
+import org.dukecon.android.features.sessions.SessionsPresenter;
 import org.dukecon.android.features.sessions.domain.data.SessionsDataSource;
 import org.dukecon.android.features.sessions.domain.usecase.GetSessions;
 
