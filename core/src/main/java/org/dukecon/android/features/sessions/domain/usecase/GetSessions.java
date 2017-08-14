@@ -1,10 +1,9 @@
 package org.dukecon.android.features.sessions.domain.usecase;
 
+import org.dukecon.android.api.model.Event;
+import org.dukecon.android.domain.filter.Filter;
 import org.dukecon.android.domain.usecase.UseCase;
 import org.dukecon.android.features.sessions.domain.data.SessionsDataSource;
-import org.dukecon.android.features.sessions.domain.filter.SessionsFilter;
-
-import org.dukecon.android.api.model.Event;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class GetSessions extends UseCase<GetSessions.RequestValues, GetSessions.
         sessionsDataSource.getEvents(new SessionsDataSource.LoadEventsCallback() {
             @Override
             public void onEventsLoaded(List<Event> events) {
-                SessionsFilter sessionsFilter = values.getSessionsFilter();
+                Filter sessionsFilter = values.getSessionsFilter();
                 List<Event> eventsFiltered = sessionsFilter.filter(events);
                 ResponseValue responseValue = new ResponseValue(eventsFiltered);
                 getUseCaseCallback().onSuccess(responseValue);
@@ -44,10 +43,10 @@ public class GetSessions extends UseCase<GetSessions.RequestValues, GetSessions.
 
     public static final class RequestValues implements UseCase.RequestValues {
 
-        private final SessionsFilter sessionsFilter;
+        private final Filter<Event> sessionsFilter;
         private final boolean forceUpdate;
 
-        public RequestValues(boolean forceUpdate, @Nonnull SessionsFilter sessionsFilter) {
+        public RequestValues(boolean forceUpdate, @Nonnull Filter<Event> sessionsFilter) {
             this.sessionsFilter = checkNotNull(sessionsFilter, "currentFiltering cannot be null!");
             this.forceUpdate = forceUpdate;
         }
@@ -56,7 +55,7 @@ public class GetSessions extends UseCase<GetSessions.RequestValues, GetSessions.
             return forceUpdate;
         }
 
-        public SessionsFilter getSessionsFilter() {
+        public Filter<Event> getSessionsFilter() {
             return sessionsFilter;
         }
     }
