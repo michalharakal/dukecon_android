@@ -24,6 +24,7 @@ android:
     - android-sdk-license-.+
 
 script:
+ - mkdir -p dukecon-api/build/swagger
  - ./gradlew clean assembleDebug testDebug
 
 before_install:
