@@ -12,16 +12,15 @@ env:
   - _JAVA_OPTIONS="-Xms48m -Xmx2048m"
 
 android:
- components:
-  - tools
-  - build-tools-25.0.0
-  - platform-tools
-  - android-25
-
- licenses:
-  - 'android-sdk-license-.+'
-  - 'android-sdk-preview-license-.+'
-  - 'google-gdk-license-.+'
+  components:
+    - platform-tools
+    - tools
+    - build-tools-26.0.1
+    - android-26
+    - extra-android-m2repository
+    - extra-google-m2repository 
+  licenses:
+    - android-sdk-license-.+
 
 script:
  - ./gradlew clean app:assembleDebug testDebug
