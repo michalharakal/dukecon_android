@@ -4,7 +4,7 @@ package org.dukecon.android.features.sessions;
 import org.dukecon.android.api.model.Event;
 import org.dukecon.android.domain.usecase.UseCase;
 import org.dukecon.android.domain.usecase.UseCaseHandler;
-import org.dukecon.android.features.sessions.domain.filter.AllSessionsFilter;
+import org.dukecon.android.features.sessions.domain.filter.DateFilter;
 import org.dukecon.android.features.sessions.domain.usecase.GetSessions;
 import org.joda.time.DateTime;
 
@@ -34,7 +34,7 @@ public class SessionsPresenter implements SessionListContract.Presenter {
             sessionsView.showWait();
         }
 
-        GetSessions.RequestValues requestValue = new GetSessions.RequestValues(force, new AllSessionsFilter());
+        GetSessions.RequestValues requestValue = new GetSessions.RequestValues(force, new DateFilter(dateTime));
 
         useCaseHandler.execute(getSessions, requestValue,
                 new UseCase.UseCaseCallback<GetSessions.ResponseValue>() {

@@ -22,11 +22,15 @@ public class DateFilter implements Filter<Event> {
         List<Event> filteredTasks = new ArrayList<>();
 
         for (Event event : events) {
-            DateTime dateTime = new DateTime(event.getStart());
-            if (dateTime.equals(dateTimeFilter)) {
+            if (dayEquals(dateTimeFilter, event.getStart())) {
                 filteredTasks.add(event);
             }
         }
         return filteredTasks;
+    }
+
+    private boolean dayEquals(DateTime dateTimeFilter, DateTime start) {
+        return ((dateTimeFilter.getDayOfMonth() == start.getDayOfMonth()) &&
+                (dateTimeFilter.getMonthOfYear() == start.getMonthOfYear()));
     }
 }
