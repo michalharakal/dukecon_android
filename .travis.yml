@@ -24,7 +24,7 @@ android:
     - android-sdk-license-.+
 
 script:
- - ./gradlew clean app:assembleDebug testDebug
+ - ./gradlew clean assembleDebug testDebug
 
 before_install:
   - bash .travis-android-licenses.sh
