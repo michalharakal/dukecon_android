@@ -15,11 +15,13 @@ android:
  components:
   - tools
   - build-tools-25.0.0
+  - platform-tools
   - android-25
 
  licenses:
   - 'android-sdk-license-.+'
   - 'android-sdk-preview-license-.+'
+  - 'google-gdk-license-.+'
 
 script:
  - ./gradlew clean app:assembleDebug testDebug
