@@ -1,6 +1,7 @@
 package org.dukecon.android.features.sessions.domain.data;
 
 import org.dukecon.android.api.model.Event;
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -11,6 +12,14 @@ public interface SessionsDataSource {
     interface LoadEventsCallback {
 
         void onEventsLoaded(List<Event> events);
+
+        void onDataNotAvailable();
+    }
+
+
+    interface LoadEventDatesCallback {
+
+        void onEventDatesLoaded(List<DateTime> dates);
 
         void onDataNotAvailable();
     }
@@ -27,4 +36,7 @@ public interface SessionsDataSource {
     void getEvents(@Nonnull LoadEventsCallback callback);
 
     void getEvent(@Nonnull String taskId, @Nonnull LoadEventCallback callback);
+
+    void getDates(@Nonnull LoadEventDatesCallback callback);
+    
 }

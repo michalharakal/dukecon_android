@@ -12,15 +12,15 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class SessionsPresenter implements SessionsContract.Presenter {
+public class SessionsPresenter implements SessionListContract.Presenter {
 
-    private final SessionsContract.View sessionsView;
+    private final SessionListContract.View sessionsView;
     private final GetSessions getSessions;
 
     private final UseCaseHandler useCaseHandler;
 
     public SessionsPresenter(@Nonnull UseCaseHandler useCaseHandler,
-                             @Nonnull SessionsContract.View sessionsView, @Nonnull GetSessions
+                             @Nonnull SessionListContract.View sessionsView, @Nonnull GetSessions
                                      getSessions) {
 
         this.sessionsView = sessionsView;
@@ -29,7 +29,6 @@ public class SessionsPresenter implements SessionsContract.Presenter {
     }
 
 
-    @Override
     public void loadSessions(final boolean force, DateTime dateTime) {
         if (force) {
             sessionsView.showWait();
@@ -66,12 +65,17 @@ public class SessionsPresenter implements SessionsContract.Presenter {
     }
 
     @Override
-    public void onStart() {
-        loadSessions(true, new DateTime());
+    public void setDate(DateTime date) {
+        loadSessions(true, date);
     }
 
     @Override
-    public void onStop() {
+    public void onAttach() {
+
+    }
+
+    @Override
+    public void onDetach() {
 
     }
 }

@@ -3,4 +3,12 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+
+    <dimen name="timeslot_width">72dp</dimen>
+    <dimen name="session_row_height">116dp</dimen>
+    <dimen name="recycler_spacing_vertical">3dp</dimen>
+
+    <!-- Z-axis elevation -->
+    <dimen name="app_bar_elevation">4dp</dimen>
 </resources>

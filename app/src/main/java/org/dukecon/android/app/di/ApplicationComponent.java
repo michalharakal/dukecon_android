@@ -1,7 +1,7 @@
 package org.dukecon.android.app.di;
 
-import org.dukecon.android.features.sessions.di.SessionsComponent;
-import org.dukecon.android.features.sessions.di.SessionsModule;
+import org.dukecon.android.features.main.di.MainComponent;
+import org.dukecon.android.features.main.di.MainModule;
 
 import javax.inject.Singleton;
 
@@ -12,5 +12,5 @@ import dagger.Component;
         modules = {ApplicationModule.class, NetModule.class}
 )
 public interface ApplicationComponent {
-    SessionsComponent plus(SessionsModule sessionsModule);
+    MainComponent plus(MainModule mainModule);
 }

@@ -219,9 +219,11 @@
           "type" : "string"
         },
         "start" : {
-          "type" : "string"
+          "type" : "string",
+          "format": "date-time"
         },
         "end" : {
+          "format": "date-time",
           "type" : "string"
         },
         "title" : {

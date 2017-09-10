@@ -7,6 +7,10 @@ import org.dukecon.android.api.model.Conference;
 import org.dukecon.android.api.model.Event;
 import org.dukecon.android.app.configuration.ConfigurationsProvider;
 import org.dukecon.android.features.sessions.domain.data.SessionsDataSource;
+import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -22,12 +26,13 @@ import retrofit2.Response;
 public class ConferenceRepository implements SessionsDataSource {
 
     private static final String LOG_TAG = ConferenceRepository.class.getName();
-    
+
     private final Lazy<ConferencesApi> conferenceApiService;
     private final Lazy<ConfigurationsProvider> configurationsProvider;
 
 
     private Conference conference = null;
+    private List<DateTime> dates = null;
 
 
     @Inject
@@ -54,16 +59,61 @@ public class ConferenceRepository implements SessionsDataSource {
     }
 
     @Override
-    public void getEvent(@Nonnull String taskId, @Nonnull LoadEventCallback callback) {
+    public void getEvent(@Nonnull String eventId, @Nonnull LoadEventCallback callback) {
         if (conference != null) {
             for (Event event : conference.getEvents()) {
-                if (taskId.equals(event.getId())) {
+                if (eventId.equals(event.getId())) {
                     callback.onEventLoaded(event);
                     return;
                 }
             }
         }
         callback.onDataNotAvailable();
+    }
+
+    @Override
+    public void getDates(@Nonnull final LoadEventDatesCallback callback) {
+        if (dates == null) {
+            if (conference != null) {
+                dates = getDatesFromEvents(conference.getEvents());
+                callback.onEventDatesLoaded(dates);
+                return;
+            }
+            getDataFromNetwork(new LoadEventsCallback() {
+                @Override
+                public void onEventsLoaded(List<Event> events) {
+                    dates = getDatesFromEvents(events);
+                    callback.onEventDatesLoaded(dates);
+                }
+
+                @Override
+                public void onDataNotAvailable() {
+
+                }
+            });
+        } else {
+            callback.onEventDatesLoaded(dates);
+        }
+
+    }
+
+    private List<DateTime> getDatesFromEvents(List<Event> events) {
+        List<DateTime> dates = new ArrayList<>();
+        for (Event event : events) {
+            if (dateNotInList(dates, event.getStart())) {
+                dates.add(event.getStart());
+            }
+        }
+        return dates;
+    }
+
+    private boolean dateNotInList(List<DateTime> dates, DateTime date) {
+        for (DateTime dateTime : dates) {
+            if ((dateTime.getDayOfMonth() == date.getDayOfMonth()) && (dateTime.getMonthOfYear() == date.getMonthOfYear())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void getDataFromNetwork(@Nonnull final LoadEventsCallback callback) {

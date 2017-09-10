@@ -42,12 +42,12 @@ public final class ApplicationModule {
         return new ConfigurationsProvider() {
             @Override
             public String getUrl() {
-                return "https://jfs.dukecon.org/2017/rest/";
+                return "https://latest.dukecon.org/javaland/2017/rest/";
             }
 
             @Override
             public String getConferenceId() {
-                return "jfs2017";
+                return "javaland2017";
             }
         };
     }

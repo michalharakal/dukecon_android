@@ -49,7 +49,5 @@ class NetModule {
                 .build();
 
         return restAdapter.create(ConferencesApi.class);
-
-
     }
 }

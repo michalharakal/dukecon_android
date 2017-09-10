@@ -1,9 +1,8 @@
 package org.dukecon.android.mvp;
 
-public interface BasePresenter {
+public interface BasePresenter<T extends BaseView> {
 
-    void onStart();
+    void onAttach();
 
-    void onStop();
-
+    void onDetach();
 }

@@ -5,4 +5,5 @@
     <string name="action_schedule">Events</string>
     <string name="action_speakers">Speakers</string>
     <string name="action_info">Info</string>
+    <string name="session_time">%1$s\nto\n%2$s</string>
 </resources>

@@ -23,9 +23,11 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             />
 
-        <include
-            layout="@layout/content_main"/>
-
+        <FrameLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
