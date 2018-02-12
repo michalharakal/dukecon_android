@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dukecon.android.domain.usecase;
+package org.dukecon.domain.usecase;
 
 /**
  * Use cases are the entry points to the domain layer.
@@ -45,7 +45,7 @@ public abstract class UseCase<Q extends UseCase.RequestValues, P extends UseCase
     }
 
     void run() {
-       executeUseCase(mRequestValues);
+        executeUseCase(mRequestValues);
     }
 
     protected abstract void executeUseCase(Q requestValues);
@@ -64,6 +64,7 @@ public abstract class UseCase<Q extends UseCase.RequestValues, P extends UseCase
 
     public interface UseCaseCallback<R> {
         void onSuccess(R response);
+
         void onError();
     }
 }

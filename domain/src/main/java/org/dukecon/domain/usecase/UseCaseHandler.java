@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package org.dukecon.android.domain.usecase;
+package org.dukecon.domain.usecase;
 
 /**
  * Runs {@link UseCase}s using a {@link UseCaseScheduler}.
  */
 public class UseCaseHandler {
+
     private final UseCaseScheduler mUseCaseScheduler;
 
     public UseCaseHandler(UseCaseScheduler useCaseScheduler) {
