@@ -1,0 +1,18 @@
+<resources>
+    <string name="open_drawer">Open Drawer</string>
+    <string name="close_drawer">Close Drawer</string>
+    <string name="status_in_progress">This session is in progress</string>
+    <string name="status_over">This session is over</string>
+    <string name="action_schedule">Schedule</string>
+    <string name="action_speakers">Speakers</string>
+    <string name="action_location">Location</string>
+    <string name="action_info">Info</string>
+
+    <string name="session_time">%1$s\nto\n%2$s</string>
+    <string name="session_detail_time">%1$s, %2$s - %3$s</string>
+
+    <string name="cancel">cancel</string>
+    <string name="submit">Submit</string>
+    <string name="cd_logo">Event Logo</string>
+
+</resources>

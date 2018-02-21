@@ -16,7 +16,7 @@ ext {
     kotlinVersion = '1.1.3-2'
     butterKnifeVersion = '7.0.1'
     recyclerViewVersion = '21.0.3'
-    rxJavaVersion = '2.0.2'
+    rxJavaVersion = '2.1.3'
     rxKotlinVersion = '2.1.0'
     rxAndroidVersion = '2.0.1'
     javaxAnnotationVersion = '1.0'
@@ -30,6 +30,7 @@ ext {
     retrofitVersion = '2.3.0'
     roomVersion = '1.0.0-alpha6'
     supportLibraryVersion = '26.0.1'
+    constraintLayoutVersion = '1.0.2'
     timberVersion = '4.5.1'
     glideVersion = '4.0.0'
     daggerVersion = '2.11'
@@ -54,7 +55,8 @@ ext {
             javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject:        "javax.inject:javax.inject:${javaxInjectVersion}",
             rxKotlin:           "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
-            kotlin:             "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}"
+            kotlin:             "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}",
+            jodaTime:           "joda-time:joda-time:${jodaTimeVersion}"
     ]
 
     domainTestDependencies = [
@@ -77,7 +79,8 @@ ext {
             androidAnnotations: "com.android.support:support-annotations:${androidAnnotationsVersion}",
             retrofit:           "com.squareup.retrofit2:retrofit:${retrofitVersion}",
             retrofitConverter:  "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
-            retrofitAdapter:    "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}"
+            retrofitAdapter:    "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
+            jodaTime:           "joda-time:joda-time:${jodaTimeVersion}"
     ]
 
     presentationTestDependencies = [
@@ -103,7 +106,8 @@ ext {
             androidAnnotations: "com.android.support:support-annotations:${androidAnnotationsVersion}",
             retrofit:           "com.squareup.retrofit2:retrofit:${retrofitVersion}",
             retrofitConverter:  "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
-            retrofitAdapter:    "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}"
+            retrofitAdapter:    "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
+            jodaTime:           "joda-time:joda-time:${jodaTimeVersion}"
     ]
 
     dataTestDependencies = [
@@ -126,6 +130,7 @@ ext {
             roomRuntime:        "android.arch.persistence.room:runtime:${roomVersion}",
             roomCompiler:       "android.arch.persistence.room:compiler:${roomVersion}",
             roomRxJava:         "android.arch.persistence.room:rxjava2:${roomVersion}",
+            jodaTime:           "joda-time:joda-time:${jodaTimeVersion}"
     ]
 
     cacheTestDependencies = [
@@ -153,7 +158,8 @@ ext {
             okHttpLogger:       "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}",
             retrofit:           "com.squareup.retrofit2:retrofit:${retrofitVersion}",
             retrofitConverter:  "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
-            retrofitAdapter:    "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}"
+            retrofitAdapter:    "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
+            jodaTime:           "joda-time:joda-time:${jodaTimeVersion}"
     ]
 
     remoteTestDependencies = [
@@ -178,7 +184,10 @@ ext {
             androidSupportV4:   "com.android.support:support-v4:${supportLibraryVersion}",
             androidSupportV13:  "com.android.support:support-v13:${supportLibraryVersion}",
             appCompatV7:        "com.android.support:appcompat-v7:${supportLibraryVersion}",
+            appCardViewV7:      "com.android.support:cardview-v7:${supportLibraryVersion}",
             supportRecyclerView:"com.android.support:recyclerview-v7:${supportLibraryVersion}",
+            constrantLayout:    "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
+
             supportDesign:      "com.android.support:design:${supportLibraryVersion}",
             timber:             "com.jakewharton.timber:timber:${timberVersion}",
             daggerSupport:      "com.google.dagger:dagger-android-support:${daggerVersion}",
