@@ -78,6 +78,11 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
                 .map {
                     it.sortedBy { it.startTime }
                 }
+                .map {
+                    it.allBy {
+                        it.startTime.dayOfMonth().get() == day
+                    }
+                }
     }
 
     /**
