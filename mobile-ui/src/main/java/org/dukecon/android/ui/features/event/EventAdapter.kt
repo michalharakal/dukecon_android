@@ -32,8 +32,8 @@ internal class EventAdapter(val onSessionSelectedListener: ((session: EventView)
 
         holder.session = session
 
-        val startTime = formatDateTime(context, session.startTime?.millis ?: 0, DateUtils.FORMAT_SHOW_TIME)
-        val endTime = formatDateTime(context, session.endTime?.millis ?: 0, DateUtils.FORMAT_SHOW_TIME)
+        val startTime = formatDateTime(context, session.startTime.millis, DateUtils.FORMAT_SHOW_TIME)
+        val endTime = formatDateTime(context, session.endTime.millis, DateUtils.FORMAT_SHOW_TIME)
         holder.timeslot.text = String.format(context.getString(R.string.session_time), startTime, endTime)
 
         // Dim the session card once hte session is over
@@ -44,7 +44,7 @@ internal class EventAdapter(val onSessionSelectedListener: ((session: EventView)
             holder.card.setBackgroundColor(ContextCompat.getColor(context, R.color.session_finished_bg))
         }
 
-        holder.title.text = session.name
+        holder.title.text = session.title
 
         /*
         val sessionSpeakers = session.speakers?.map { speakers[it] }

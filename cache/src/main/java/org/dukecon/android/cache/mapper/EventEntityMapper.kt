@@ -2,7 +2,6 @@ package org.dukecon.android.cache.mapper
 
 import org.dukecon.android.cache.model.CachedEvent
 import org.dukecon.data.model.EventEntity
-import java.util.*
 import javax.inject.Inject
 
 
@@ -16,7 +15,7 @@ class EventEntityMapper @Inject constructor() : EntityMapper<CachedEvent, EventE
      * Map a [EventEntity] instance to a [CachedEvent] instance
      */
     override fun mapToCached(type: EventEntity): CachedEvent {
-        return CachedEvent(type.name, type.title, type.avatar, type.startTime, type.endTime)
+        return CachedEvent(type.name, type.title, type.abstractText, type.startTime, type.endTime)
     }
 
     /**

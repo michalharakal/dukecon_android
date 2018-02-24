@@ -2,7 +2,6 @@ package org.dukecon.data.mapper
 
 import org.dukecon.data.model.EventEntity
 import org.dukecon.domain.model.Event
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -15,7 +14,7 @@ open class EventMapper @Inject constructor() : Mapper<EventEntity, Event> {
      * Map a [EventEntity] instance to a [Event] instance
      */
     override fun mapFromEntity(type: EventEntity): Event {
-        return Event(type.name, type.title, type.avatar, type.startTime, type.endTime)
+        return Event(type.name, type.title, type.abstractText, type.startTime, type.endTime)
     }
 
     /**

@@ -3,6 +3,7 @@ package org.dukecon.presentation.feature.event
 import org.dukecon.presentation.BasePresenter
 import org.dukecon.presentation.BaseView
 import org.dukecon.presentation.model.EventView
+import org.joda.time.DateTime
 
 /**
  * Defines a contract of operations between the Events Presenter and Events View
@@ -19,7 +20,7 @@ interface EventListContract {
     }
 
     interface Presenter : BasePresenter<View> {
-        fun setDate(it: String)
+        fun setDate(conferenceDay: DateTime)
     }
 
 }

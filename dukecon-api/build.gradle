@@ -15,7 +15,6 @@ swagger {
             'apiPackage'       : 'org.dukecon.android.api',
             'library'          : 'retrofit2',
             'serializableModel': 'true',
-            "useRxJava"        : 'true',
             'dateLibrary'      : 'joda'
     ]
 }
@@ -36,8 +35,6 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
     compile "com.squareup.retrofit2:converter-scalars:$rootProject.retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
-    compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofitVersion"
-    compile "io.reactivex.rxjava2:rxjava:$rootProject.rxJavaVersion"
 
     compile "io.swagger:swagger-annotations:$rootProject.swaggerAnnotationsVersion"
     compile("org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:$rootProject.oltuVersion") {

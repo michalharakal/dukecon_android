@@ -8,6 +8,7 @@ import org.dukecon.data.source.EventDataStoreFactory
 import org.dukecon.data.source.EventRemoteDataStore
 import org.dukecon.domain.model.Event
 import org.dukecon.domain.repository.EventRepository
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 
@@ -18,23 +19,33 @@ import javax.inject.Inject
 class EventDataRepository @Inject constructor(private val factory: EventDataStoreFactory,
                                               private val eventMapper: EventMapper) :
         EventRepository {
-    override fun getEventDates(): Single<List<String>> {
+
+    override fun getEventDates(): Single<List<DateTime>> {
         val dataStore = factory.retrieveDataStore()
         return dataStore.getEvents()
                 .flatMap {
                     if (dataStore is EventRemoteDataStore) {
-                        saveEventEntities(it).toSingle { it }
+                        saveEventEntities(it).toSingle() { it }
+
                     } else {
-                        Single.just(it)
+                        Single.just(it.distinctBy {
+                            it.startTime.dayOfMonth()
+                        })
                     }
                 }
                 .map { list ->
-                    list.map { listItem ->
-                        listItem.startTime.toString()
+                    list.distinctBy {
+                        it.startTime.dayOfMonth()
+                    }.sortedBy { it.startTime }
+
+                }
+                .map { list ->
+                    list.map {
+                        it.startTime
                     }
                 }
-
     }
+
 
     override fun clearEvents(): Completable {
         return factory.retrieveCacheDataStore().clearEvents()
@@ -49,7 +60,7 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
         return factory.retrieveCacheDataStore().saveEvents(events)
     }
 
-    override fun getEvents(): Single<List<Event>> {
+    override fun getEvents(day: Int): Single<List<Event>> {
         val dataStore = factory.retrieveDataStore()
         return dataStore.getEvents()
                 .flatMap {
@@ -64,6 +75,22 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
                         eventMapper.mapFromEntity(listItem)
                     }
                 }
+                .map {
+                    it.sortedBy { it.startTime }
+                }
+    }
+
+    /**
+     * Returns a list containing elements from the given collection by the given [selector] function.
+     */
+    fun <T> Iterable<T>.allBy(selector: (T) -> Boolean): List<T> {
+        val list = ArrayList<T>()
+        for (e in this) {
+            if (selector(e)) {
+                list.add(e)
+            }
+        }
+        return list
     }
 
 }

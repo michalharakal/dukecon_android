@@ -9,13 +9,14 @@ import org.dukecon.android.ui.ext.getComponent
 import org.dukecon.android.ui.features.main.MainComponent
 import org.dukecon.presentation.feature.event.EventListContract
 import org.dukecon.presentation.model.EventView
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 class SessionListView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
         RecyclerView(context, attrs, defStyle), EventListContract.View {
 
     private val adapter: EventAdapter
-    private var date: String? = null
+    private var date: DateTime? = null
 
     @Inject lateinit var presenter: EventListContract.Presenter
     @Inject lateinit var sessionNavigator: SessionNavigator
@@ -39,11 +40,11 @@ class SessionListView(context: Context, attrs: AttributeSet? = null, defStyle: I
     }
 
     override fun onDetachedFromWindow() {
-    //    presenter.onDetach()
+        presenter.onDetach()
         super.onDetachedFromWindow()
     }
 
-    fun setDate(date: String) {
+    fun setDate(date: DateTime) {
         this.date = date
     }
 

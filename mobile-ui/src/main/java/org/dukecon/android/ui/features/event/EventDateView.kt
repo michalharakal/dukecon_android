@@ -11,8 +11,7 @@ import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getComponent
 import org.dukecon.android.ui.features.main.MainComponent
 import org.dukecon.presentation.feature.event.EventDateListContract
-import java.text.SimpleDateFormat
-import java.util.*
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 class EventDateView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
@@ -48,24 +47,22 @@ class EventDateView(context: Context, attrs: AttributeSet? = null, defStyle: Int
     }
 
     override fun showNoSessionDates() {
-        adapter.dates.clear()
+        adapter.clear()
         adapter.notifyDataSetChanged()
     }
 
-    override fun showSessionDates(sessionDates: List<String>) {
-        adapter.dates.clear()
-        adapter.dates.addAll(sessionDates)
+    override fun showSessionDates(eventDate: List<DateTime>) {
+        adapter.showEventDates(eventDate)
         adapter.notifyDataSetChanged()
 
-        if (sessionDates.size > 1) {
+        if (eventDate.size > 1) {
             tabs.visibility = View.VISIBLE
         }
     }
 
     override fun scrollToCurrentDay() {
         if (adapter.dates.isNotEmpty()) {
-            val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val index = adapter.dates.indexOfFirst { DateUtils.isToday(format.parse(it).time) }
+            val index = adapter.dates.indexOfFirst { DateUtils.isToday(it.millis) }
             if (index >= 0) {
                 pager.setCurrentItem(index, false)
             }

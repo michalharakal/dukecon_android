@@ -6,37 +6,53 @@ import org.dukecon.android.cache.mapper.EventEntityMapper
 import org.dukecon.data.mapper.EventMapper
 import org.dukecon.data.model.EventEntity
 import org.dukecon.data.repository.EventCache
+import java.util.stream.Collectors.toList
 import javax.inject.Inject
 
 /**
  * Cached implementation for retrieving and saving Event instances. This class implements the
  * [EventCache] from the Data layer as it is that layers responsibility for defining the
- * operations in which data store implementation layers can carry out.
+ * operations in which data store implementation layers can carry out. Just simple in memory chache
  */
 class EventCacheImpl @Inject constructor(private val entityMapper: EventEntityMapper,
                                          private val mapper: EventMapper) :
         EventCache {
+
+    var cachedEvents: List<EventEntity> = listOf()
+    private val EXPIRATION_TIME = (60 * 10 * 1000).toLong()
+
+
     override fun clearEvents(): Completable {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return Completable.complete()
     }
 
     override fun saveEvents(events: List<EventEntity>): Completable {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        cachedEvents = events
+        lastCache = System.currentTimeMillis()
+        return Completable.complete()
     }
 
     override fun getEvents(): Single<List<EventEntity>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return Single.create({ s ->
+            s.onSuccess(
+                    cachedEvents
+            )
+        })
     }
 
     override fun isCached(): Boolean {
-       return false;
+        return cachedEvents.isNotEmpty()
     }
 
+    private var lastCache: Long = 0
+
     override fun setLastCacheTime(lastCache: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        this.lastCache = lastCache
     }
 
     override fun isExpired(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val currentTime = System.currentTimeMillis()
+        val lastUpdateTime = lastCache
+        return currentTime - lastUpdateTime > EXPIRATION_TIME
     }
 }

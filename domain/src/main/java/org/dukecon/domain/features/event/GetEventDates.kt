@@ -6,6 +6,7 @@ import org.dukecon.domain.executor.ThreadExecutor
 import org.dukecon.domain.interactor.SingleUseCase
 import org.dukecon.domain.model.Event
 import org.dukecon.domain.repository.EventRepository
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 /**
@@ -14,9 +15,9 @@ import javax.inject.Inject
 open class GetEventDates @Inject constructor(val eventRepository: EventRepository,
                                              threadExecutor: ThreadExecutor,
                                              postExecutionThread: PostExecutionThread) :
-        SingleUseCase<List<String>, Void?>(threadExecutor, postExecutionThread) {
+        SingleUseCase<List<DateTime>, Void?>(threadExecutor, postExecutionThread) {
 
-    public override fun buildUseCaseObservable(params: Void?): Single<List<String>> {
+    public override fun buildUseCaseObservable(params: Void?): Single<List<DateTime>> {
         return eventRepository.getEventDates()
     }
 }

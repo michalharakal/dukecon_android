@@ -3,6 +3,7 @@ package org.dukecon.domain.repository
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.dukecon.domain.model.Event
+import org.joda.time.DateTime
 
 /**
  * Interface defining methods for how the data layer can pass data to and from the Domain layer.
@@ -15,7 +16,7 @@ interface EventRepository {
 
     fun saveEvents(events: List<Event>): Completable
 
-    fun getEvents(): Single<List<Event>>
-    fun getEventDates(): Single<List<String>>
+    fun getEvents(day: Int): Single<List<Event>>
+    fun getEventDates(): Single<List<DateTime>>
 
 }

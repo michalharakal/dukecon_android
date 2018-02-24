@@ -5,12 +5,11 @@ import android.support.v4.view.PagerAdapter
 import android.text.format.DateUtils
 import android.view.View
 import android.view.ViewGroup
-import java.text.SimpleDateFormat
-import java.util.Locale
+import org.joda.time.DateTime
 
 internal class SessionPagerAdapter : PagerAdapter() {
 
-    val dates: MutableList<String> = mutableListOf()
+    var dates: List<DateTime> = arrayListOf()
     var context: Context? = null
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -22,9 +21,7 @@ internal class SessionPagerAdapter : PagerAdapter() {
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val date = format.parse(dates[position])
-        return DateUtils.formatDateTime(context, date.time, DateUtils.FORMAT_SHOW_DATE)
+        return DateUtils.formatDateTime(context, dates[position].millis, DateUtils.FORMAT_SHOW_DATE)
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
@@ -37,5 +34,13 @@ internal class SessionPagerAdapter : PagerAdapter() {
 
     override fun getCount(): Int {
         return dates.size
+    }
+
+    fun clear() {
+        dates = arrayListOf()
+    }
+
+    fun showEventDates(eventDate: List<DateTime>) {
+        dates = eventDate
     }
 }

@@ -2,10 +2,11 @@ package org.dukecon.presentation.feature.event
 
 import io.reactivex.observers.DisposableSingleObserver
 import org.dukecon.domain.interactor.SingleUseCase
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 
-class EventDatePresenter @Inject constructor(val getEventDateUseCase: SingleUseCase<List<String>, Void>)
+class EventDatePresenter @Inject constructor(val getEventDateUseCase: SingleUseCase<List<DateTime>, Void>)
     : EventDateListContract.Presenter {
 
     private var view: EventDateListContract.View? = null
@@ -21,8 +22,8 @@ class EventDatePresenter @Inject constructor(val getEventDateUseCase: SingleUseC
         getEventDateUseCase.dispose()
     }
 
-    internal fun handleGetEventsSuccess(events: List<String>) {
-        if (events == null || events.isEmpty()) {
+    internal fun handleGetEventsSuccess(events: List<DateTime>) {
+        if (events.isEmpty()) {
             this.view?.showNoSessionDates()
         } else {
             this.view?.let {
@@ -32,9 +33,9 @@ class EventDatePresenter @Inject constructor(val getEventDateUseCase: SingleUseC
         }
     }
 
-    inner class EventSubscriber : DisposableSingleObserver<List<String>>() {
+    inner class EventSubscriber : DisposableSingleObserver<List<DateTime>>() {
 
-        override fun onSuccess(t: List<String>) {
+        override fun onSuccess(t: List<DateTime>) {
             handleGetEventsSuccess(t)
         }
 

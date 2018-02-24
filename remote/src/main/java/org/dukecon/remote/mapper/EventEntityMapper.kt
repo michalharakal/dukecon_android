@@ -11,10 +11,10 @@ import javax.inject.Inject
 open class EventEntityMapper @Inject constructor(): EntityMapper<Event, EventEntity> {
 
     /**
-     * Map an instance of a [Event] to a [EventEntity] model
+     * Map an instance of a [org.dukecon.android.api.model.EventEvent] to a [EventEntity] model
      */
-    override fun mapFromRemote(type: Event): EventEntity {
-        return EventEntity(type.id, type.title, type.abstractText, type.start, type.end)
+    override fun mapFromRemote(type: org.dukecon.android.api.model.Event): EventEntity {
+        return EventEntity(type.id, type.title, type.abstractText ?: "" , type.start, type.end)
     }
 
 }
