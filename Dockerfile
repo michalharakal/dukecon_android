@@ -109,5 +109,5 @@ RUN apt-get clean
 
 ENV BITRISE_DOCKER_REV_NUMBER_ANDROID v2017_12_29_1
 
-RUN mkdir -p /opt/workspace
+RUN mkdir -p /opt/workspace && chmod 777 /opt/workspace
 WORKDIR  /opt/workspace
