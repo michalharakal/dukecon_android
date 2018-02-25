@@ -9,10 +9,11 @@ import org.dukecon.android.ui.ext.getComponent
 import org.dukecon.android.ui.features.main.MainComponent
 import org.dukecon.presentation.feature.event.EventListContract
 import org.dukecon.presentation.model.EventView
+import org.dukecon.presentation.model.SpeakerView
 import org.joda.time.DateTime
 import javax.inject.Inject
 
-class SessionListView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
+class EventsListView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
         RecyclerView(context, attrs, defStyle), EventListContract.View {
 
     private val adapter: EventAdapter
@@ -58,14 +59,12 @@ class SessionListView(context: Context, attrs: AttributeSet? = null, defStyle: I
         adapter.notifyDataSetChanged()
     }
 
-    /*
-    override fun showSpeakers(speakers: Map<String, Speaker>) {
-      /*  adapter.speakers.clear()
+    override fun showSpeakers(speakers: Map<String, SpeakerView>) {
+        adapter.speakers.clear()
         adapter.speakers.putAll(speakers)
         adapter.notifyDataSetChanged()
-        */
+
     }
-    */
 
     override fun showFavorites(favorites: Set<String>) {
         adapter.favorites.clear()

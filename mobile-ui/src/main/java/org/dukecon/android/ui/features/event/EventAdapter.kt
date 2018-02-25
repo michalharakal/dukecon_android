@@ -12,13 +12,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.item_session.view.*
 import org.dukecon.android.ui.R
+import org.dukecon.android.ui.utils.DrawableUtils
 import org.dukecon.presentation.model.EventView
+import org.dukecon.presentation.model.SpeakerView
 import org.joda.time.DateTime
 
 internal class EventAdapter(val onSessionSelectedListener: ((session: EventView) -> Unit)) :
         RecyclerView.Adapter<EventAdapter.ViewHolder>() {
 
     val sessions: MutableList<EventView> = mutableListOf()
+    val speakers: MutableMap<String, SpeakerView> = mutableMapOf()
     val favorites: MutableSet<String> = mutableSetOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -46,9 +49,8 @@ internal class EventAdapter(val onSessionSelectedListener: ((session: EventView)
 
         holder.title.text = session.title
 
-        /*
-        val sessionSpeakers = session.speakers?.map { speakers[it] }
-        if (sessionSpeakers == null || sessionSpeakers.isEmpty()) {
+        val sessionSpeakers = session.speakersId.map { speakers[it] }
+        if (sessionSpeakers.isEmpty()) {
             holder.speakers.visibility = View.GONE
         } else {
             holder.speakers.visibility = View.VISIBLE
@@ -60,6 +62,7 @@ internal class EventAdapter(val onSessionSelectedListener: ((session: EventView)
                 null)
         }
 
+        /*
         if (session.room == null) {
             holder.room.visibility = View.GONE
         } else {
@@ -71,7 +74,8 @@ internal class EventAdapter(val onSessionSelectedListener: ((session: EventView)
                 null,
                 null)
         }
-        */
+
+       */
 
         /*
         if (favorites.contains(session.id)) {

@@ -14,13 +14,13 @@ open class EventMapper @Inject constructor() : Mapper<EventEntity, Event> {
      * Map a [EventEntity] instance to a [Event] instance
      */
     override fun mapFromEntity(type: EventEntity): Event {
-        return Event(type.name, type.title, type.abstractText, type.startTime, type.endTime)
+        return Event(type.name, type.title, type.abstractText, type.startTime, type.endTime, type.speakerIds)
     }
 
     /**
      * Map a [Event] instance to a [EventEntity] instance
      */
     override fun mapToEntity(type: Event): EventEntity {
-        return EventEntity(type.name, type.title, type.avatar, type.startTime, type.endTime)
+        return EventEntity(type.name, type.title, type.avatar, type.startTime, type.endTime, type.speakerIds)
     }
 }

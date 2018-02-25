@@ -4,6 +4,6 @@ import dagger.Subcomponent
 
 @Subcomponent(modules = arrayOf(EventListModule::class))
 interface EventsListComponent {
-    fun inject(sessionListView: SessionListView)
+    fun inject(eventsListView: EventsListView)
     fun inject(eventDateView: EventDateView)
 }

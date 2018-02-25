@@ -3,6 +3,7 @@ package org.dukecon.presentation.feature.event
 import org.dukecon.presentation.BasePresenter
 import org.dukecon.presentation.BaseView
 import org.dukecon.presentation.model.EventView
+import org.dukecon.presentation.model.SpeakerView
 import org.joda.time.DateTime
 
 /**
@@ -14,6 +15,7 @@ interface EventListContract {
 
         fun showNoSessions()
         fun showSessions(sessions: List<EventView>)
+        fun showSpeakers(speakers: Map<String, SpeakerView>)
         fun showFavorites(favorites: Set<String>)
         fun scrollTo(index: Int)
 

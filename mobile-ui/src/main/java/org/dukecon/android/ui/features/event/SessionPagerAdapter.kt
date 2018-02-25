@@ -14,7 +14,7 @@ internal class SessionPagerAdapter : PagerAdapter() {
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         context = container.context
-        val v = SessionListView(container.context)
+        val v = EventsListView(container.context)
         v.setDate(dates[position])
         container.addView(v)
         return v

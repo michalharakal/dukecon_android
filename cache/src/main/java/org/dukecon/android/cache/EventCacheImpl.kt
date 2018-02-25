@@ -5,6 +5,7 @@ import io.reactivex.Single
 import org.dukecon.android.cache.mapper.EventEntityMapper
 import org.dukecon.data.mapper.EventMapper
 import org.dukecon.data.model.EventEntity
+import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.repository.EventCache
 import java.util.stream.Collectors.toList
 import javax.inject.Inject
@@ -19,6 +20,7 @@ class EventCacheImpl @Inject constructor(private val entityMapper: EventEntityMa
         EventCache {
 
     var cachedEvents: List<EventEntity> = listOf()
+    var cacheSpeakers: List<SpeakerEntity> = listOf()
     private val EXPIRATION_TIME = (60 * 10 * 1000).toLong()
 
 
@@ -32,6 +34,21 @@ class EventCacheImpl @Inject constructor(private val entityMapper: EventEntityMa
         return Completable.complete()
     }
 
+    override fun getSpeakers(): Single<List<SpeakerEntity>> {
+        return Single.create({ s ->
+            s.onSuccess(
+                    cacheSpeakers
+            )
+        })
+    }
+
+    override fun saveSpeakers(speakers: List<SpeakerEntity>): Completable {
+        cacheSpeakers = speakers
+        lastCache = System.currentTimeMillis()
+        return Completable.complete()
+    }
+
+
     override fun getEvents(): Single<List<EventEntity>> {
         return Single.create({ s ->
             s.onSuccess(
@@ -41,7 +58,7 @@ class EventCacheImpl @Inject constructor(private val entityMapper: EventEntityMa
     }
 
     override fun isCached(): Boolean {
-        return cachedEvents.isNotEmpty()
+        return cachedEvents.isNotEmpty() && cacheSpeakers.isNotEmpty()
     }
 
     private var lastCache: Long = 0

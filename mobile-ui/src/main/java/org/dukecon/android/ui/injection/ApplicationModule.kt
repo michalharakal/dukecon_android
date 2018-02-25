@@ -19,7 +19,9 @@ import org.dukecon.data.repository.EventCache
 import org.dukecon.data.repository.EventRemote
 import org.dukecon.domain.executor.PostExecutionThread
 import org.dukecon.domain.executor.ThreadExecutor
+import org.dukecon.presentation.mapper.SpeakerMapper
 import org.dukecon.remote.mapper.EventRemoteImpl
+import org.dukecon.remote.mapper.SpeakerEntityMapper
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -46,8 +48,8 @@ open class ApplicationModule {
     }
 
     @Provides
-    internal fun provideEventRemote(service: ConferencesApi, factory: org.dukecon.remote.mapper.EventEntityMapper): EventRemote {
-        return EventRemoteImpl(service, "javaland2018", factory)
+    internal fun provideEventRemote(service: ConferencesApi, factory: org.dukecon.remote.mapper.EventEntityMapper, speakerMapper: SpeakerEntityMapper): EventRemote {
+        return EventRemoteImpl(service, "javaland2018", factory, speakerMapper)
     }
 
 

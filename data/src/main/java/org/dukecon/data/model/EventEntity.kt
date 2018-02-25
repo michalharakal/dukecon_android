@@ -8,5 +8,5 @@ import java.util.*
  */
 
 data class EventEntity(val name: String, val title: String, val abstractText: String, val startTime: DateTime,
-                       val endTime: DateTime)
+                       val endTime: DateTime, val speakerIds: List<String>)
 

@@ -6,4 +6,5 @@ import org.joda.time.DateTime
 /**
  * Representation for a [EventView] instance for this layers Model representation
  */
-class EventView(val name: String, val title: String, val startTime: DateTime, val endTime: DateTime)
+data class EventView(val name: String, val title: String, val startTime: DateTime, val endTime: DateTime,
+                     val speakersId: List<String>)

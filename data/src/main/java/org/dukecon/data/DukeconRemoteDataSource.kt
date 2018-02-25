@@ -3,10 +3,13 @@ package org.dukecon.data
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.dukecon.data.mapper.EventMapper
+import org.dukecon.data.mapper.SpeakerMapper
 import org.dukecon.data.model.EventEntity
+import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.source.EventDataStoreFactory
 import org.dukecon.data.source.EventRemoteDataStore
 import org.dukecon.domain.model.Event
+import org.dukecon.domain.model.Speaker
 import org.dukecon.domain.repository.EventRepository
 import org.joda.time.DateTime
 import javax.inject.Inject
@@ -17,8 +20,25 @@ import javax.inject.Inject
  * data sources
  */
 class EventDataRepository @Inject constructor(private val factory: EventDataStoreFactory,
-                                              private val eventMapper: EventMapper) :
+                                              private val eventMapper: EventMapper,
+                                              private val speakerMapper: SpeakerMapper) :
         EventRepository {
+    override fun getSpeakers(): Single<List<Speaker>> {
+        val dataStore = factory.retrieveDataStore()
+        return dataStore.getSpeakers()
+                .flatMap {
+                    if (dataStore is EventRemoteDataStore) {
+                        saveSpeakersEntities(it).toSingle { it }
+                    } else {
+                        Single.just(it)
+                    }
+                }.map { list ->
+                    list.map { listItem ->
+                        speakerMapper.mapFromEntity(listItem)
+                    }
+                }
+        return Single.just(listOf())
+    }
 
     override fun getEventDates(): Single<List<DateTime>> {
         val dataStore = factory.retrieveDataStore()
@@ -59,6 +79,11 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
     private fun saveEventEntities(events: List<EventEntity>): Completable {
         return factory.retrieveCacheDataStore().saveEvents(events)
     }
+
+    private fun saveSpeakersEntities(speakers: List<SpeakerEntity>): Completable {
+        return factory.retrieveCacheDataStore().saveSpeakers(speakers)
+    }
+
 
     override fun getEvents(day: Int): Single<List<Event>> {
         val dataStore = factory.retrieveDataStore()

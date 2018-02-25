@@ -5,6 +5,7 @@ import dagger.Provides
 import org.dukecon.android.ui.injection.scopes.PerApplication
 import org.dukecon.data.EventDataRepository
 import org.dukecon.data.mapper.EventMapper
+import org.dukecon.data.mapper.SpeakerMapper
 import org.dukecon.data.source.EventDataStoreFactory
 import org.dukecon.domain.repository.EventRepository
 
@@ -13,8 +14,9 @@ import org.dukecon.domain.repository.EventRepository
 class DataModule {
     @Provides
     internal fun provideEventRepository(factory: EventDataStoreFactory,
-                                        mapper: EventMapper): EventRepository {
-        return EventDataRepository(factory, mapper)
+                                        mapper: EventMapper,
+                                        speakerMapper: SpeakerMapper): EventRepository {
+        return EventDataRepository(factory, mapper, speakerMapper)
     }
 
 }

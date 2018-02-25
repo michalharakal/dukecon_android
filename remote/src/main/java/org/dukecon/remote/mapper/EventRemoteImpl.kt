@@ -7,6 +7,7 @@ import io.reactivex.SingleEmitter
 import org.dukecon.android.api.ConferencesApi
 import org.dukecon.android.api.model.Event
 import org.dukecon.data.model.EventEntity
+import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.repository.EventRemote
 import javax.inject.Inject
 
@@ -18,8 +19,28 @@ import javax.inject.Inject
  */
 class EventRemoteImpl @Inject constructor(private val conferenceApi: ConferencesApi,
                                           private val conferenceId: String,
-                                          private val entityMapper: EventEntityMapper) :
+                                          private val entityMapper: EventEntityMapper,
+                                          private val speakersEntityMapper: SpeakerEntityMapper) :
         EventRemote {
+    override fun getSpeakers(): Single<List<SpeakerEntity>> {
+        return Single.create({ s ->
+            val call = conferenceApi.getSpeakers(conferenceId);
+            val response = call.execute()
+            if (response.isSuccessful) {
+                if (response.body() != null) {
+                    val eventsList = response.body()
+                    if (eventsList != null) {
+                        s.onSuccess(
+                                eventsList.map { speakersEntityMapper.mapFromRemote(it) }
+                        )
+                    }
+
+                }
+            } else {
+                s.onError(Throwable())
+            }
+        })
+    }
 
     /**
      * Retrieve a list of [EventEntity] instances from the [ConferencesApi].
