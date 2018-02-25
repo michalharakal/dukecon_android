@@ -25,10 +25,7 @@ node {
      
 
         stage('Run application test') {
-            // If you need environmental variables in your image. Why not load it attach it to the image, and delete it afterward
-            sh("env >> .env")
-            sh("docker run --env-file .env --rm -v $PWD:/opt/workspace ${project}  ./gradlew test")
-            sh("rm -rf .env")
+            sh("docker run --rm -v $PWD:/opt/workspace ${project}  ./gradlew test")
         }        
     } catch (e) {
         currentBuild.result = "FAILED"

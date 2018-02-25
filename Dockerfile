@@ -51,35 +51,16 @@ RUN sdkmanager "emulator" "tools" "platform-tools"
 RUN yes | sdkmanager \
     "platforms;android-27" \
     "platforms;android-26" \
-    "platforms;android-25" \
-    "platforms;android-24" \
-    "platforms;android-23" \
-    "platforms;android-22" \
     "platforms;android-21" \
     "platforms;android-19" \
-    "platforms;android-17" \
-    "platforms;android-15" \
     "build-tools;27.0.3" \
     "build-tools;27.0.2" \
     "build-tools;27.0.1" \
     "build-tools;27.0.0" \
     "build-tools;26.0.2" \
     "build-tools;26.0.1" \
-    "build-tools;25.0.3" \
-    "build-tools;24.0.3" \
-    "build-tools;23.0.3" \
-    "build-tools;22.0.1" \
-    "build-tools;21.1.2" \
-    "build-tools;19.1.0" \
-    "build-tools;17.0.0" \
-    "system-images;android-26;google_apis;x86" \
-    "system-images;android-25;google_apis;armeabi-v7a" \
-    "system-images;android-24;default;armeabi-v7a" \
-    "system-images;android-22;default;armeabi-v7a" \
-    "system-images;android-19;default;armeabi-v7a" \
     "extras;android;m2repository" \
     "extras;google;m2repository" \
-    "extras;google;google_play_services" \
     "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2" \
     "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.1" \
     "add-ons;addon-google_apis-google-23" \
@@ -104,39 +85,11 @@ RUN apt-get purge maven maven2 \
 
 
 # ------------------------------------------------------
-# --- Pre-install Ionic and Cordova CLIs
-
-RUN npm install -g ionic cordova
-
-
-# ------------------------------------------------------
 # --- Install Fastlane
 
 RUN gem install fastlane --no-document \
  && fastlane --version
 
-# ------------------------------------------------------
-# --- Install Google Cloud SDK
-# https://cloud.google.com/sdk/downloads
-#  Section: apt-get (Debian and Ubuntu only)
-#
-# E.g. for "Using Firebase Test Lab for Android from the gcloud Command Line":
-#  https://firebase.google.com/docs/test-lab/command-line
-#
-
-RUN echo "deb https://packages.cloud.google.com/apt cloud-sdk-`lsb_release -c -s` main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-RUN sudo apt-get update -qq \
- && sudo apt-get install -y -qq google-cloud-sdk
-
-ENV GCLOUD_SDK_CONFIG /usr/lib/google-cloud-sdk/lib/googlecloudsdk/core/config.json
-
-# gcloud config doesn't update config.json. See the official Dockerfile for details:
-#  https://github.com/GoogleCloudPlatform/cloud-sdk-docker/blob/master/Dockerfile
-RUN /usr/bin/gcloud config set --installation component_manager/disable_update_check true \
- && sed -i -- 's/\"disable_updater\": false/\"disable_updater\": true/g' $GCLOUD_SDK_CONFIG \
- && /usr/bin/gcloud config set --installation core/disable_usage_reporting true \
- && sed -i -- 's/\"disable_usage_reporting\": false/\"disable_usage_reporting\": true/g' $GCLOUD_SDK_CONFIG
 
 
 # ------------------------------------------------------
