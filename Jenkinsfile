@@ -25,10 +25,8 @@ node {
      
 
         stage('Run application test') {
-            sh("ls")
-            sh("docker run --rm -v $PWD:/opt/workspace ${project}  ls /opt/workspace/workspace")
-            sh("docker run --rm -v $PWD:/opt/workspace ${project}  find . -name 'gradlew'")            
-            sh("docker run --rm -v $PWD:/opt/workspace ${project}  ./gradlew test")
+            def workspace = pwd()
+            sh("docker run --rm -v $workspace:/opt/workspace ${project} ./gradlew test")
         }        
     } catch (e) {
         currentBuild.result = "FAILED"
