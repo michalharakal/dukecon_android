@@ -25,6 +25,7 @@ node {
      
 
         stage('Run application test') {
+            sh("ls")
             sh("docker run --rm -v $PWD:/opt/workspace ${project}  ./gradlew test")
         }        
     } catch (e) {
