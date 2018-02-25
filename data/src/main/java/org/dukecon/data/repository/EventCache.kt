@@ -3,6 +3,7 @@ package org.dukecon.data.repository
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.dukecon.data.model.EventEntity
+import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 
 
@@ -41,5 +42,8 @@ interface EventCache {
     fun getSpeakers(): Single<List<SpeakerEntity>>
 
     fun saveSpeakers(speakers: List<SpeakerEntity>): Completable
+
+    fun getRooms(): Single<List<RoomEntity>>
+    fun saveRooms(rooms: List<RoomEntity>): Completable
 
 }

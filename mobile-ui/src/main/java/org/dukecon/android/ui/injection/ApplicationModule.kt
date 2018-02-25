@@ -14,13 +14,13 @@ import org.dukecon.android.api.ConferencesApi
 import org.dukecon.android.cache.EventCacheImpl
 import org.dukecon.android.ui.UiThread
 import org.dukecon.data.executor.JobExecutor
-import org.dukecon.data.mapper.EventMapper
 import org.dukecon.data.repository.EventCache
 import org.dukecon.data.repository.EventRemote
 import org.dukecon.domain.executor.PostExecutionThread
 import org.dukecon.domain.executor.ThreadExecutor
-import org.dukecon.presentation.mapper.SpeakerMapper
+import org.dukecon.remote.mapper.EventEntityMapper
 import org.dukecon.remote.mapper.EventRemoteImpl
+import org.dukecon.remote.mapper.RoomEntityMapper
 import org.dukecon.remote.mapper.SpeakerEntityMapper
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -42,14 +42,16 @@ open class ApplicationModule {
 
     @Provides
     @Singleton
-    internal fun provideEventCache(entityMapper: org.dukecon.android.cache.mapper.EventEntityMapper,
-                                   mapper: EventMapper): EventCache {
-        return EventCacheImpl(entityMapper, mapper)
+    internal fun provideEventCache(): EventCache {
+        return EventCacheImpl()
     }
 
     @Provides
-    internal fun provideEventRemote(service: ConferencesApi, factory: org.dukecon.remote.mapper.EventEntityMapper, speakerMapper: SpeakerEntityMapper): EventRemote {
-        return EventRemoteImpl(service, "javaland2018", factory, speakerMapper)
+    internal fun provideEventRemote(service: ConferencesApi,
+                                    factory: EventEntityMapper,
+                                    speakerMapper: SpeakerEntityMapper,
+                                    roomEntityMapper: RoomEntityMapper): EventRemote {
+        return EventRemoteImpl(service, "javaland2018", factory, speakerMapper, roomEntityMapper)
     }
 
 

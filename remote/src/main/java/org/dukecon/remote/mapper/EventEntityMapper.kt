@@ -14,7 +14,7 @@ open class EventEntityMapper @Inject constructor(): EntityMapper<Event, EventEnt
      * Map an instance of a [org.dukecon.android.api.model.EventEvent] to a [EventEntity] model
      */
     override fun mapFromRemote(type: org.dukecon.android.api.model.Event): EventEntity {
-        return EventEntity(type.id, type.title, type.abstractText ?: "" , type.start, type.end, type.speakerIds)
+        return EventEntity(type.id, type.title, type.abstractText ?: "" , type.start, type.end, type.speakerIds, type.locationId)
     }
 
 }

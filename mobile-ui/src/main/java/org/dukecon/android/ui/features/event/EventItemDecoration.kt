@@ -27,7 +27,7 @@ internal class EventItemDecoration(private val context: Context) : RecyclerView.
             val view = parent.getChildAt(i)
             if (view != null) {
                 val holder = parent.getChildViewHolder(view)
-                if (holder is EventAdapter.ViewHolder && holder.adapterPosition != 0) {
+                if (holder is EventsAdapter.ViewHolder && holder.adapterPosition != 0) {
                     if (holder.timeslot.visibility == View.VISIBLE) {
                         val left = 0
                         val top = holder.itemView.top
@@ -43,7 +43,7 @@ internal class EventItemDecoration(private val context: Context) : RecyclerView.
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val holder = parent.getChildViewHolder(view)
-        if (holder is EventAdapter.ViewHolder) {
+        if (holder is EventsAdapter.ViewHolder) {
             if (holder.timeslot.visibility == View.VISIBLE && holder.adapterPosition != 0) {
                 outRect.set(0, divider.intrinsicHeight, 0, 0)
             }

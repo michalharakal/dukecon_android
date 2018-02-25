@@ -9,6 +9,7 @@ import org.dukecon.android.ui.ext.getComponent
 import org.dukecon.android.ui.features.main.MainComponent
 import org.dukecon.presentation.feature.event.EventListContract
 import org.dukecon.presentation.model.EventView
+import org.dukecon.presentation.model.RoomView
 import org.dukecon.presentation.model.SpeakerView
 import org.joda.time.DateTime
 import javax.inject.Inject
@@ -16,7 +17,7 @@ import javax.inject.Inject
 class EventsListView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
         RecyclerView(context, attrs, defStyle), EventListContract.View {
 
-    private val adapter: EventAdapter
+    private val adapter: EventsAdapter
     private var date: DateTime? = null
 
     @Inject lateinit var presenter: EventListContract.Presenter
@@ -28,7 +29,7 @@ class EventsListView(context: Context, attrs: AttributeSet? = null, defStyle: In
         layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         layoutManager = LinearLayoutManager(context, VERTICAL, false)
         addItemDecoration(EventItemDecoration(context))
-        adapter = EventAdapter({ session ->
+        adapter = EventsAdapter({ session ->
             sessionNavigator.showSession(session)
         })
         super.setAdapter(adapter)
@@ -63,8 +64,14 @@ class EventsListView(context: Context, attrs: AttributeSet? = null, defStyle: In
         adapter.speakers.clear()
         adapter.speakers.putAll(speakers)
         adapter.notifyDataSetChanged()
-
     }
+
+    override fun showRooms(rooms: Map<String, RoomView>) {
+        adapter.rooms.clear()
+        adapter.rooms.putAll(rooms)
+        adapter.notifyDataSetChanged()
+    }
+
 
     override fun showFavorites(favorites: Set<String>) {
         adapter.favorites.clear()

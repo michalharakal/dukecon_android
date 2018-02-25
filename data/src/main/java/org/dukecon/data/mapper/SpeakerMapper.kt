@@ -1,11 +1,8 @@
 package org.dukecon.data.mapper
 
-import org.dukecon.data.model.EventEntity
 import org.dukecon.data.model.SpeakerEntity
-import org.dukecon.domain.model.Event
 import org.dukecon.domain.model.Speaker
 import javax.inject.Inject
-
 
 
 /**

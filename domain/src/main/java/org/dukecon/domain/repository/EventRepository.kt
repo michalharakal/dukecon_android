@@ -3,6 +3,7 @@ package org.dukecon.domain.repository
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.dukecon.domain.model.Event
+import org.dukecon.domain.model.Room
 import org.dukecon.domain.model.Speaker
 import org.joda.time.DateTime
 
@@ -21,5 +22,9 @@ interface EventRepository {
     fun getEventDates(): Single<List<DateTime>>
 
     fun getSpeakers(): Single<List<Speaker>>
+    fun saveSpeakers(it: List<Speaker>): Completable
+
+    fun getRooms(): Single<List<Room>>
+    fun saveRooms(it: List<Room>): Completable
 
 }

@@ -2,12 +2,10 @@ package org.dukecon.android.cache
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.dukecon.android.cache.mapper.EventEntityMapper
-import org.dukecon.data.mapper.EventMapper
 import org.dukecon.data.model.EventEntity
+import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.repository.EventCache
-import java.util.stream.Collectors.toList
 import javax.inject.Inject
 
 /**
@@ -15,16 +13,31 @@ import javax.inject.Inject
  * [EventCache] from the Data layer as it is that layers responsibility for defining the
  * operations in which data store implementation layers can carry out. Just simple in memory chache
  */
-class EventCacheImpl @Inject constructor(private val entityMapper: EventEntityMapper,
-                                         private val mapper: EventMapper) :
+class EventCacheImpl @Inject constructor() :
         EventCache {
 
+    var cachedRooms: List<RoomEntity> = listOf()
     var cachedEvents: List<EventEntity> = listOf()
     var cacheSpeakers: List<SpeakerEntity> = listOf()
     private val EXPIRATION_TIME = (60 * 10 * 1000).toLong()
 
+    override fun saveRooms(rooms: List<RoomEntity>): Completable {
+        cachedRooms = rooms
+        lastCache = System.currentTimeMillis()
+        return Completable.complete()
+    }
+
+    override fun getRooms(): Single<List<RoomEntity>> {
+        return Single.create({ s ->
+            s.onSuccess(
+                    cachedRooms
+            )
+        })
+    }
+
 
     override fun clearEvents(): Completable {
+        lastCache = 0
         return Completable.complete()
     }
 
@@ -58,7 +71,7 @@ class EventCacheImpl @Inject constructor(private val entityMapper: EventEntityMa
     }
 
     override fun isCached(): Boolean {
-        return cachedEvents.isNotEmpty() && cacheSpeakers.isNotEmpty()
+        return cachedEvents.isNotEmpty() && cacheSpeakers.isNotEmpty() && cachedRooms.isNotEmpty()
     }
 
     private var lastCache: Long = 0

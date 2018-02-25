@@ -1,14 +1,19 @@
 package org.dukecon.data
 
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.functions.BiFunction
 import org.dukecon.data.mapper.EventMapper
+import org.dukecon.data.mapper.RoomMapper
 import org.dukecon.data.mapper.SpeakerMapper
 import org.dukecon.data.model.EventEntity
+import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.source.EventDataStoreFactory
 import org.dukecon.data.source.EventRemoteDataStore
 import org.dukecon.domain.model.Event
+import org.dukecon.domain.model.Room
 import org.dukecon.domain.model.Speaker
 import org.dukecon.domain.repository.EventRepository
 import org.joda.time.DateTime
@@ -21,8 +26,37 @@ import javax.inject.Inject
  */
 class EventDataRepository @Inject constructor(private val factory: EventDataStoreFactory,
                                               private val eventMapper: EventMapper,
-                                              private val speakerMapper: SpeakerMapper) :
+                                              private val speakerMapper: SpeakerMapper,
+                                              private val roomMapper: RoomMapper) :
         EventRepository {
+    override fun getRooms(): Single<List<Room>> {
+        val dataStore = factory.retrieveDataStore()
+        return dataStore.getRooms()
+                .flatMap {
+                    if (dataStore is EventRemoteDataStore) {
+                        savRoomsEntities(it).toSingle { it }
+                    } else {
+                        Single.just(it)
+                    }
+                }.map { list ->
+                    list.map { listItem ->
+                        roomMapper.mapFromEntity(listItem)
+                    }
+                }
+        return Single.just(listOf())
+    }
+
+    override fun saveSpeakers(speakers: List<Speaker>): Completable {
+        val eventEntities = speakers.map { speakerMapper.mapToEntity(it) }
+        return saveSpeakersEntities(eventEntities)
+
+    }
+
+    override fun saveRooms(rooms: List<Room>): Completable {
+        val eventEntities = rooms.map { roomMapper.mapToEntity(it) }
+        return savRoomsEntities(eventEntities)
+    }
+
     override fun getSpeakers(): Single<List<Speaker>> {
         val dataStore = factory.retrieveDataStore()
         return dataStore.getSpeakers()
@@ -66,7 +100,6 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
                 }
     }
 
-
     override fun clearEvents(): Completable {
         return factory.retrieveCacheDataStore().clearEvents()
     }
@@ -84,9 +117,14 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
         return factory.retrieveCacheDataStore().saveSpeakers(speakers)
     }
 
+    private fun savRoomsEntities(speakers: List<RoomEntity>): Completable {
+        return factory.retrieveCacheDataStore().saveRooms(speakers)
+    }
+
 
     override fun getEvents(day: Int): Single<List<Event>> {
         val dataStore = factory.retrieveDataStore()
+
         return dataStore.getEvents()
                 .flatMap {
                     if (dataStore is EventRemoteDataStore) {

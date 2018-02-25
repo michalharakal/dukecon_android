@@ -15,14 +15,16 @@ class EventEntityMapper @Inject constructor() : EntityMapper<CachedEvent, EventE
      * Map a [EventEntity] instance to a [CachedEvent] instance
      */
     override fun mapToCached(type: EventEntity): CachedEvent {
-        return CachedEvent(type.name, type.title, type.abstractText, type.startTime, type.endTime, type.speakerIds)
+        return CachedEvent(type.name, type.title, type.abstractText, type.startTime, type.endTime,
+                type.speakerIds, type.roomId)
     }
 
     /**
      * Map a [CachedEvent] instance to a [EventEntity] instance
      */
     override fun mapFromCached(type: CachedEvent): EventEntity {
-        return EventEntity(type.name, type.title, type.avatar, type.startTime, type.endTime, type.speakerIds)
+        return EventEntity(type.name, type.title, type.avatar, type.startTime, type.endTime, type.speakerIds,
+                type.roomId)
     }
 
 }

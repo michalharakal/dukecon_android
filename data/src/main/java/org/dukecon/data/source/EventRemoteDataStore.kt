@@ -3,6 +3,7 @@ package org.dukecon.data.source
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.dukecon.data.model.EventEntity
+import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.repository.EventDataStore
 import org.dukecon.data.repository.EventRemote
@@ -16,6 +17,14 @@ import javax.inject.Inject
  */
 open class EventRemoteDataStore @Inject constructor(private val eventRemote: EventRemote) :
         EventDataStore {
+    override fun getRooms(): Single<List<RoomEntity>> {
+        return eventRemote.getRooms();
+    }
+
+    override fun saveRooms(rooms: List<RoomEntity>): Completable {
+        throw UnsupportedOperationException()
+    }
+
     override fun getSpeakers(): Single<List<SpeakerEntity>> {
         return eventRemote.getSpeakers()
     }
