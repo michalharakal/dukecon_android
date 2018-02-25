@@ -8,9 +8,9 @@ node {
         def project = 'dukecon_android'
         def appName = 'Dukecon Android'
         
-        agent {
-           docker { image 'node:7-alpine' }
-        }
+//        agent {
+//           docker { image 'node:7-alpine' }
+//        }
 
         // Stage, is to tell the Jenkins that this is the new process/step that needs to be executed
         stage('Checkout') {
