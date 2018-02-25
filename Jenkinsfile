@@ -36,7 +36,7 @@ node {
 
         stage("Archive")   {
             // move all apk file from various build variants folder into working path
-            sh("find ${WORKSPACE}/app/build/outputs/apk/ -name *.apk -exec cp {} ${WORKSPACE} \\;")
+            sh("find ${WORKSPACE} -name '*.apk' -exec cp {} ${WORKSPACE} \\;")
 			archive '*.apk'
 		} 
     } catch (e) {
