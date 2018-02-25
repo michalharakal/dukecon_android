@@ -27,7 +27,18 @@ node {
         stage('Run application test') {
             def workspace = pwd()
             sh("docker run --rm -v $workspace:/opt/workspace ${project} ./gradlew test")
-        }        
+        } 
+
+        stage('Build application') {
+            def workspace = pwd()
+            sh("docker run --rm -v $workspace:/opt/workspace ${project} ./gradlew assemble")
+        }       
+
+        stage("Archive")   {
+            // move all apk file from various build variants folder into working path
+            sh("find ${WORKSPACE}/app/build/outputs/apk/ -name *.apk -exec cp {} ${WORKSPACE} \\;")
+			archive '*.apk'
+		} 
     } catch (e) {
         currentBuild.result = "FAILED"
         throw e
