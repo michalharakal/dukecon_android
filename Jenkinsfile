@@ -26,12 +26,12 @@ node {
 
         stage('Run application test') {
             def workspace = pwd()
-            sh("docker run --rm -v $workspace:/opt/workspace ${project} ./gradlew test")
+            sh("docker run --rm -v $workspace:/opt/workspace -u `id -u` -w /opt/workspace ${project} ./gradlew test")
         } 
 
         stage('Build application') {
             def workspace = pwd()
-            sh("docker run --rm -v $workspace:/opt/workspace -w /opt/workspace ${project} ./gradlew assemble")
+            sh("docker run --rm -v $workspace:/opt/workspace -u `id -u` -w /opt/workspace ${project} ./gradlew assemble")
         }       
 
         stage("Archive")   {
