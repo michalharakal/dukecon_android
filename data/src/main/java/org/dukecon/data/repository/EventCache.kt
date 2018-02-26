@@ -46,4 +46,6 @@ interface EventCache {
     fun getRooms(): Single<List<RoomEntity>>
     fun saveRooms(rooms: List<RoomEntity>): Completable
 
+    fun getEvent(id: String): Single<EventEntity>
+
 }

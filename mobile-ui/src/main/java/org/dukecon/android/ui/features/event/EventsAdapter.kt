@@ -51,17 +51,21 @@ internal class EventsAdapter(val onSessionSelectedListener: ((session: EventView
 
         holder.title.text = session.title
 
-        val sessionSpeakers = session.speakersId.map { speakers[it] }
-        if (sessionSpeakers.isEmpty()) {
-            holder.speakers.visibility = View.GONE
+        if (speakers.size > 0) {
+            val sessionSpeakers = session.speakersId.map { speakers[it] }
+            if (sessionSpeakers.isEmpty()) {
+                holder.speakers.visibility = View.GONE
+            } else {
+                holder.speakers.visibility = View.VISIBLE
+                holder.speakers.text = sessionSpeakers.map { it?.name }.joinToString()
+                holder.room.setCompoundDrawablesWithIntrinsicBounds(
+                        DrawableUtils.create(context, R.drawable.ic_speaker),
+                        null,
+                        null,
+                        null)
+            }
         } else {
-            holder.speakers.visibility = View.VISIBLE
-            holder.speakers.text = sessionSpeakers.map { it?.name }.joinToString()
-            holder.room.setCompoundDrawablesWithIntrinsicBounds(
-                DrawableUtils.create(context, R.drawable.ic_speaker),
-                null,
-                null,
-                null)
+            holder.speakers.visibility = View.GONE
         }
 
 
@@ -69,10 +73,10 @@ internal class EventsAdapter(val onSessionSelectedListener: ((session: EventView
             holder.room.visibility = View.VISIBLE
             holder.room.text = rooms.get(session.room)?.name
             holder.room.setCompoundDrawablesWithIntrinsicBounds(
-                DrawableUtils.create(context, R.drawable.ic_room),
-                null,
-                null,
-                null)
+                    DrawableUtils.create(context, R.drawable.ic_room),
+                    null,
+                    null,
+                    null)
         } else {
             holder.room.visibility = View.GONE
         }

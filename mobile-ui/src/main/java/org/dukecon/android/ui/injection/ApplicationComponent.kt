@@ -4,8 +4,10 @@ import android.app.Application
 import dagger.BindsInstance
 import dagger.Component
 import org.dukecon.android.ui.DukeconApplication
-import org.dukecon.android.ui.features.main.MainComponent
-import org.dukecon.android.ui.features.main.MainModule
+import org.dukecon.android.ui.features.eventdetail.di.EventDetailComponent
+import org.dukecon.android.ui.features.eventdetail.di.EventDetailModule
+import org.dukecon.android.ui.features.main.di.MainComponent
+import org.dukecon.android.ui.features.main.di.MainModule
 import javax.inject.Singleton
 
 @Singleton
@@ -22,5 +24,6 @@ interface ApplicationComponent {
 
     fun mainComponent(mainModule: MainModule): MainComponent
     fun inject(dukeconApplication: DukeconApplication)
+    fun eventDetailComponent(sessionDetailModule: EventDetailModule): EventDetailComponent
 
 }

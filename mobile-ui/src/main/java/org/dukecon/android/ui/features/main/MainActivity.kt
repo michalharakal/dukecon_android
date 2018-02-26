@@ -1,5 +1,6 @@
 package org.dukecon.android.ui.features.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -14,6 +15,9 @@ import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getAppComponent
 import org.dukecon.android.ui.features.event.EventDateView
 import org.dukecon.android.ui.features.event.SessionNavigator
+import org.dukecon.android.ui.features.eventdetail.EventDetailActivity
+import org.dukecon.android.ui.features.main.di.MainComponent
+import org.dukecon.android.ui.features.main.di.MainModule
 import org.dukecon.presentation.model.EventView
 
 class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNavigationItemSelectedListener {
@@ -84,11 +88,9 @@ class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNav
     }
 
     override fun showSession(session: EventView) {
-        /*
-        val intent = Intent(this, SessionDetailActivity::class.java)
+        val intent = Intent(this, EventDetailActivity::class.java)
         intent.putExtra("session_id", session.id)
         startActivity(intent)
-        */
     }
 
     /*

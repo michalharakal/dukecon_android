@@ -1,6 +1,6 @@
-package org.dukecon.android.ui.features.main
+package org.dukecon.android.ui.features.main.di
 
-import org.dukecon.android.ui.features.event.EventsListComponent
+import org.dukecon.android.ui.features.event.di.EventsListComponent
 import dagger.Subcomponent
 
 @Subcomponent(modules = arrayOf(MainModule::class))

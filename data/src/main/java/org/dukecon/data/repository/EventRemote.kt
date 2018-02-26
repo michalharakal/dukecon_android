@@ -10,5 +10,6 @@ interface EventRemote {
     fun getEvents(): Single<List<EventEntity>>
     fun getSpeakers(): Single<List<SpeakerEntity>>
     fun getRooms(): Single<List<RoomEntity>>
+    fun getEvent(id: String): Single<EventEntity>
 
 }

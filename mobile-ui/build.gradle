@@ -111,6 +111,10 @@ dependencies {
     implementation mobileUiDependencies.dagger
     implementation mobileUiDependencies.daggerSupport
 
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.mikhaellopez:circularimageview:3.0.2'
+
+
     testImplementation mobileUiTestDependencies.kotlinJUnit
 
     kapt mobileUiDependencies.daggerCompiler

@@ -6,6 +6,7 @@ import org.dukecon.data.model.EventEntity
 import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.repository.EventCache
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 /**
@@ -69,6 +70,22 @@ class EventCacheImpl @Inject constructor() :
             )
         })
     }
+
+    override fun getEvent(id: String): Single<EventEntity> {
+        return Single.create({ s ->
+            val found = cachedEvents.find { event ->
+                event.id.equals(id)
+            } ?: emptyEntity()
+            s.onSuccess(found)
+        })
+    }
+
+
+    private fun emptyEntity(): EventEntity {
+        val event = EventEntity("", "", "", DateTime(), DateTime(), listOf(), "")
+        return event
+    }
+
 
     override fun isCached(): Boolean {
         return cachedEvents.isNotEmpty() && cacheSpeakers.isNotEmpty() && cachedRooms.isNotEmpty()

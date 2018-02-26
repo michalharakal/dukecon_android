@@ -14,8 +14,7 @@ open class EventMapper @Inject constructor() : Mapper<EventView, Event> {
      * Map a [Event] instance to a [EventView] instance
      */
     override fun mapToView(type: Event): EventView {
-        return EventView(type.name, type.title, type.startTime, type.endTime, type.speakerIds, type.room)
+        return EventView(type.name, type.title, type.description, type.startTime, type.endTime,
+                type.speakerIds, type.room)
     }
-
-
 }

@@ -22,9 +22,11 @@ interface EventRepository {
     fun getEventDates(): Single<List<DateTime>>
 
     fun getSpeakers(): Single<List<Speaker>>
-    fun saveSpeakers(it: List<Speaker>): Completable
+    fun saveSpeakers(speakers: List<Speaker>): Completable
 
     fun getRooms(): Single<List<Room>>
-    fun saveRooms(it: List<Room>): Completable
+    fun saveRooms(rooms: List<Room>): Completable
+
+    fun getEvent(id: String): Single<Event>
 
 }

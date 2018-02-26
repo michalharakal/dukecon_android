@@ -15,7 +15,7 @@ class EventEntityMapper @Inject constructor() : EntityMapper<CachedEvent, EventE
      * Map a [EventEntity] instance to a [CachedEvent] instance
      */
     override fun mapToCached(type: EventEntity): CachedEvent {
-        return CachedEvent(type.name, type.title, type.abstractText, type.startTime, type.endTime,
+        return CachedEvent(type.id, type.title, type.abstractText, type.startTime, type.endTime,
                 type.speakerIds, type.roomId)
     }
 

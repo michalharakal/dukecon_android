@@ -7,6 +7,7 @@ import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.repository.EventCache
 import org.dukecon.data.repository.EventDataStore
+import org.dukecon.domain.model.Event
 import javax.inject.Inject
 
 
@@ -16,6 +17,11 @@ import javax.inject.Inject
  */
 open class EventCacheDataStore @Inject constructor(private val eventCache: EventCache) :
         EventDataStore {
+
+
+    override fun getEvent(id: String): Single<EventEntity> {
+        return eventCache.getEvent(id)
+    }
 
     override fun getRooms(): Single<List<RoomEntity>> {
         return eventCache.getRooms()

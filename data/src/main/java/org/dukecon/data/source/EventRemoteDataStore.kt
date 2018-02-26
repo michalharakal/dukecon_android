@@ -10,13 +10,17 @@ import org.dukecon.data.repository.EventRemote
 import javax.inject.Inject
 
 
-
 /**
  * Implementation of the [EventDataStore] interface to provide a means of communicating
  * with the remote data source
  */
 open class EventRemoteDataStore @Inject constructor(private val eventRemote: EventRemote) :
         EventDataStore {
+
+    override fun getEvent(id: String): Single<EventEntity> {
+        return eventRemote.getEvent(id)
+    }
+
     override fun getRooms(): Single<List<RoomEntity>> {
         return eventRemote.getRooms();
     }

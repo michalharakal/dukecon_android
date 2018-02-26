@@ -14,7 +14,7 @@ swagger {
             'modelPackage'     : 'org.dukecon.android.api.model',
             'apiPackage'       : 'org.dukecon.android.api',
             'library'          : 'retrofit2',
-            'serializableModel': 'true',
+            'serializableModel': 'false',
             'dateLibrary'      : 'joda'
     ]
 }

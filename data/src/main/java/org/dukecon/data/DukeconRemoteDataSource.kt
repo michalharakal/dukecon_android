@@ -1,7 +1,6 @@
 package org.dukecon.data
 
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import org.dukecon.data.mapper.EventMapper
@@ -29,6 +28,28 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
                                               private val speakerMapper: SpeakerMapper,
                                               private val roomMapper: RoomMapper) :
         EventRepository {
+    override fun getEvent(id: String): Single<Event> {
+        val dataStore = factory.retrieveDataStore()
+
+        val getEvent = dataStore.getEvent(id).map { eventMapper.mapFromEntity(it) }
+        val getRooms = dataStore.getRooms()
+
+        return Single.zip(getEvent, getRooms, BiFunction { event: Event, rooms: List<RoomEntity> ->
+            combineEvent(event, rooms)
+        })
+    }
+
+    private fun combineEvent(event: Event, rooms: List<RoomEntity>): Event {
+        val foundRoom = rooms.find { it.id.equals(event.room) }
+
+        if (foundRoom != null) {
+            return Event(event.name, event.title, event.description, event.startTime, event.endTime,
+                    event.speakerIds, foundRoom.name)
+        } else {
+            return event
+        }
+    }
+
     override fun getRooms(): Single<List<Room>> {
         val dataStore = factory.retrieveDataStore()
         return dataStore.getRooms()
@@ -143,7 +164,11 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
                 }
                 .map {
                     it.allBy {
-                        it.startTime.dayOfMonth().get() == day
+                        if (day > 0) {
+                            it.startTime.dayOfMonth().get() == day
+                        } else {
+                            true
+                        }
                     }
                 }
     }

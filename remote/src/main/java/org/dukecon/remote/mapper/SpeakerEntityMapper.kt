@@ -15,7 +15,7 @@ open class SpeakerEntityMapper @Inject constructor() : EntityMapper<org.dukecon.
      * Map an instance of a [org.dukecon.android.api.model.Speaker] to a [SpeakerEntity] model
      */
     override fun mapFromRemote(type: org.dukecon.android.api.model.Speaker): SpeakerEntity {
-        return SpeakerEntity(type.id, type.name)
+        return SpeakerEntity(type.id, type.name, type.photoId ?: "")
     }
 
 }

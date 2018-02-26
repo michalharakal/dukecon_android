@@ -1,9 +1,6 @@
 package org.dukecon.remote.mapper
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader
 import io.reactivex.Single
-import io.reactivex.Single.fromObservable
-import io.reactivex.SingleEmitter
 import org.dukecon.android.api.ConferencesApi
 import org.dukecon.android.api.model.Event
 import org.dukecon.data.model.EventEntity
@@ -24,6 +21,33 @@ class EventRemoteImpl @Inject constructor(private val conferenceApi: Conferences
                                           private val speakersEntityMapper: SpeakerEntityMapper,
                                           private val roomEntityMapper: RoomEntityMapper) :
         EventRemote {
+    override fun getEvent(id: String): Single<EventEntity> {
+        return Single.create({ s ->
+            val call = conferenceApi.getEvents(conferenceId);
+            val response = call.execute()
+            if (response.isSuccessful) {
+                if (response.body() != null) {
+                    val eventsList = response.body()
+                    if (eventsList != null) {
+                        val found = eventsList.find { event ->
+                            event.id.equals(id)
+                        } ?: emptyEntity()
+                        s.onSuccess(entityMapper.mapFromRemote(found))
+                    }
+
+                }
+            } else {
+                s.onError(Throwable())
+            }
+        })
+    }
+
+    private fun emptyEntity(): Event {
+        val event = Event()
+        event.id = ""
+        return event
+    }
+
     override fun getRooms(): Single<List<RoomEntity>> {
         return Single.create({ s ->
             val call = conferenceApi.getMeta(conferenceId);

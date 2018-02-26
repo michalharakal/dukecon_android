@@ -77,7 +77,6 @@ class EventListPresenter @Inject constructor(val getEventsUseCase: GetEvents,
         }
     }
 
-
     internal fun handleGetRoomsSuccess(rooms: List<Room>) {
 
         if (rooms.isNotEmpty()) {
@@ -111,7 +110,6 @@ class EventListPresenter @Inject constructor(val getEventsUseCase: GetEvents,
         }
     }
 
-
     inner class RoomsSubscriber : DisposableSingleObserver<List<Room>>() {
 
         override fun onSuccess(t: List<Room>) {
@@ -122,6 +120,4 @@ class EventListPresenter @Inject constructor(val getEventsUseCase: GetEvents,
             view?.showNoSessions()
         }
     }
-
-
 }
