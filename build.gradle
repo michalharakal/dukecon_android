@@ -10,7 +10,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "gradle.plugin.org.detoeuf:swagger-codegen-plugin:1.7.4"
+        classpath "gradle.plugin.org.detoeuf:swagger-codegen-plugin:1.7.2"
         classpath "com.dicedmelon.gradle:jacoco-android:0.1.1"
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
 

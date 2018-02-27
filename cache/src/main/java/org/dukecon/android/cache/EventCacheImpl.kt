@@ -80,6 +80,20 @@ class EventCacheImpl @Inject constructor() :
         })
     }
 
+    override fun getSpeaker(id: String): Single<SpeakerEntity> {
+        return Single.create({ s ->
+            val found = cacheSpeakers.find { speaker ->
+                speaker.id.equals(id)
+            } ?: emptySpeakerEntity()
+            s.onSuccess(found)
+        })
+
+    }
+
+    private fun emptySpeakerEntity(): SpeakerEntity {
+        return SpeakerEntity("", "", "", "", "", "", "")
+    }
+
 
     private fun emptyEntity(): EventEntity {
         val event = EventEntity("", "", "", DateTime(), DateTime(), listOf(), "")

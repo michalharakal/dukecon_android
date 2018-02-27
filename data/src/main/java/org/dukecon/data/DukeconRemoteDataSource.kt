@@ -28,6 +28,12 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
                                               private val speakerMapper: SpeakerMapper,
                                               private val roomMapper: RoomMapper) :
         EventRepository {
+    override fun getSpeaker(id: String): Single<Speaker> {
+        val dataStore = factory.retrieveDataStore()
+
+        return dataStore.getSpeaker(id).map { speakerMapper.mapFromEntity(it) }
+    }
+
     override fun getEvent(id: String): Single<Event> {
         val dataStore = factory.retrieveDataStore()
 

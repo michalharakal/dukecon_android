@@ -1,4 +1,4 @@
-package org.dukecon.android.ui.features.eventdetail
+package org.dukecon.android.ui.features.speaker
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -9,7 +9,11 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_speaker.view.*
 import org.dukecon.android.ui.R
+import org.dukecon.android.ui.utils.DrawableUtils
 import org.dukecon.presentation.model.SpeakerView
+import com.bumptech.glide.request.RequestOptions
+
+
 
 internal class SpeakerAdapter(val wrapsWidth: Boolean = true, val onSpeakerClickedListener: ((speaker: SpeakerView, view: View) -> Unit)) :
         RecyclerView.Adapter<SpeakerAdapter.ViewHolder>() {
@@ -49,11 +53,14 @@ internal class SpeakerAdapter(val wrapsWidth: Boolean = true, val onSpeakerClick
         fun bind(speaker: SpeakerView) {
             this.speaker = speaker
             name.text = speaker.name
+            title.text = speaker.title
+
+            val options = RequestOptions()
+                    .placeholder(DrawableUtils.create(itemView.context, R.drawable.ph_speaker))
 
             Glide.with(itemView.context)
                     .load(speaker.avatar)
-                    //.asBitmap()
-                    //.placeholder(DrawableUtils.create(itemView.context, R.drawable.ph_speaker))
+                    .apply(options)
                     .into(image)
         }
 

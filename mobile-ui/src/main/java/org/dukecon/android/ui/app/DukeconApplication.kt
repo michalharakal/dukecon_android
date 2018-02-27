@@ -1,4 +1,4 @@
-package org.dukecon.android.ui
+package org.dukecon.android.ui.app
 
 import android.app.Activity
 import android.app.Application

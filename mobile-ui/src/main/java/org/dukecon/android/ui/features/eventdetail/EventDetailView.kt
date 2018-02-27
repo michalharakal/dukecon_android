@@ -17,12 +17,11 @@ import kotlinx.android.synthetic.main.view_session_detail.view.toolbar
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getComponent
 import org.dukecon.android.ui.features.eventdetail.di.EventDetailComponent
+import org.dukecon.android.ui.features.speaker.SpeakerAdapter
 import org.dukecon.android.ui.utils.DrawableUtils
 import org.dukecon.presentation.feature.eventdetail.EventDetailContract
 import org.dukecon.presentation.model.EventView
-import org.dukecon.presentation.model.RoomView
 import org.dukecon.presentation.model.SpeakerView
-import java.util.Date
 import javax.inject.Inject
 
 class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :

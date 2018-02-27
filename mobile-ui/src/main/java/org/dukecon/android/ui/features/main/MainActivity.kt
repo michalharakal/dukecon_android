@@ -18,15 +18,19 @@ import org.dukecon.android.ui.features.event.SessionNavigator
 import org.dukecon.android.ui.features.eventdetail.EventDetailActivity
 import org.dukecon.android.ui.features.main.di.MainComponent
 import org.dukecon.android.ui.features.main.di.MainModule
+import org.dukecon.android.ui.features.speaker.SpeakerListView
+import org.dukecon.android.ui.features.speakerdetail.SpeakerDetailActivity
+import org.dukecon.android.ui.features.speakerdetail.SpeakerNavigator
 import org.dukecon.presentation.model.EventView
 
-class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNavigationItemSelectedListener, SpeakerNavigator {
+
     lateinit var component: MainComponent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        component = getAppComponent().mainComponent(MainModule(this))
+        component = getAppComponent().mainComponent(MainModule(this, this))
 
         setContentView(R.layout.activity_main)
 
@@ -67,7 +71,7 @@ class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNav
     private fun showView(viewId: Int): Boolean {
         val view: View? = when (viewId) {
             R.id.action_schedule -> EventDateView(this)
-        //    R.id.action_speakers -> SpeakerListView(this)
+            R.id.action_speakers -> SpeakerListView(this)
 //            R.id.action_location -> LocationView(this)
 //            R.id.action_info -> InfoView(this)
             else -> null
@@ -93,11 +97,9 @@ class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNav
         startActivity(intent)
     }
 
-    /*
     override fun navigateToSpeaker(id: String, image: View?) {
-        //SpeakerDetailActivity.navigate(this, id, image)
+        SpeakerDetailActivity.navigate(this, id, image)
     }
-*/
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
