@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import org.joda.time.DateTime
 
 internal class SessionPagerAdapter : PagerAdapter() {
+    override fun isViewFromObject(view: View, `object`: Any): Boolean {
+        return view == `object`
+    }
 
     var dates: List<DateTime> = arrayListOf()
     var context: Context? = null
@@ -28,9 +31,6 @@ internal class SessionPagerAdapter : PagerAdapter() {
         container.removeView(`object` as View)
     }
 
-    override fun isViewFromObject(view: View, `object`: Any?): Boolean {
-        return view == `object`
-    }
 
     override fun getCount(): Int {
         return dates.size

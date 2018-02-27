@@ -15,6 +15,6 @@ open class SpeakerMapper @Inject constructor() : Mapper<SpeakerView, Speaker> {
      * Map a [Speaker] instance to a [EventView] instance
      */
     override fun mapToView(type: Speaker): SpeakerView {
-        return SpeakerView(type.id, type.name, type.avatar)
+        return SpeakerView(type.id, type.name, type.title, type.avatar)
     }
 }
