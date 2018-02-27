@@ -70,7 +70,6 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
                         roomMapper.mapFromEntity(listItem)
                     }
                 }
-        return Single.just(listOf())
     }
 
     override fun saveSpeakers(speakers: List<Speaker>): Completable {
@@ -98,7 +97,6 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
                         speakerMapper.mapFromEntity(listItem)
                     }
                 }
-        return Single.just(listOf())
     }
 
     override fun getEventDates(): Single<List<DateTime>> {
