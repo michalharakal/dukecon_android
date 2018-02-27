@@ -16,6 +16,9 @@ import javax.inject.Inject
  */
 open class EventRemoteDataStore @Inject constructor(private val eventRemote: EventRemote) :
         EventDataStore {
+    override fun getSpeaker(id: String): Single<SpeakerEntity> {
+        return eventRemote.getSpeaker(id)
+    }
 
     override fun getEvent(id: String): Single<EventEntity> {
         return eventRemote.getEvent(id)

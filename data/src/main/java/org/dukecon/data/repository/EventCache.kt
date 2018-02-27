@@ -40,6 +40,7 @@ interface EventCache {
     fun isExpired(): Boolean
 
     fun getSpeakers(): Single<List<SpeakerEntity>>
+    fun getSpeaker(id: String): Single<SpeakerEntity>
 
     fun saveSpeakers(speakers: List<SpeakerEntity>): Completable
 

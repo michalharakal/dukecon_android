@@ -19,6 +19,7 @@ import org.dukecon.android.ui.features.eventdetail.EventDetailActivity
 import org.dukecon.android.ui.features.main.di.MainComponent
 import org.dukecon.android.ui.features.main.di.MainModule
 import org.dukecon.android.ui.features.speaker.SpeakerListView
+import org.dukecon.android.ui.features.speakerdetail.SpeakerDetailActivity
 import org.dukecon.android.ui.features.speakerdetail.SpeakerNavigator
 import org.dukecon.presentation.model.EventView
 
@@ -97,7 +98,7 @@ class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNav
     }
 
     override fun navigateToSpeaker(id: String, image: View?) {
-        //SpeakerDetailActivity.navigate(this, id, image)
+        SpeakerDetailActivity.navigate(this, id, image)
     }
 
     override fun onBackPressed() {

@@ -1,4 +1,4 @@
-package org.dukecon.android.ui.features.eventdetail
+package org.dukecon.android.ui.features.speaker
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
