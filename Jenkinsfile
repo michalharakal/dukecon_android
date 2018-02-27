@@ -29,17 +29,29 @@ node {
             sh("docker run --rm -v $workspace:/opt/workspace -u `id -u` -w /opt/workspace ${project} ./gradlew --stacktrace --info test")
         } 
 
+        stage('Unit Tests') {
+            junit "mobile-ui/build/test-results/**/*.xml"
+            step([$class: 'JUnitResultArchiver', testResults: "mobile-ui/build/test-results/test${Partner}DebugUnitTest/*.xml"]) || true
+        }
+    
+    	stage('Code Coverage') {
+            step([$class: 'JacocoPublisher', execPattern: 'mobile-ui/build/target/jacoco.exec', exclusionPattern: '**/Messages.class']) || true
+        }
+
         stage('Build application') {
             def workspace = pwd()
             sh("docker run --rm -v $workspace:/opt/workspace -u `id -u` -w /opt/workspace ${project} ./gradlew --stacktrace --info assemble")
         }       
 
+
         stage("Archive")   {
             // move all apk file from various build variants folder into working path
             sh("find ${WORKSPACE} -name '*.apk' -exec cp {} ${WORKSPACE} \\;")
 			archive '*.apk'
-            deleteDir()
 		} 
+        stage("Upload/Clean WS")   {
+			step([$class: 'WsCleanup', cleanWhenAborted: false, cleanWhenFailure: false, cleanWhenNotBuilt: false, cleanWhenUnstable: false])
+		}
     } catch (e) {
         currentBuild.result = "FAILED"
         throw e
