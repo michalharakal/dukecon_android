@@ -50,7 +50,7 @@ node {
 			archive '*.apk'
 		} 
         stage("Upload/Clean WS")   {
-			step([$class: 'WsCleanup', cleanWhenAborted: false, cleanWhenFailure: false, cleanWhenNotBuilt: false, cleanWhenUnstable: false])
+			step([$class: 'WsCleanup', cleanWhenAborted: false, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenUnstable: true])
 		}
     } catch (e) {
         currentBuild.result = "FAILED"
