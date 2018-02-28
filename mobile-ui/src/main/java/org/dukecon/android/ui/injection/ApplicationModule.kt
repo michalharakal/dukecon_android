@@ -12,6 +12,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.dukecon.android.api.ConferencesApi
 import org.dukecon.android.cache.EventCacheImpl
+import org.dukecon.android.cache.PreferencesHelper
 import org.dukecon.android.ui.UiThread
 import org.dukecon.data.executor.JobExecutor
 import org.dukecon.data.repository.EventCache
@@ -39,11 +40,17 @@ open class ApplicationModule {
         return application
     }
 
+    @Provides
+    internal fun providePreferencesHelper(context: Context): PreferencesHelper {
+        return PreferencesHelper(context)
+    }
+
 
     @Provides
     @Singleton
-    internal fun provideEventCache(): EventCache {
-        return EventCacheImpl()
+    internal fun provideEventCache(application: Application, gson: Gson, preferencesHelper: PreferencesHelper): EventCache {
+        val baseCacheFolder = application.filesDir.absolutePath
+        return EventCacheImpl(baseCacheFolder, gson, preferencesHelper)
     }
 
     @Provides

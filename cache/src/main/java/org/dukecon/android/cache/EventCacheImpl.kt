@@ -1,12 +1,17 @@
 package org.dukecon.android.cache
 
+import com.google.gson.Gson
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.dukecon.android.cache.reader.CacheJsonReader
 import org.dukecon.data.model.EventEntity
 import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.repository.EventCache
 import org.joda.time.DateTime
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
 import javax.inject.Inject
 
 /**
@@ -14,17 +19,33 @@ import javax.inject.Inject
  * [EventCache] from the Data layer as it is that layers responsibility for defining the
  * operations in which data store implementation layers can carry out. Just simple in memory chache
  */
-class EventCacheImpl @Inject constructor() :
+class EventCacheImpl @Inject constructor(val baseCacheFolder: String, val gson: Gson, val preferencesHelper: PreferencesHelper) :
         EventCache {
 
     var cachedRooms: List<RoomEntity> = listOf()
     var cachedEvents: List<EventEntity> = listOf()
     var cacheSpeakers: List<SpeakerEntity> = listOf()
-    private val EXPIRATION_TIME = (60 * 10 * 1000).toLong()
+
+    // 1 hour cache
+    private val EXPIRATION_TIME = (60 * 60 * 1000).toLong()
+
+    init {
+        if (preferencesHelper.lastCacheTime > 0) {
+            readRooms()
+            readEvents()
+            readSpeakers()
+        }
+    }
+
+    private fun readRooms() {
+        val reader = CacheJsonReader(baseCacheFolder + "/rooms.json", gson)
+        cachedRooms = reader.readRoomsFromJson()
+    }
 
     override fun saveRooms(rooms: List<RoomEntity>): Completable {
         cachedRooms = rooms
-        lastCache = System.currentTimeMillis()
+        writeRooms()
+        preferencesHelper.lastCacheTime = System.currentTimeMillis()
         return Completable.complete()
     }
 
@@ -38,14 +59,57 @@ class EventCacheImpl @Inject constructor() :
 
 
     override fun clearEvents(): Completable {
-        lastCache = 0
+        preferencesHelper.lastCacheTime = 0
+        cachedEvents = listOf()
+        cacheSpeakers = listOf()
+        cachedRooms = listOf()
         return Completable.complete()
     }
 
     override fun saveEvents(events: List<EventEntity>): Completable {
         cachedEvents = events
-        lastCache = System.currentTimeMillis()
+        writeEvents()
+        preferencesHelper.lastCacheTime = System.currentTimeMillis()
         return Completable.complete()
+    }
+
+    private fun writeEvents() {
+        val sd = File(baseCacheFolder + "/events.json")
+        sd.createNewFile()
+
+        val fOut = FileOutputStream(sd)
+        val myOutWriter = OutputStreamWriter(fOut)
+        val json = gson.toJson(cachedEvents)
+        myOutWriter.write(json)
+        myOutWriter.flush()
+    }
+
+    private fun readEvents() {
+        val reader = CacheJsonReader(baseCacheFolder + "/events.json", gson)
+        cachedEvents = reader.readEventsFromJson()
+    }
+
+
+    private fun writeSpeakers() {
+        val sd = File(baseCacheFolder + "/speakers.json")
+        sd.createNewFile()
+
+        val fOut = FileOutputStream(sd)
+        val myOutWriter = OutputStreamWriter(fOut)
+        val json = gson.toJson(cacheSpeakers)
+        myOutWriter.write(json)
+        myOutWriter.flush()
+    }
+
+    private fun writeRooms() {
+        val sd = File(baseCacheFolder + "/rooms.json")
+        sd.createNewFile()
+
+        val fOut = FileOutputStream(sd)
+        val myOutWriter = OutputStreamWriter(fOut)
+        val json = gson.toJson(cachedRooms)
+        myOutWriter.write(json)
+        myOutWriter.flush()
     }
 
     override fun getSpeakers(): Single<List<SpeakerEntity>> {
@@ -58,8 +122,14 @@ class EventCacheImpl @Inject constructor() :
 
     override fun saveSpeakers(speakers: List<SpeakerEntity>): Completable {
         cacheSpeakers = speakers
-        lastCache = System.currentTimeMillis()
+        writeSpeakers()
+        preferencesHelper.lastCacheTime = System.currentTimeMillis()
         return Completable.complete()
+    }
+
+    private fun readSpeakers() {
+        val reader = CacheJsonReader(baseCacheFolder + "/speakers.json", gson)
+        cacheSpeakers = reader.readSpeakersFromJson()
     }
 
 
@@ -105,15 +175,14 @@ class EventCacheImpl @Inject constructor() :
         return cachedEvents.isNotEmpty() && cacheSpeakers.isNotEmpty() && cachedRooms.isNotEmpty()
     }
 
-    private var lastCache: Long = 0
-
     override fun setLastCacheTime(lastCache: Long) {
-        this.lastCache = lastCache
+        preferencesHelper.lastCacheTime = System.currentTimeMillis()
     }
 
     override fun isExpired(): Boolean {
         val currentTime = System.currentTimeMillis()
-        val lastUpdateTime = lastCache
+        val lastUpdateTime = preferencesHelper.lastCacheTime
+
         return currentTime - lastUpdateTime > EXPIRATION_TIME
     }
 }
