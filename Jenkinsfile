@@ -29,20 +29,10 @@ node {
             sh("docker run --rm -v $workspace:/opt/workspace -u `id -u` -w /opt/workspace ${project} ./gradlew --stacktrace --info test")
         } 
 
-        stage('Unit Tests') {
-            junit "mobile-ui/build/test-results/**/*.xml"
-            step([$class: 'JUnitResultArchiver', testResults: "mobile-ui/build/test-results/test${Partner}DebugUnitTest/*.xml"]) || true
-        }
-    
-    	stage('Code Coverage') {
-            step([$class: 'JacocoPublisher', execPattern: 'mobile-ui/build/target/jacoco.exec', exclusionPattern: '**/Messages.class']) || true
-        }
-
         stage('Build application') {
             def workspace = pwd()
             sh("docker run --rm -v $workspace:/opt/workspace -u `id -u` -w /opt/workspace ${project} ./gradlew --stacktrace --info assemble")
         }       
-
 
         stage("Archive")   {
             // move all apk file from various build variants folder into working path
@@ -55,31 +45,6 @@ node {
     } catch (e) {
         currentBuild.result = "FAILED"
         throw e
-      } finally {
-        notifyBuild(currentBuild.result)
+    } finally {
     }
-}
-
-def notifyBuild(String buildStatus = 'STARTED') {
-  buildStatus =  buildStatus ?: 'SUCCESSFUL'
-
-  def color = 'RED'
-  def colorCode = '#FF0000'
-  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
-  def summary = "${subject} (${env.BUILD_URL})"
-  def details = """<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-    <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
-
-  if (buildStatus == 'STARTED') {
-    color = 'YELLOW'
-    colorCode = '#FFCC00'
-  } else if (buildStatus == 'SUCCESSFUL') {
-    color = 'GREEN'
-    colorCode = '#228B22'
-  } else {
-    color = 'RED'
-    colorCode = '#FF0000'
-  }
-
-  slackSend (color: colorCode, message: summary)
 }
