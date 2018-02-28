@@ -1,6 +1,6 @@
 package org.dukecon.android.ui.features.main
 
-import org.dukecon.android.ui.features.event.di.EventsListComponent
+import org.dukecon.android.ui.features.event.EventsListComponent
 import dagger.Subcomponent
 import org.dukecon.android.ui.features.speaker.SpeakerListComponent
 

@@ -1,8 +1,6 @@
-package org.dukecon.android.ui.features.event.di
+package org.dukecon.android.ui.features.event
 
 import dagger.Subcomponent
-import org.dukecon.android.ui.features.event.EventDateView
-import org.dukecon.android.ui.features.event.EventsListView
 
 @Subcomponent(modules = arrayOf(EventListModule::class))
 interface EventsListComponent {
