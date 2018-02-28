@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.ViewGroup
 import org.dukecon.android.ui.ext.getComponent
-import org.dukecon.android.ui.features.main.di.MainComponent
+import org.dukecon.android.ui.features.main.MainComponent
 import org.dukecon.presentation.feature.event.EventListContract
 import org.dukecon.presentation.model.EventView
 import org.dukecon.presentation.model.RoomView

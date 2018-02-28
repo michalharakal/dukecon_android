@@ -1,4 +1,4 @@
-package org.dukecon.android.ui.features.main.di
+package org.dukecon.android.ui.features.main
 
 import dagger.Module
 import dagger.Provides

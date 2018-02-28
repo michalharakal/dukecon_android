@@ -6,8 +6,8 @@ import dagger.Component
 import org.dukecon.android.ui.app.DukeconApplication
 import org.dukecon.android.ui.features.eventdetail.di.EventDetailComponent
 import org.dukecon.android.ui.features.eventdetail.di.EventDetailModule
-import org.dukecon.android.ui.features.main.di.MainComponent
-import org.dukecon.android.ui.features.main.di.MainModule
+import org.dukecon.android.ui.features.main.MainComponent
+import org.dukecon.android.ui.features.main.MainModule
 import org.dukecon.android.ui.features.speakerdetail.SpeakerDetailComponent
 import javax.inject.Singleton
 

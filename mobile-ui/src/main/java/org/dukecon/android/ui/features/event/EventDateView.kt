@@ -9,7 +9,7 @@ import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.view_sessions.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getComponent
-import org.dukecon.android.ui.features.main.di.MainComponent
+import org.dukecon.android.ui.features.main.MainComponent
 import org.dukecon.presentation.feature.event.EventDateListContract
 import org.joda.time.DateTime
 import javax.inject.Inject
