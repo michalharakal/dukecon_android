@@ -33,9 +33,6 @@ node {
             sh("find ${WORKSPACE} -name '*.apk' -exec cp {} ${WORKSPACE} \\;")
 			archive '*.apk'
 		} 
-        stage("Upload/Clean WS")   {
-			step([$class: 'WsCleanup', cleanWhenAborted: false, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenUnstable: true])
-		}
     } catch (e) {
         currentBuild.result = "FAILED"
         throw e
