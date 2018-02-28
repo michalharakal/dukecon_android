@@ -2,16 +2,10 @@
 node {
     //Utilizing a try block so as to make the code cleaner and send slack notification in case of any error
     try {
-        //Call function to send a message to Slack
-        notifyBuild('STARTED')
         // Global variable declaration
         def project = 'dukecon_android'
         def appName = 'Dukecon Android'
         
-//        agent {
-//           docker { image 'node:7-alpine' }
-//        }
-
         // Stage, is to tell the Jenkins that this is the new process/step that needs to be executed
         stage('Checkout') {
             // Pull the code from the repo
