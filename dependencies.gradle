@@ -7,10 +7,10 @@ allprojects {
 
 ext {
     //Android
-    androidBuildToolsVersion = "26.0.2"
+    androidBuildToolsVersion = "27.0.3"
     androidMinSdkVersion = 15
     androidTargetSdkVersion = 26
-    androidCompileSdkVersion = 26
+    androidCompileSdkVersion = 27
 
     //Libraries
     kotlinVersion = '1.2.21'
@@ -29,7 +29,7 @@ ext {
     jodaTimeVersion = '2.9.9'
     retrofitVersion = '2.3.0'
     roomVersion = '1.0.0-alpha6'
-    supportLibraryVersion = '26.0.2'
+    supportLibraryVersion = '27.1.0'
     constraintLayoutVersion = '1.0.2'
     timberVersion = '4.5.1'
     glideVersion = '4.6.1'
