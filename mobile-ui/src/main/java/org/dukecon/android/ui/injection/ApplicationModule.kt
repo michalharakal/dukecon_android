@@ -127,7 +127,7 @@ open class ApplicationModule {
     @Provides
     internal fun provideConfernceService(client: OkHttpClient, gson: Gson): ConferencesApi {
         var restAdapter = Retrofit.Builder() // https://latest.dukecon.org/javaland/2018/rest/conferences/javaland2018/events
-                .baseUrl("https://programm.javaland.eu/2018/rest") //https://latest.dukecon.org/javaland/2018/rest/") //endpoitUrlProvider.getUrl())
+                .baseUrl("https://programm.javaland.eu/2018/rest/") //https://latest.dukecon.org/javaland/2018/rest/") //endpoitUrlProvider.getUrl())
                 .client(client)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
