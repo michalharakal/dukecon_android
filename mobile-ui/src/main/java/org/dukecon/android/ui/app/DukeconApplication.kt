@@ -1,15 +1,10 @@
 package org.dukecon.android.ui.app
 
-import android.app.Activity
 import android.app.Application
-import android.support.v4.BuildConfig
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
+import org.dukecon.android.ui.BuildConfig
 import org.dukecon.android.ui.injection.ApplicationComponent
 import org.dukecon.android.ui.injection.DaggerApplicationComponent
 import timber.log.Timber
-import javax.inject.Inject
 
 class DukeconApplication : Application() {
 
