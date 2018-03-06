@@ -100,14 +100,14 @@ dependencies {
 
     implementation mobileUiDependencies.javaxAnnotation
 
-    compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
-    compile "com.squareup.retrofit2:converter-scalars:$rootProject.retrofitVersion"
-    compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
-    compile ('com.fatboyindustrial.gson-jodatime-serialisers:gson-jodatime-serialisers:1.6.0') {
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-scalars:$rootProject.retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
+    implementation ('com.fatboyindustrial.gson-jodatime-serialisers:gson-jodatime-serialisers:1.6.0') {
         exclude group: 'joda-time', module: 'joda-time'
     }
-    compile "com.squareup.okhttp3:logging-interceptor:3.9.1"
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:3.9.1"
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
 
 
     implementation mobileUiDependencies.kotlin
@@ -164,11 +164,11 @@ dependencies {
         exclude module: 'recyclerview-v7'
         exclude module: 'design'
     }
-    compile 'com.google.firebase:firebase-core:11.8.0'
-    compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+    implementation 'com.google.firebase:firebase-core:11.8.0'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
         transitive = true
     }
-    compile 'com.google.firebase:firebase-core:11.8.0'
+    implementation 'com.google.firebase:firebase-core:11.8.0'
 
     kaptTest mobileUiDependencies.daggerCompiler
     kaptAndroidTest mobileUiDependencies.daggerCompiler
