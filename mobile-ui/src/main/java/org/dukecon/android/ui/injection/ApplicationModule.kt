@@ -8,11 +8,13 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
+import mu.KotlinLogging
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.dukecon.android.api.ConferencesApi
 import org.dukecon.android.cache.EventCacheImpl
 import org.dukecon.android.cache.PreferencesHelper
+import org.dukecon.android.cache.persistance.ConferenceCacheGsonSerializer
 import org.dukecon.android.ui.UiThread
 import org.dukecon.data.executor.JobExecutor
 import org.dukecon.data.repository.EventCache
@@ -28,6 +30,8 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.security.cert.X509Certificate
 import javax.inject.Singleton
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Module used to provide dependencies at an application-level.
@@ -50,7 +54,7 @@ open class ApplicationModule {
     @Singleton
     internal fun provideEventCache(application: Application, gson: Gson, preferencesHelper: PreferencesHelper): EventCache {
         val baseCacheFolder = application.filesDir.absolutePath
-        return EventCacheImpl(baseCacheFolder, gson, preferencesHelper)
+        return EventCacheImpl(ConferenceCacheGsonSerializer(baseCacheFolder, gson), preferencesHelper)
     }
 
     @Provides
@@ -107,7 +111,7 @@ open class ApplicationModule {
             e.printStackTrace()
         }
 
-        val interceptor = HttpLoggingInterceptor()
+        val interceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { it -> logger.info { it } })
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
                 .addInterceptor(interceptor)

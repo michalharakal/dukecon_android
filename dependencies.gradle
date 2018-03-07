@@ -35,6 +35,9 @@ ext {
     glideVersion = '4.6.1'
     daggerVersion = '2.11'
     glassfishAnnotationVersion = '10.0-b28'
+    kotlinLoggingVersion = '1.5.3'
+    slf4jAndroidVersion = '1.7.25'
+    circularViewVersion = '3.0.2'
 
     //Testing
     robolectricVersion = '3.4.2'
@@ -124,6 +127,7 @@ ext {
             gson:               "com.google.code.gson:gson:${gsonVersion}",
             rxKotlin:           "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
             kotlin:             "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}",
+            kotlinLogging:      "io.github.microutils:kotlin-logging:${kotlinLoggingVersion}",
             javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject:        "javax.inject:javax.inject:${javaxInjectVersion}",
             androidAnnotations: "com.android.support:support-annotations:${androidAnnotationsVersion}",
@@ -179,6 +183,8 @@ ext {
             glide:              "com.github.bumptech.glide:glide:${glideVersion}",
             glideOktthp:        "com.github.bumptech.glide:okhttp3-integration:${glideVersion}",
             glideAnnotation:    "com.github.bumptech.glide:compiler:${glideVersion}",
+            kotlinLogging:      "io.github.microutils:kotlin-logging:${kotlinLoggingVersion}",
+            slf4jAndroid:       "org.slf4j:slf4j-android:${slf4jAndroidVersion}",
             kotlin:             "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}",
             javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject:        "javax.inject:javax.inject:${javaxInjectVersion}",
@@ -194,7 +200,9 @@ ext {
             timber:             "com.jakewharton.timber:timber:${timberVersion}",
             daggerSupport:      "com.google.dagger:dagger-android-support:${daggerVersion}",
             daggerProcessor:    "com.google.dagger:dagger-android-processor:${daggerVersion}",
-            glassfishAnnotation: "org.glassfish:javax.annotation:${glassfishAnnotationVersion}"
+            glassfishAnnotation: "org.glassfish:javax.annotation:${glassfishAnnotationVersion}",
+            circularView:        "com.mikhaellopez:circularimageview:${circularViewVersion}"
+
     ]
 
     mobileUiTestDependencies = [
