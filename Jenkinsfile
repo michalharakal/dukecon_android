@@ -20,18 +20,18 @@ node {
 
         stage('Run application test') {
             def workspace = pwd()
-            sh("docker run --rm -v $workspace:/opt/workspace -u `id -u` -w /opt/workspace ${project} ./gradlew --stacktrace --info test")
+            sh("docker run --rm -v $workspace:/opt/workspace -u `id -u` -w /opt/workspace ${project} ./gradlew --stacktrace --info clean test")
         } 
 
         stage('Build application') {
             def workspace = pwd()
-            sh("docker run --rm -v $workspace:/opt/workspace -u `id -u` -w /opt/workspace ${project} ./gradlew --stacktrace --info assemble")
+            sh("docker run --rm -v $workspace:/opt/workspace -u `id -u` -w /opt/workspace ${project} ./gradlew --stacktrace --info clean assemble")
         }       
 
         stage("Archive")   {
             // move all apk file from various build variants folder into working path
-            sh("find ${WORKSPACE} -name '*.apk' -exec cp {} ${WORKSPACE} \\;")
-			archive '*.apk'
+            sh("find ${WORKSPACE} -name '*javaland*.apk' -exec cp {} ${WORKSPACE} \\;")
+			archive '*javaland*.apk'
 		} 
     } catch (e) {
         currentBuild.result = "FAILED"
