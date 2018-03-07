@@ -58,6 +58,7 @@ dependencies {
     implementation cacheDependencies.rxKotlin
     implementation cacheDependencies.gson
     implementation cacheDependencies.jodaTime
+    implementation cacheDependencies.kotlinLogging
 
     testImplementation cacheTestDependencies.junit
     testImplementation cacheTestDependencies.kotlinJUnit

@@ -127,11 +127,11 @@ dependencies {
     implementation mobileUiDependencies.glideOktthp
     implementation mobileUiDependencies.dagger
     implementation mobileUiDependencies.daggerSupport
-
-    implementation 'com.mikhaellopez:circularimageview:3.0.2'
+    implementation mobileUiDependencies.kotlinLogging
+    implementation mobileUiDependencies.slf4jAndroid
+    implementation mobileUiDependencies.circularView
 
     kapt mobileUiDependencies.glideAnnotation
-
 
     testImplementation mobileUiTestDependencies.kotlinJUnit
 
