@@ -10,12 +10,6 @@ apply from: '../config/git.gradle'
 
 version = '1.0.0-SNAPSHOT'
 
-
-def event_id = "javaland-2018"
-def event_name = "Javaland"
-def app_name = "Dukecon"
-
-
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
 
@@ -28,9 +22,6 @@ android {
         multiDexEnabled = false
         testInstrumentationRunner "org.buffer.android.boilerplate.ui.test.TestRunner"
 
-        buildConfigField "String", "EVENT_ID", "\"$event_id\""
-        resValue "string", "app_name", "$app_name"
-        resValue "string", "event_name", "$event_name"
 
     }
 
@@ -73,6 +64,7 @@ android {
         javaland {
             dimension "dukecon"
             applicationIdSuffix ".javaland"
+
             versionCode gitVersion.version
             versionName gitVersionName
         }

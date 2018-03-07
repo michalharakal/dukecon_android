@@ -12,7 +12,7 @@ import org.dukecon.android.ui.features.speakerdetail.SpeakerDetailComponent
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(ApplicationModule::class, DataModule::class))
+@Component(modules = arrayOf(ApplicationModule::class, DataModule::class, ConferenceModule::class))
 interface ApplicationComponent {
 
     @Component.Builder

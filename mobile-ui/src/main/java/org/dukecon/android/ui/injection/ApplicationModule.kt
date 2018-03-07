@@ -16,6 +16,7 @@ import org.dukecon.android.cache.EventCacheImpl
 import org.dukecon.android.cache.PreferencesHelper
 import org.dukecon.android.cache.persistance.ConferenceCacheGsonSerializer
 import org.dukecon.android.ui.UiThread
+import org.dukecon.android.ui.app.ConferenceConfiguration
 import org.dukecon.data.executor.JobExecutor
 import org.dukecon.data.repository.EventCache
 import org.dukecon.data.repository.EventRemote
@@ -61,8 +62,9 @@ open class ApplicationModule {
     internal fun provideEventRemote(service: ConferencesApi,
                                     factory: EventEntityMapper,
                                     speakerMapper: SpeakerEntityMapper,
-                                    roomEntityMapper: RoomEntityMapper): EventRemote {
-        return EventRemoteImpl(service, "javaland2018", factory, speakerMapper, roomEntityMapper)
+                                    roomEntityMapper: RoomEntityMapper,
+                                    conferenceConfiguration: ConferenceConfiguration): EventRemote {
+        return EventRemoteImpl(service, conferenceConfiguration.conferenceId, factory, speakerMapper, roomEntityMapper)
     }
 
 
@@ -129,9 +131,9 @@ open class ApplicationModule {
     }
 
     @Provides
-    internal fun provideConfernceService(client: OkHttpClient, gson: Gson): ConferencesApi {
-        var restAdapter = Retrofit.Builder() // https://latest.dukecon.org/javaland/2018/rest/conferences/javaland2018/events
-                .baseUrl("https://programm.javaland.eu/2018/rest/") //https://latest.dukecon.org/javaland/2018/rest/") //endpoitUrlProvider.getUrl())
+    internal fun provideConfernceService(client: OkHttpClient, gson: Gson, conferenceConfiguration: ConferenceConfiguration): ConferencesApi {
+        var restAdapter = Retrofit.Builder()
+                .baseUrl(conferenceConfiguration.baseUrl)
                 .client(client)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -140,3 +142,5 @@ open class ApplicationModule {
         return restAdapter.create(ConferencesApi::class.java)
     }
 }
+
+
