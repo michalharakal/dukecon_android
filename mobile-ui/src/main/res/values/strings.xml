@@ -16,4 +16,6 @@
     <string name="cancel">cancel</string>
     <string name="submit">Submit</string>
     <string name="cd_logo">Event Logo</string>
+    <string name="info_topper">Brought to you with the help of these Open Source projects</string>
+
 </resources>

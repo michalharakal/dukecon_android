@@ -1,6 +1,8 @@
 package org.dukecon.android.ui.injection
 
 import android.app.Application
+import com.chicagoroboto.features.info.InfoComponent
+import com.chicagoroboto.features.info.InfoModule
 import dagger.BindsInstance
 import dagger.Component
 import org.dukecon.android.ui.app.DukeconApplication
@@ -27,5 +29,6 @@ interface ApplicationComponent {
     fun inject(dukeconApplication: DukeconApplication)
     fun eventDetailComponent(sessionDetailModule: EventDetailModule): EventDetailComponent
     fun speakerDetailComponent(): SpeakerDetailComponent
+    fun infoComponent(infoModule: InfoModule): InfoComponent
 
 }
