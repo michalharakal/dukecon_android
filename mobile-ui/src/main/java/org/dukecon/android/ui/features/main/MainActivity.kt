@@ -7,6 +7,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
+import org.dukecon.android.ui.features.info.InfoView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getAppComponent
@@ -68,7 +69,7 @@ class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNav
             R.id.action_schedule -> EventDateView(this)
             R.id.action_speakers -> SpeakerListView(this)
 //            R.id.action_location -> LocationView(this)
-//            R.id.action_info -> InfoView(this)
+            R.id.action_info -> InfoView(this)
             else -> null
         }
         if (view != null) {
