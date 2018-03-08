@@ -68,7 +68,6 @@ class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNav
         val view: View? = when (viewId) {
             R.id.action_schedule -> EventDateView(this)
             R.id.action_speakers -> SpeakerListView(this)
-//            R.id.action_location -> LocationView(this)
             R.id.action_info -> InfoView(this)
             else -> null
         }

@@ -15,10 +15,6 @@
 
     <group android:id="@+id/group_other" android:checkableBehavior="single">
         <item
-            android:id="@+id/action_location"
-            android:icon="@drawable/ic_location"
-            android:title="@string/action_location" />
-        <item
             android:id="@+id/action_info"
             android:icon="@drawable/ic_info"
             android:title="@string/action_info" />
