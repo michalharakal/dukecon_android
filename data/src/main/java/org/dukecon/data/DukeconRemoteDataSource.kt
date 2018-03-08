@@ -39,10 +39,15 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
 
         val getEvent = dataStore.getEvent(id).map { eventMapper.mapFromEntity(it) }
         val getRooms = dataStore.getRooms()
+        val getSpeakers = dataStore.getSpeakers()
 
-        return Single.zip(getEvent, getRooms, BiFunction { event: Event, rooms: List<RoomEntity> ->
+        val eventsWithRooms = Single.zip(getEvent, getRooms, BiFunction { event: Event, rooms: List<RoomEntity> ->
             combineEvent(event, rooms)
         })
+        return Single.zip(eventsWithRooms, getSpeakers, BiFunction { event: Event, rooms: List<SpeakerEntity> ->
+            combineSpeaker(event, rooms)
+        })
+
     }
 
     private fun combineEvent(event: Event, rooms: List<RoomEntity>): Event {
@@ -51,6 +56,26 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
         if (foundRoom != null) {
             return Event(event.name, event.title, event.description, event.startTime, event.endTime,
                     event.speakerIds, foundRoom.name)
+        } else {
+            return event
+        }
+    }
+
+    private fun combineSpeaker(event: Event, speakers: List<SpeakerEntity>): Event {
+        val foundSpeakers: MutableList<Speaker> = mutableListOf()
+        event.speakerIds.forEach { eventSpeaker ->
+            run {
+                val found = speakers.find { it.id.equals(eventSpeaker.id) }
+                if (found != null) {
+                    foundSpeakers.add(speakerMapper.mapFromEntity(found))
+                }
+            }
+        }
+
+
+        if (foundSpeakers != null) {
+            return Event(event.name, event.title, event.description, event.startTime, event.endTime,
+                    foundSpeakers, event.room)
         } else {
             return event
         }

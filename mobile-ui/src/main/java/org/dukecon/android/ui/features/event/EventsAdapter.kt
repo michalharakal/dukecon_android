@@ -52,7 +52,7 @@ internal class EventsAdapter(val onSessionSelectedListener: ((session: EventView
         holder.title.text = session.title
 
         if (speakers.size > 0) {
-            val sessionSpeakers = session.speakersId.map { speakers[it] }
+            val sessionSpeakers = session.speakersId.map { speakers[it.id] }
             if (sessionSpeakers.isEmpty()) {
                 holder.speakers.visibility = View.GONE
             } else {

@@ -9,7 +9,7 @@ interface EventDetailContract {
 
     interface View : BaseView {
         fun showSessionDetail(sessionDetail: EventView)
-        fun showSpeakerInfo(speakers: Set<SpeakerView>)
+        fun showSpeakerInfo(speakers: List<SpeakerView>)
         fun setIsFavorite(isFavorite: Boolean)
         fun showNoSession()
     }

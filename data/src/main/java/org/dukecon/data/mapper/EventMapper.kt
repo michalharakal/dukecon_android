@@ -2,6 +2,7 @@ package org.dukecon.data.mapper
 
 import org.dukecon.data.model.EventEntity
 import org.dukecon.domain.model.Event
+import org.dukecon.domain.model.Speaker
 import javax.inject.Inject
 
 /**
@@ -15,7 +16,17 @@ open class EventMapper @Inject constructor() : Mapper<EventEntity, Event> {
      */
     override fun mapFromEntity(type: EventEntity): Event {
         return Event(type.id, type.title, type.abstractText, type.startTime, type.endTime,
-                type.speakerIds, type.roomId)
+                createSpeakerList(type.speakerIds), type.roomId)
+    }
+
+    private fun createSpeakerList(speakerIds: List<String>): List<Speaker> {
+        val result: MutableList<Speaker> = mutableListOf()
+        speakerIds.forEach {
+            run {
+                result.add(Speaker(it, "", "", "", "", "", ""))
+            }
+        }
+        return result
     }
 
     /**
@@ -23,6 +34,16 @@ open class EventMapper @Inject constructor() : Mapper<EventEntity, Event> {
      */
     override fun mapToEntity(type: Event): EventEntity {
         return EventEntity(type.name, type.title, type.description, type.startTime, type.endTime,
-                type.speakerIds, type.room)
+                createIdsList(type.speakerIds), type.room)
+    }
+
+    private fun createIdsList(speakerIds: List<Speaker>): List<String> {
+        val result: MutableList<String> = mutableListOf()
+        speakerIds.forEach {
+            run {
+                result.add(it.id)
+            }
+        }
+        return result
     }
 }

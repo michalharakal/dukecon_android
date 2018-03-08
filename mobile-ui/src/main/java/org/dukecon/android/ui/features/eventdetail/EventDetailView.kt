@@ -7,17 +7,12 @@ import android.support.v7.widget.LinearLayoutManager
 import android.text.format.DateUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import kotlinx.android.synthetic.main.view_session_detail.view.banner
-import kotlinx.android.synthetic.main.view_session_detail.view.description
-import kotlinx.android.synthetic.main.view_session_detail.view.favorite
-import kotlinx.android.synthetic.main.view_session_detail.view.feedback
-import kotlinx.android.synthetic.main.view_session_detail.view.speakers
-import kotlinx.android.synthetic.main.view_session_detail.view.status
-import kotlinx.android.synthetic.main.view_session_detail.view.toolbar
+import kotlinx.android.synthetic.main.view_session_detail.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getComponent
 import org.dukecon.android.ui.features.eventdetail.di.EventDetailComponent
 import org.dukecon.android.ui.features.speaker.SpeakerAdapter
+import org.dukecon.android.ui.features.speakerdetail.SpeakerNavigator
 import org.dukecon.android.ui.utils.DrawableUtils
 import org.dukecon.presentation.feature.eventdetail.EventDetailContract
 import org.dukecon.presentation.model.EventView
@@ -28,6 +23,9 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
         CoordinatorLayout(context, attrs, defStyle), EventDetailContract.View {
     @Inject
     lateinit var presenter: EventDetailContract.Presenter
+
+    @Inject
+    lateinit var speakerNavigator: SpeakerNavigator
 
     private val speakerAdapter: SpeakerAdapter
     private var sessionId: String? = null
@@ -47,7 +45,7 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
         }
 
         speakerAdapter = SpeakerAdapter(true, { speaker, image ->
-            //    speakerNavigator.navigateToSpeaker(speaker.id!!, image)
+            speakerNavigator.navigateToSpeaker(speaker.id!!, image)
         })
         speakers.adapter = speakerAdapter
         speakers.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -102,11 +100,11 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
             }
             status.setText(statusString)
 
-            feedback.visibility = VISIBLE
+            feedback.visibility = GONE // TODO to be added
         }
     }
 
-    override fun showSpeakerInfo(speakers: Set<SpeakerView>) {
+    override fun showSpeakerInfo(speakers: List<SpeakerView>) {
         speakerAdapter.speakers.clear()
         speakerAdapter.speakers.addAll(speakers)
         speakerAdapter.notifyDataSetChanged()

@@ -3,11 +3,15 @@ package org.dukecon.presentation.feature.eventdetail
 import io.reactivex.observers.DisposableSingleObserver
 import org.dukecon.domain.features.eventdetail.GetEventDetailUseCase
 import org.dukecon.domain.model.Event
+import org.dukecon.domain.model.Speaker
 import org.dukecon.presentation.mapper.EventMapper
+import org.dukecon.presentation.mapper.SpeakerMapper
+import org.dukecon.presentation.model.SpeakerView
 import javax.inject.Inject
 
 
 class EventDetailPresenter @Inject constructor(val eventDetailUseCase: GetEventDetailUseCase,
+                                               val speakerMapper: SpeakerMapper,
                                                val eventsMapper: EventMapper) :
         EventDetailContract.Presenter {
 
@@ -33,6 +37,7 @@ class EventDetailPresenter @Inject constructor(val eventDetailUseCase: GetEventD
     private fun handleGetEventSuccess(event: Event) {
         this.view?.let {
             it.showSessionDetail(eventsMapper.mapToView(event))
+            it.showSpeakerInfo(event.speakerIds.map { it -> speakerMapper.mapToView(it) })
         }
     }
 
