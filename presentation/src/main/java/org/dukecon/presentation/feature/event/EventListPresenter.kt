@@ -34,14 +34,6 @@ class EventListPresenter @Inject constructor(val getEventsUseCase: GetEvents,
         getSpeakersUseCase.execute(SpeakersSubscriber())
 
         getRoomsUseCase.execute(RoomsSubscriber())
-
-
-        /*
-        favoriteProvider.removeFavoriteListener(date)
-        favoriteProvider.addFavoriteListener(date, { sessions ->
-            this.view?.showFavorites(sessions)
-        })
-        */
     }
 
     override fun onDetach() {

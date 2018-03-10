@@ -1,9 +1,7 @@
 package org.dukecon.presentation.mapper
 
 import org.dukecon.domain.model.Event
-import org.dukecon.domain.model.Speaker
 import org.dukecon.presentation.model.EventView
-import org.dukecon.presentation.model.SpeakerView
 import javax.inject.Inject
 
 /**
@@ -17,6 +15,6 @@ open class EventMapper @Inject constructor(val speakersMapper: SpeakerMapper) : 
      */
     override fun mapToView(type: Event): EventView {
         return EventView(type.name, type.title, type.description, type.startTime, type.endTime,
-                type.speakerIds.map { speakersMapper.mapToView(it) }, type.room)
+                type.speakers.map { speakersMapper.mapToView(it) }, type.favorite, type.room)
     }
 }

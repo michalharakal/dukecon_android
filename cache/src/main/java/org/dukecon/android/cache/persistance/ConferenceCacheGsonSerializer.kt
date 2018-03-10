@@ -2,6 +2,7 @@ package org.dukecon.android.cache.persistance
 
 import com.google.gson.Gson
 import org.dukecon.data.model.EventEntity
+import org.dukecon.data.model.FavoriteEntity
 import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import java.io.*
@@ -11,6 +12,8 @@ class ConferenceCacheGsonSerializer(private val baseFolder: String, val gson: Gs
     private fun getSpeakersFullName() = baseFolder + "/speakers.json"
     private fun getRoomsFullName() = baseFolder + "/rooms.json"
     private fun getEventsFullName() = baseFolder + "/events.json"
+    private fun getFavoritesFullName() = baseFolder + "/favorites.json"
+
 
     override fun readSpeakers(): List<SpeakerEntity> {
         val sd = File(getSpeakersFullName())
@@ -47,8 +50,20 @@ class ConferenceCacheGsonSerializer(private val baseFolder: String, val gson: Gs
         }
     }
 
-    override fun writeRooms(cachedRooms: List<RoomEntity>) {
-        writeList(getRoomsFullName(), cachedRooms)
+    override fun readFavorites(): List<FavoriteEntity> {
+        val sd = File(getFavoritesFullName())
+        if (sd.exists()) {
+            val inputStream = FileInputStream(sd)
+            val reader = InputStreamReader(inputStream)
+
+            return gson.fromJson(reader, Array<FavoriteEntity>::class.java).toList()
+        } else {
+            return listOf()
+        }
+    }
+
+    override fun writeRooms(rooms: List<RoomEntity>) {
+        writeList(getRoomsFullName(), rooms)
     }
 
     override fun writeEvents(events: List<EventEntity>) {
@@ -57,6 +72,10 @@ class ConferenceCacheGsonSerializer(private val baseFolder: String, val gson: Gs
 
     override fun writeSpeakers(speakers: List<SpeakerEntity>) {
         writeList(getSpeakersFullName(), speakers)
+    }
+
+    override fun writeFavorites(favorites: List<FavoriteEntity>) {
+        writeList(getFavoritesFullName(), favorites)
     }
 
     fun writeList(fileName: String, events: List<Any>) {
@@ -78,4 +97,6 @@ interface ConferenceCacheSerializer {
     fun writeRooms(cachedRooms: List<RoomEntity>)
     fun writeEvents(events: List<EventEntity>)
     fun writeSpeakers(speakers: List<SpeakerEntity>)
+    fun readFavorites(): List<FavoriteEntity>
+    fun writeFavorites(favorites: List<FavoriteEntity>)
 }

@@ -72,13 +72,6 @@ class EventsListView(context: Context, attrs: AttributeSet? = null, defStyle: In
         adapter.notifyDataSetChanged()
     }
 
-
-    override fun showFavorites(favorites: Set<String>) {
-        adapter.favorites.clear()
-        adapter.favorites.addAll(favorites)
-        adapter.notifyDataSetChanged()
-    }
-
     override fun scrollTo(index: Int) {
         scrollToPosition(index)
     }
