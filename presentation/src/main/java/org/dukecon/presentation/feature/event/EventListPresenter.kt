@@ -1,19 +1,22 @@
 package org.dukecon.presentation.feature.event
 
 import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.schedulers.Schedulers
 import org.dukecon.domain.features.event.GetEvents
 import org.dukecon.domain.features.event.GetRooms
 import org.dukecon.domain.features.event.GetSpeakers
 import org.dukecon.domain.model.Event
 import org.dukecon.domain.model.Room
 import org.dukecon.domain.model.Speaker
+import org.dukecon.domain.repository.ConferenceRepository
 import org.dukecon.presentation.mapper.EventMapper
 import org.dukecon.presentation.mapper.RoomMapper
 import org.dukecon.presentation.mapper.SpeakerMapper
 import org.joda.time.DateTime
 import javax.inject.Inject
 
-class EventListPresenter @Inject constructor(val getEventsUseCase: GetEvents,
+class EventListPresenter @Inject constructor(val conferenceRepository: ConferenceRepository,
+                                             val getEventsUseCase: GetEvents,
                                              val getSpeakersUseCase: GetSpeakers,
                                              val getRoomsUseCase: GetRooms,
                                              val eventsMapper: EventMapper,
@@ -26,22 +29,26 @@ class EventListPresenter @Inject constructor(val getEventsUseCase: GetEvents,
 
     override fun onAttach(view: EventListContract.View) {
         this.view = view
+        subscribeForChanges()
+    }
+
+    private fun subscribeForChanges() {
+        conferenceRepository.getEventChanges()
+                .subscribeOn(Schedulers.newThread())
+                .subscribe{ result ->
+                    getEventsUseCase.execute(EventSubscriber(), date.dayOfMonth)
+                }
     }
 
     override fun setDate(date: DateTime) {
+
+        this.date = date
+
         getEventsUseCase.execute(EventSubscriber(), date.dayOfMonth)
 
         getSpeakersUseCase.execute(SpeakersSubscriber())
 
         getRoomsUseCase.execute(RoomsSubscriber())
-
-
-        /*
-        favoriteProvider.removeFavoriteListener(date)
-        favoriteProvider.addFavoriteListener(date, { sessions ->
-            this.view?.showFavorites(sessions)
-        })
-        */
     }
 
     override fun onDetach() {

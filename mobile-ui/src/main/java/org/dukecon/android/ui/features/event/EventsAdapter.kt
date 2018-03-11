@@ -24,7 +24,6 @@ internal class EventsAdapter(val onSessionSelectedListener: ((session: EventView
     val sessions: MutableList<EventView> = mutableListOf()
     val speakers: MutableMap<String, SpeakerView> = mutableMapOf()
     val rooms: MutableMap<String, RoomView> = mutableMapOf()
-    val favorites: MutableSet<String> = mutableSetOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_session, parent, false)
@@ -81,14 +80,11 @@ internal class EventsAdapter(val onSessionSelectedListener: ((session: EventView
             holder.room.visibility = View.GONE
         }
 
-        holder.favorite.visibility = View.VISIBLE
-        /*
-        if (favorites.contains(session.id)) {
+        if (session.favorite.selected) {
             holder.favorite.visibility = View.VISIBLE
         } else {
             holder.favorite.visibility = View.GONE
         }
-        */
 
         if (position > 0) {
             val previous = sessions[position - 1]

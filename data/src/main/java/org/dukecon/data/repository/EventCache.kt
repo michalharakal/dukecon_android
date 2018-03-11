@@ -3,6 +3,7 @@ package org.dukecon.data.repository
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.dukecon.data.model.EventEntity
+import org.dukecon.data.model.FavoriteEntity
 import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 
@@ -32,11 +33,6 @@ interface EventCache {
 
     fun setLastCacheTime(lastCache: Long)
 
-    /**
-     * Checks if the cache is expired.
-
-     * @return true, the cache is expired, otherwise false.
-     */
     fun isExpired(): Boolean
 
     fun getSpeakers(): Single<List<SpeakerEntity>>
@@ -48,5 +44,8 @@ interface EventCache {
     fun saveRooms(rooms: List<RoomEntity>): Completable
 
     fun getEvent(id: String): Single<EventEntity>
+
+    fun getFavorites(): Single<List<FavoriteEntity>>
+    fun saveFavorite(favorite: FavoriteEntity): Single<List<FavoriteEntity>>
 
 }

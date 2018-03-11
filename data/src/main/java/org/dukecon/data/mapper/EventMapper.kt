@@ -2,6 +2,7 @@ package org.dukecon.data.mapper
 
 import org.dukecon.data.model.EventEntity
 import org.dukecon.domain.model.Event
+import org.dukecon.domain.model.Favorite
 import org.dukecon.domain.model.Speaker
 import javax.inject.Inject
 
@@ -16,7 +17,7 @@ open class EventMapper @Inject constructor() : Mapper<EventEntity, Event> {
      */
     override fun mapFromEntity(type: EventEntity): Event {
         return Event(type.id, type.title, type.abstractText, type.startTime, type.endTime,
-                createSpeakerList(type.speakerIds), type.roomId)
+                createSpeakerList(type.speakerIds), Favorite("0", false), type.roomId)
     }
 
     private fun createSpeakerList(speakerIds: List<String>): List<Speaker> {
@@ -34,7 +35,7 @@ open class EventMapper @Inject constructor() : Mapper<EventEntity, Event> {
      */
     override fun mapToEntity(type: Event): EventEntity {
         return EventEntity(type.name, type.title, type.description, type.startTime, type.endTime,
-                createIdsList(type.speakerIds), type.room)
+                createIdsList(type.speakers), type.room)
     }
 
     private fun createIdsList(speakerIds: List<Speaker>): List<String> {

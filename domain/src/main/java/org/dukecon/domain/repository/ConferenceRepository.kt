@@ -1,10 +1,13 @@
 package org.dukecon.domain.repository
 
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import org.dukecon.domain.model.Event
+import org.dukecon.domain.model.Favorite
 import org.dukecon.domain.model.Room
 import org.dukecon.domain.model.Speaker
+import org.dukecon.domain.model.Change
 import org.joda.time.DateTime
 
 /**
@@ -12,7 +15,7 @@ import org.joda.time.DateTime
  * This is to be implemented by the data layer, setting the requirements for the
  * operations that need to be implemented
  */
-interface EventRepository {
+interface ConferenceRepository {
 
     fun clearEvents(): Completable
 
@@ -30,4 +33,8 @@ interface EventRepository {
 
     fun getEvent(id: String): Single<Event>
 
+    fun saveFavorite(favorite: Favorite): Single<List<Favorite>>
+    fun getFavorites(): Single<List<Favorite>>
+
+    fun getEventChanges():Observable<Change>
 }

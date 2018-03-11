@@ -92,8 +92,8 @@ class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNav
         startActivity(intent)
     }
 
-    override fun navigateToSpeaker(id: String, image: View?) {
-        SpeakerDetailActivity.navigate(this, id, image)
+    override fun navigateToSpeaker(id: String) {
+        SpeakerDetailActivity.navigate(this, id)
     }
 
     override fun onBackPressed() {

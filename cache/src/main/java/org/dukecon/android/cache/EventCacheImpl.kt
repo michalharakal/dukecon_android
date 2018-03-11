@@ -5,6 +5,7 @@ import io.reactivex.Single
 import mu.KotlinLogging
 import org.dukecon.android.cache.persistance.ConferenceCacheSerializer
 import org.dukecon.data.model.EventEntity
+import org.dukecon.data.model.FavoriteEntity
 import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.repository.EventCache
@@ -24,6 +25,7 @@ class EventCacheImpl @Inject constructor(val conferenceCacheSerializer: Conferen
     var cachedRooms: List<RoomEntity> = listOf()
     var cachedEvents: List<EventEntity> = listOf()
     var cacheSpeakers: List<SpeakerEntity> = listOf()
+    var cacheFavorites: List<FavoriteEntity> = listOf()
 
     // 1 hour cache
     private val EXPIRATION_TIME = (60 * 60 * 1000).toLong()
@@ -35,6 +37,7 @@ class EventCacheImpl @Inject constructor(val conferenceCacheSerializer: Conferen
                 cachedRooms = it.readRooms()
                 cachedEvents = it.readEvents()
                 cacheSpeakers = it.readSpeakers()
+                cacheFavorites = it.readFavorites()
             }
         }
     }
@@ -44,6 +47,7 @@ class EventCacheImpl @Inject constructor(val conferenceCacheSerializer: Conferen
         cachedEvents = listOf()
         cacheSpeakers = listOf()
         cachedRooms = listOf()
+        cacheFavorites = listOf()
         return Completable.complete()
     }
 
@@ -127,8 +131,52 @@ class EventCacheImpl @Inject constructor(val conferenceCacheSerializer: Conferen
             } ?: emptySpeakerEntity()
             s.onSuccess(found)
         })
-
     }
+
+    override fun getFavorites(): Single<List<FavoriteEntity>> {
+        logger.info { "reading favorites from memory cache" }
+        return Single.create({ s ->
+            s.onSuccess(
+                    cacheFavorites
+            )
+        })
+    }
+
+    override fun saveFavorite(favorite: FavoriteEntity): Single<List<FavoriteEntity>> {
+        val foundFavorite = cacheFavorites.find { it.id.equals(favorite.id) }
+        var changed = false
+        if (foundFavorite == null) {
+            // add
+            if (favorite.selected) {
+                val newlist: MutableList<FavoriteEntity> = cacheFavorites.toMutableList()
+                newlist.add(favorite)
+                cacheFavorites = newlist.filter { it -> it != null }
+                changed = true
+            }
+        } else {
+            if (!favorite.selected) {
+                val newlist: MutableList<FavoriteEntity> = cacheFavorites.toMutableList()
+                for (i in cacheFavorites.indices) {
+                    if (cacheFavorites[i].id.equals(favorite.id)) {
+                        newlist.removeAt(i)
+                        break
+                    }
+                }
+                cacheFavorites = newlist.filter { it -> it != null }
+                changed = true
+            }
+        }
+        if (changed) {
+            conferenceCacheSerializer.writeFavorites(cacheFavorites)
+            preferencesHelper.lastCacheTime = System.currentTimeMillis()
+        }
+        return Single.create({ s ->
+            s.onSuccess(
+                    cacheFavorites
+            )
+        })
+    }
+
 
     private fun emptySpeakerEntity(): SpeakerEntity {
         return SpeakerEntity("", "", "", "", "", "", "")

@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import mu.KotlinLogging
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.dukecon.android.api.ConferencesApi
@@ -101,7 +102,10 @@ open class ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideNonCachedOkHttpClient(): OkHttpClient {
+    fun provideNonCachedOkHttpClient(application: Application): OkHttpClient {
+
+        val cacheSize = 10 * 1024 * 1024L // 10 MB
+        val cache = Cache(application.getCacheDir(), cacheSize)
 
         val xtm = XtmImp()
         val sslContext = javax.net.ssl.SSLContext.getInstance("SSL")
@@ -117,6 +121,7 @@ open class ApplicationModule {
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
                 .addInterceptor(interceptor)
+                .cache(cache)
                 .sslSocketFactory(sslContext.getSocketFactory(), xtm)
                 .hostnameVerifier(DO_NOT_VERIFY_IMP())
                 .build()

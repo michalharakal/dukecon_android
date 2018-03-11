@@ -32,7 +32,7 @@ class EventDetailActivity : AppCompatActivity(), SpeakerNavigator {
         }
     }
 
-    override fun navigateToSpeaker(id: String, image: View?) {
-        SpeakerDetailActivity.navigate(this, id, image)
+    override fun navigateToSpeaker(id: String) {
+        SpeakerDetailActivity.navigate(this, id)
     }
 }

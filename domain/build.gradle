@@ -19,6 +19,7 @@ dependencies {
     implementation domainDependencies.kotlin
     implementation domainDependencies.jodaTime
 
+
     testImplementation domainTestDependencies.junit
     testImplementation domainTestDependencies.mockito
     testImplementation domainTestDependencies.assertj

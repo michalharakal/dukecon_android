@@ -3,6 +3,7 @@ package org.dukecon.data.source
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.dukecon.data.model.EventEntity
+import org.dukecon.data.model.FavoriteEntity
 import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.repository.EventCache
@@ -16,6 +17,15 @@ import javax.inject.Inject
  */
 open class EventCacheDataStore @Inject constructor(private val eventCache: EventCache) :
         EventDataStore {
+
+    override fun saveFavorite(favorite: FavoriteEntity): Single<List<FavoriteEntity>> {
+        return eventCache.saveFavorite(favorite)
+    }
+
+    override fun getFavorites(): Single<List<FavoriteEntity>> {
+        return eventCache.getFavorites()
+    }
+
     override fun getSpeaker(id: String): Single<SpeakerEntity> {
         return eventCache.getSpeaker(id)
     }

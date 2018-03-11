@@ -18,7 +18,6 @@ interface EventListContract {
         fun showSessions(sessions: List<EventView>)
         fun showSpeakers(speakers: Map<String, SpeakerView>)
         fun showRooms(speakers: Map<String, RoomView>)
-        fun showFavorites(favorites: Set<String>)
         fun scrollTo(index: Int)
 
     }

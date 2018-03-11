@@ -5,6 +5,7 @@ import org.dukecon.android.api.ConferencesApi
 import org.dukecon.android.api.model.Event
 import org.dukecon.android.api.model.Speaker
 import org.dukecon.data.model.EventEntity
+import org.dukecon.data.model.FavoriteEntity
 import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.repository.EventRemote
@@ -22,6 +23,7 @@ class EventRemoteImpl @Inject constructor(private val conferenceApi: Conferences
                                           private val speakersEntityMapper: SpeakerEntityMapper,
                                           private val roomEntityMapper: RoomEntityMapper) :
         EventRemote {
+
     override fun getSpeaker(id: String): Single<SpeakerEntity> {
         return Single.create({ s ->
             val call = conferenceApi.getSpeakers(conferenceId);

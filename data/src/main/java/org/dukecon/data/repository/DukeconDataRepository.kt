@@ -1,33 +1,65 @@
-package org.dukecon.data
+package org.dukecon.data.repository
 
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import org.dukecon.data.mapper.EventMapper
+import org.dukecon.data.mapper.FavoriteMapper
 import org.dukecon.data.mapper.RoomMapper
 import org.dukecon.data.mapper.SpeakerMapper
 import org.dukecon.data.model.EventEntity
+import org.dukecon.data.model.FavoriteEntity
 import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.source.EventDataStoreFactory
 import org.dukecon.data.source.EventRemoteDataStore
-import org.dukecon.domain.model.Event
-import org.dukecon.domain.model.Room
-import org.dukecon.domain.model.Speaker
-import org.dukecon.domain.repository.EventRepository
+import org.dukecon.domain.model.*
+import org.dukecon.domain.repository.ConferenceRepository
 import org.joda.time.DateTime
 import javax.inject.Inject
 
 
 /**
- * Provides an implementation of the [EventRepository] interface for communicating to and from
+ * Provides an implementation of the [ConferenceRepository] interface for communicating to and from
  * data sources
  */
-class EventDataRepository @Inject constructor(private val factory: EventDataStoreFactory,
-                                              private val eventMapper: EventMapper,
-                                              private val speakerMapper: SpeakerMapper,
-                                              private val roomMapper: RoomMapper) :
-        EventRepository {
+class DukeconDataRepository @Inject constructor(private val factory: EventDataStoreFactory,
+                                                private val eventMapper: EventMapper,
+                                                private val speakerMapper: SpeakerMapper,
+                                                private val roomMapper: RoomMapper,
+                                                private val favoriteMapper: FavoriteMapper) :
+        ConferenceRepository {
+
+    private var relay: PublishRelay<Change> = PublishRelay.create<Change>()
+
+    override fun getEventChanges(): Observable<Change> {
+        return relay
+    }
+
+    override fun saveFavorite(favorite: Favorite): Single<List<Favorite>> {
+        return factory.retrieveCacheDataStore()
+                .saveFavorite(favoriteMapper.mapToEntity(favorite))
+                .doAfterSuccess({
+                    relay.accept(Change(DataChange.FAVORITE))
+                })
+                .map { list ->
+                    list.map { listItem ->
+                        favoriteMapper.mapFromEntity(listItem)
+                    }
+                }
+
+    }
+
+    override fun getFavorites(): Single<List<Favorite>> {
+        return factory.retrieveCacheDataStore().getFavorites().map { list ->
+            list.map { listItem ->
+                favoriteMapper.mapFromEntity(listItem)
+            }
+        }
+    }
+
     override fun getSpeaker(id: String): Single<Speaker> {
         val dataStore = factory.retrieveDataStore()
 
@@ -40,14 +72,29 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
         val getEvent = dataStore.getEvent(id).map { eventMapper.mapFromEntity(it) }
         val getRooms = dataStore.getRooms()
         val getSpeakers = dataStore.getSpeakers()
+        val getFavorites = factory.retrieveCacheDataStore().getFavorites()
 
         val eventsWithRooms = Single.zip(getEvent, getRooms, BiFunction { event: Event, rooms: List<RoomEntity> ->
             combineEvent(event, rooms)
         })
-        return Single.zip(eventsWithRooms, getSpeakers, BiFunction { event: Event, rooms: List<SpeakerEntity> ->
+        val eventWithRoomsAndSpeaker = Single.zip(eventsWithRooms, getSpeakers, BiFunction { event: Event, rooms: List<SpeakerEntity> ->
             combineSpeaker(event, rooms)
         })
+        return Single.zip(eventWithRoomsAndSpeaker, getFavorites, BiFunction { event: Event, favorites: List<FavoriteEntity> ->
+            combineFavorites(event, favorites)
+        })
 
+    }
+
+    private fun combineFavorites(event: Event, favorites: List<FavoriteEntity>): Event {
+        val foundEvent = favorites.find { it.id.equals(event.name) }
+
+        if (foundEvent != null) {
+            return Event(event.name, event.title, event.description, event.startTime, event.endTime,
+                    event.speakers, Favorite(event.name, true), event.name)
+        } else {
+            return event
+        }
     }
 
     private fun combineEvent(event: Event, rooms: List<RoomEntity>): Event {
@@ -55,7 +102,7 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
 
         if (foundRoom != null) {
             return Event(event.name, event.title, event.description, event.startTime, event.endTime,
-                    event.speakerIds, foundRoom.name)
+                    event.speakers, event.favorite, foundRoom.name)
         } else {
             return event
         }
@@ -63,7 +110,7 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
 
     private fun combineSpeaker(event: Event, speakers: List<SpeakerEntity>): Event {
         val foundSpeakers: MutableList<Speaker> = mutableListOf()
-        event.speakerIds.forEach { eventSpeaker ->
+        event.speakers.forEach { eventSpeaker ->
             run {
                 val found = speakers.find { it.id.equals(eventSpeaker.id) }
                 if (found != null) {
@@ -72,10 +119,9 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
             }
         }
 
-
-        if (foundSpeakers != null) {
+        if (foundSpeakers.isNotEmpty()) {
             return Event(event.name, event.title, event.description, event.startTime, event.endTime,
-                    foundSpeakers, event.room)
+                    foundSpeakers, event.favorite, event.room)
         } else {
             return event
         }
@@ -120,7 +166,7 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
                 }.map { list ->
                     list.map { listItem ->
                         speakerMapper.mapFromEntity(listItem)
-                    }
+                    }.sortedBy { it -> it.name }
                 }
     }
 
@@ -175,7 +221,10 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
     override fun getEvents(day: Int): Single<List<Event>> {
         val dataStore = factory.retrieveDataStore()
 
-        return dataStore.getEvents()
+        val getFavorites = factory.retrieveCacheDataStore().getFavorites()
+
+
+        val getEvents = dataStore.getEvents()
                 .flatMap {
                     if (dataStore is EventRemoteDataStore) {
                         saveEventEntities(it).toSingle { it }
@@ -200,6 +249,32 @@ class EventDataRepository @Inject constructor(private val factory: EventDataStor
                         }
                     }
                 }
+        return Single.zip(getEvents, getFavorites, BiFunction { event: List<Event>, favorites: List<FavoriteEntity> ->
+            combineFavoritesList(event, favorites)
+        })
+
+    }
+
+    private fun combineFavoritesList(events: List<Event>, favorites: List<FavoriteEntity>): List<Event> {
+        if (favorites.size > 0) {
+
+            val newlist: MutableList<Event> = mutableListOf()
+
+            for (event in events) {
+                val foundEvent = favorites.find { it.id.equals(event.name) }
+
+                if (foundEvent != null) {
+                    newlist.add(Event(event.name, event.title, event.description, event.startTime, event.endTime,
+                            event.speakers, Favorite(event.name, true), event.room))
+                } else {
+                    newlist.add(Event(event.name, event.title, event.description, event.startTime, event.endTime,
+                            event.speakers, Favorite(event.name, false), event.room))
+                }
+            }
+            return newlist.filter { it -> it != null }
+        } else {
+            return events
+        }
     }
 
     /**

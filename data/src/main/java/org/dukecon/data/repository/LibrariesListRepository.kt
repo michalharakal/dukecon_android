@@ -10,6 +10,7 @@ class LibrariesListRepository : LibrariesRepository {
     }
 
     val libraries = listOf(
+            Library("Dukecon Android", "Dukecon", "Apache 2", "https://github.com/dukecon/dukecon_android"),
             Library("Chicago Roboto", "Ryan Harter", "Apache 2", "https://github.com/rharter/chicago-roboto"),
             Library("Android Clean Architecture Boilerplate", "Buffer inc", "MIT License", "https://github.com/bufferapp/android-clean-architecture-boilerplate"),
             Library("AOSP", "Android", "Apache 2", "https://android.googlesource.com"),
