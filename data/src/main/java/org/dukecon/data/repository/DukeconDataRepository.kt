@@ -1,6 +1,8 @@
 package org.dukecon.data.repository
 
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import org.dukecon.data.mapper.EventMapper
@@ -13,10 +15,7 @@ import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.source.EventDataStoreFactory
 import org.dukecon.data.source.EventRemoteDataStore
-import org.dukecon.domain.model.Event
-import org.dukecon.domain.model.Favorite
-import org.dukecon.domain.model.Room
-import org.dukecon.domain.model.Speaker
+import org.dukecon.domain.model.*
 import org.dukecon.domain.repository.ConferenceRepository
 import org.joda.time.DateTime
 import javax.inject.Inject
@@ -33,14 +32,24 @@ class DukeconDataRepository @Inject constructor(private val factory: EventDataSt
                                                 private val favoriteMapper: FavoriteMapper) :
         ConferenceRepository {
 
+    private var relay: PublishRelay<Change> = PublishRelay.create<Change>()
+
+    override fun getEventChanges(): Observable<Change> {
+        return relay
+    }
+
     override fun saveFavorite(favorite: Favorite): Single<List<Favorite>> {
         return factory.retrieveCacheDataStore()
                 .saveFavorite(favoriteMapper.mapToEntity(favorite))
+                .doAfterSuccess({
+                    relay.accept(Change(DataChange.FAVORITE))
+                })
                 .map { list ->
                     list.map { listItem ->
                         favoriteMapper.mapFromEntity(listItem)
                     }
                 }
+
     }
 
     override fun getFavorites(): Single<List<Favorite>> {
@@ -110,7 +119,7 @@ class DukeconDataRepository @Inject constructor(private val factory: EventDataSt
             }
         }
 
-        if (foundSpeakers != null) {
+        if (foundSpeakers.isNotEmpty()) {
             return Event(event.name, event.title, event.description, event.startTime, event.endTime,
                     foundSpeakers, event.favorite, event.room)
         } else {
@@ -256,10 +265,10 @@ class DukeconDataRepository @Inject constructor(private val factory: EventDataSt
 
                 if (foundEvent != null) {
                     newlist.add(Event(event.name, event.title, event.description, event.startTime, event.endTime,
-                            event.speakers, Favorite(event.name, true), event.name))
+                            event.speakers, Favorite(event.name, true), event.room))
                 } else {
                     newlist.add(Event(event.name, event.title, event.description, event.startTime, event.endTime,
-                            event.speakers, Favorite(event.name, false), event.name))
+                            event.speakers, Favorite(event.name, false), event.room))
                 }
             }
             return newlist.filter { it -> it != null }

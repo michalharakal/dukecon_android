@@ -7,9 +7,6 @@ apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'io.fabric'
 apply from: '../config/git.gradle'
 
-
-version = '1.0.0-SNAPSHOT'
-
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
 

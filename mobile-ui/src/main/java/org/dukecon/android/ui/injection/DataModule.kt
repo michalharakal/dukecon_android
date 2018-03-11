@@ -9,11 +9,13 @@ import org.dukecon.data.mapper.SpeakerMapper
 import org.dukecon.data.repository.DukeconDataRepository
 import org.dukecon.data.source.EventDataStoreFactory
 import org.dukecon.domain.repository.ConferenceRepository
+import javax.inject.Singleton
 
 
 @Module
 class DataModule {
     @Provides
+    @Singleton
     internal fun provideEventRepository(factory: EventDataStoreFactory,
                                         mapper: EventMapper,
                                         speakerMapper: SpeakerMapper,

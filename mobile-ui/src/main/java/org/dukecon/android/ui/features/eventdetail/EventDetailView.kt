@@ -45,7 +45,7 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
         }
 
         speakerAdapter = SpeakerAdapter(true, { speaker, image ->
-            speakerNavigator.navigateToSpeaker(speaker.id!!, image)
+            speakerNavigator.navigateToSpeaker(speaker.id)
         })
         speakers.adapter = speakerAdapter
         speakers.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
