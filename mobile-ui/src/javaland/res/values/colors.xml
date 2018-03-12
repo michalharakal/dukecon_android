@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#1aa3b1</color>
-    <color name="colorPrimaryDark">#1aa3b1</color>
-    <color name="colorAccent">#ee5c49</color>
+    <color name="primaryColor">#16968d</color>
+    <color name="primaryLightColor">#58c7bd</color>
+    <color name="primaryDarkColor">#006760</color>
+    <color name="secondaryColor">#06517c</color>
 
+    <color name="colorAccent">#06517c</color>
+
+
+    <color name="secondaryLightColor">#487dab</color>
+    <color name="secondaryDarkColor">#00294f</color>
+    <color name="primaryTextColor">#000000</color>
+    <color name="secondaryTextColor">#ffffff</color>
     <color name="twitter_blue">#55ACEE</color>
     <color name="color_nav_bg">#1aa3b1</color>
     <color name="bg_info_header">#1f000000</color>
