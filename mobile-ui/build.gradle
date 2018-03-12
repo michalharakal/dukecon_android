@@ -33,6 +33,15 @@ android {
 
     }
 
+    signingConfigs {
+        javalandRelease {
+            keyAlias javalandReleaseKeystoreProperties['keyAlias']
+            keyPassword javalandReleaseKeystoreProperties['keyPassword']
+            storeFile rootProject.file("../dukecon/dukecon_app_releases/javaland/" + javalandReleaseKeystoreProperties['storeFile'])
+            storePassword javalandReleaseKeystoreProperties['storePassword']
+        }
+    }
+
     buildTypes {
         debug {
             testCoverageEnabled true
@@ -41,6 +50,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             proguardFile 'proguard-release-app.pro'
+            signingConfig signingConfigs.javalandRelease
         }
     }
 
@@ -82,16 +92,6 @@ android {
             versionName gitVersionName
         }
     }
-
-    signingConfigs {
-        javalandRelease {
-            keyAlias javalandReleaseKeystoreProperties['keyAlias']
-            keyPassword javalandReleaseKeystoreProperties['keyPassword']
-            storeFile rootProject.file("../dukecon_app_releases/javaland/" + javalandReleaseKeystoreProperties['storeFile'])
-            storePassword javalandReleaseKeystoreProperties['storePassword']
-        }
-    }
-
 }
 
 kapt {
