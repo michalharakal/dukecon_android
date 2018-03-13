@@ -28,7 +28,7 @@ class EventDatePresenter @Inject constructor(val getEventDateUseCase: SingleUseC
         } else {
             this.view?.let {
                 it.showSessionDates(events)
-                it.scrollToCurrentDay() //.scrollTo(findCurrentSessionIndex(events))
+                it.scrollToCurrentDay()
             }
         }
     }

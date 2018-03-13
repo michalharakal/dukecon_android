@@ -5,6 +5,7 @@ import io.reactivex.schedulers.Schedulers
 import org.dukecon.domain.features.event.GetEvents
 import org.dukecon.domain.features.event.GetRooms
 import org.dukecon.domain.features.event.GetSpeakers
+import org.dukecon.domain.features.time.CurrentTimeProvider
 import org.dukecon.domain.model.Event
 import org.dukecon.domain.model.Room
 import org.dukecon.domain.model.Speaker
@@ -13,9 +14,11 @@ import org.dukecon.presentation.mapper.EventMapper
 import org.dukecon.presentation.mapper.RoomMapper
 import org.dukecon.presentation.mapper.SpeakerMapper
 import org.joda.time.DateTime
+import org.joda.time.Duration
 import javax.inject.Inject
 
-class EventListPresenter @Inject constructor(val conferenceRepository: ConferenceRepository,
+class EventListPresenter @Inject constructor(val currentTimeProvider: CurrentTimeProvider,
+                                             val conferenceRepository: ConferenceRepository,
                                              val getEventsUseCase: GetEvents,
                                              val getSpeakersUseCase: GetSpeakers,
                                              val getRoomsUseCase: GetRooms,
@@ -35,7 +38,7 @@ class EventListPresenter @Inject constructor(val conferenceRepository: Conferenc
     private fun subscribeForChanges() {
         conferenceRepository.getEventChanges()
                 .subscribeOn(Schedulers.newThread())
-                .subscribe{ result ->
+                .subscribe { result ->
                     getEventsUseCase.execute(EventSubscriber(), date.dayOfMonth)
                 }
     }
@@ -58,7 +61,8 @@ class EventListPresenter @Inject constructor(val conferenceRepository: Conferenc
 
     private fun findCurrentSessionIndex(sessions: List<Event>): Int {
         // find the current session index
-        val index = sessions.indexOfFirst { it.startTime.isAfterNow() && it.endTime.isBeforeNow() }
+        val now = DateTime( currentTimeProvider.currentTimeMillis())
+        val index =  sessions.indexOfFirst { now.isAfter(it.startTime) && now.isBefore(it.endTime) && (Duration(it.startTime, it.endTime).standardMinutes <= 100L) }
         return index
     }
 

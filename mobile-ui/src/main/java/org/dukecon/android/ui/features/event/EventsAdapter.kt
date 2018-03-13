@@ -13,12 +13,15 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.item_session.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.utils.DrawableUtils
+import org.dukecon.domain.features.time.CurrentTimeProvider
 import org.dukecon.presentation.model.EventView
 import org.dukecon.presentation.model.RoomView
 import org.dukecon.presentation.model.SpeakerView
 import org.joda.time.DateTime
+import org.joda.time.Duration
 
-internal class EventsAdapter(val onSessionSelectedListener: ((session: EventView) -> Unit)) :
+internal class EventsAdapter(val currentTimeProvider: CurrentTimeProvider,
+                             val onSessionSelectedListener: ((session: EventView) -> Unit)) :
         RecyclerView.Adapter<EventsAdapter.ViewHolder>() {
 
     val sessions: MutableList<EventView> = mutableListOf()
@@ -37,12 +40,11 @@ internal class EventsAdapter(val onSessionSelectedListener: ((session: EventView
         holder.session = session
 
         val startTime = formatDateTime(context, session.startTime.millis, DateUtils.FORMAT_SHOW_TIME)
-        val endTime = formatDateTime(context, session.endTime.millis, DateUtils.FORMAT_SHOW_TIME)
-        holder.timeslot.text = String.format(context.getString(R.string.session_time), startTime, endTime)
+        holder.timeslot.text = String.format(context.getString(R.string.session_start_time), startTime)
 
         // Dim the session card once hte session is over
-        val now = DateTime()
-        if (now.millis < session.endTime.millis) {
+        val now = currentTimeProvider.currentTimeMillis()
+        if (session.endTime.isAfter(now)) {
             holder.card.setBackgroundColor(ContextCompat.getColor(context, R.color.session_bg))
         } else {
             holder.card.setBackgroundColor(ContextCompat.getColor(context, R.color.session_finished_bg))
@@ -69,8 +71,9 @@ internal class EventsAdapter(val onSessionSelectedListener: ((session: EventView
 
 
         if (session.room.isNotEmpty()) {
+            val duration = String.format(context.getString(R.string.session_duration), Duration(session.startTime, session.endTime).standardMinutes)
             holder.room.visibility = View.VISIBLE
-            holder.room.text = rooms.get(session.room)?.name
+            holder.room.text = rooms.get(session.room)?.name + " " + duration
             holder.room.setCompoundDrawablesWithIntrinsicBounds(
                     DrawableUtils.create(context, R.drawable.ic_room),
                     null,

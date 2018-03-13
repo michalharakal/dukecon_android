@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.view_sessions.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getComponent
 import org.dukecon.android.ui.features.main.MainComponent
+import org.dukecon.domain.features.time.CurrentTimeProvider
 import org.dukecon.presentation.feature.event.EventDateListContract
 import org.joda.time.DateTime
 import javax.inject.Inject
@@ -21,7 +22,11 @@ class EventDateView(context: Context, attrs: AttributeSet? = null, defStyle: Int
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
     @Inject
+    lateinit var currentTimeProvider: CurrentTimeProvider
+
+    @Inject
     lateinit var presenter: EventDateListContract.Presenter
+
 
     private val adapter: SessionPagerAdapter
 
@@ -62,7 +67,8 @@ class EventDateView(context: Context, attrs: AttributeSet? = null, defStyle: Int
 
     override fun scrollToCurrentDay() {
         if (adapter.dates.isNotEmpty()) {
-            val index = adapter.dates.indexOfFirst { DateUtils.isToday(it.millis) }
+            val now = DateTime(currentTimeProvider.currentTimeMillis())
+            val index = adapter.dates.indexOfFirst { now.dayOfMonth() == it.dayOfMonth() }
             if (index >= 0) {
                 pager.setCurrentItem(index, false)
             }

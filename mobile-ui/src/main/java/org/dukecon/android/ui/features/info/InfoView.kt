@@ -4,7 +4,6 @@ import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
-import com.chicagoroboto.features.info.InfoModule
 import org.dukecon.android.ui.ext.getAppComponent
 import org.dukecon.presentation.feature.info.InfoContract
 import org.dukecon.presentation.model.LibraryView

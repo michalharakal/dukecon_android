@@ -6,6 +6,7 @@ import org.dukecon.domain.features.event.GetEventDates
 import org.dukecon.domain.features.event.GetEvents
 import org.dukecon.domain.features.event.GetRooms
 import org.dukecon.domain.features.event.GetSpeakers
+import org.dukecon.domain.features.time.CurrentTimeProvider
 import org.dukecon.domain.repository.ConferenceRepository
 import org.dukecon.presentation.feature.event.EventDateListContract
 import org.dukecon.presentation.feature.event.EventDatePresenter
@@ -25,14 +26,15 @@ class EventListModule() {
     }
 
     @Provides
-    fun sessionListPresenter(conferenceRepository: ConferenceRepository,
+    fun sessionListPresenter(currentTimeProvider: CurrentTimeProvider,
+                             conferenceRepository: ConferenceRepository,
                              getEvents: GetEvents,
                              getSpeakers: GetSpeakers,
                              getRooms: GetRooms,
                              eventsMapper: EventMapper,
                              speakerMapper: SpeakerMapper,
                              roomMapper: RoomMapper): EventListContract.Presenter {
-        return EventListPresenter(conferenceRepository, getEvents, getSpeakers, getRooms, eventsMapper, speakerMapper, roomMapper)
+        return EventListPresenter(currentTimeProvider, conferenceRepository, getEvents, getSpeakers, getRooms, eventsMapper, speakerMapper, roomMapper)
     }
 
 

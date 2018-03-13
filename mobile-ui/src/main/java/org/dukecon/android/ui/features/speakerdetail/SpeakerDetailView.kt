@@ -67,7 +67,7 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
         name.text = speaker.name
         bio.text = speaker.bio
 
-        if (speaker.twitter != null && speaker.twitter!!.isNotEmpty()) {
+        if (speaker.twitter != null && speaker.twitter.isNotEmpty()) {
             twitter.visibility = VISIBLE
             twitter.text = speaker.twitter
             twitter.setCompoundDrawablesWithIntrinsicBounds(
@@ -86,7 +86,7 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
             twitter.visibility = GONE
         }
 
-        if (speaker.website?.isNotEmpty() ?: false) {
+        if (speaker.website.isNotEmpty()) {
             github.visibility = VISIBLE
             github.text = speaker.website
             github.setCompoundDrawablesWithIntrinsicBounds(
