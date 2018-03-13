@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name" translatable="false">Dukecon</string>
+    <string name="event_name" translatable="false">Dukecon</string>
+    <string name="open_drawer">Open Drawer</string>
+    <string name="close_drawer">Close Drawer</string>
+    <string name="status_in_progress">This session is in progress</string>
+    <string name="status_over">This session is over</string>
+    <string name="action_schedule">Schedule</string>
+    <string name="action_speakers">Speakers</string>
+    <string name="action_location" translatable="false">Location</string>
+    <string name="action_info">Info</string>
+
+    <string name="session_time" translatable="false">%1$s\nto\n%2$s</string>
+    <string name="session_detail_time" translatable="false">%1$s, %2$s - %3$s</string>
+
+    <string name="cancel">cancel</string>
+    <string name="submit">Submit</string>
+    <string name="cd_logo">Event Logo</string>
+    <string name="info_topper">Developed in Kotlin by Michal Harakaľ und Falk Sippach as project of Java user Group Darmstadt with following open source projects and apps. App is heavily based on Chicago Roboto App.</string>
+
+</resources>
