@@ -14,9 +14,10 @@ def javalandReleaseKeystorePropertiesFile = rootProject.file("../dukecon/dukecon
 // Initialize a new Properties() object called keystoreProperties.
 def javalandReleaseKeystoreProperties = new Properties()
 
-// Load your keystore.properties file into the keystoreProperties object.
-javalandReleaseKeystoreProperties.load(new FileInputStream(javalandReleaseKeystorePropertiesFile))
-
+if (javalandReleaseKeystorePropertiesFile.canRead()) {
+    // Load your keystore.properties file into the keystoreProperties object.
+    javalandReleaseKeystoreProperties.load(new FileInputStream(javalandReleaseKeystorePropertiesFile))
+}
 
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
@@ -35,6 +36,7 @@ android {
 
     signingConfigs {
         javalandRelease {
+
             keyAlias javalandReleaseKeystoreProperties['keyAlias']
             keyPassword javalandReleaseKeystoreProperties['keyPassword']
             storeFile rootProject.file("../dukecon/dukecon_app_releases/javaland/" + javalandReleaseKeystoreProperties['storeFile'])
@@ -88,7 +90,7 @@ android {
             dimension "dukecon"
             applicationIdSuffix ".javaland"
 
-            versionCode 2
+            versionCode 3
             versionName gitVersionName
         }
     }
@@ -118,7 +120,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
     implementation "com.squareup.retrofit2:converter-scalars:$rootProject.retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
-    implementation ('com.fatboyindustrial.gson-jodatime-serialisers:gson-jodatime-serialisers:1.6.0') {
+    implementation('com.fatboyindustrial.gson-jodatime-serialisers:gson-jodatime-serialisers:1.6.0') {
         exclude group: 'joda-time', module: 'joda-time'
     }
     implementation "com.squareup.okhttp3:logging-interceptor:3.9.1"

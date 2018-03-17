@@ -14,9 +14,11 @@ import org.dukecon.android.ui.features.eventdetail.di.EventDetailComponent
 import org.dukecon.android.ui.features.speaker.SpeakerAdapter
 import org.dukecon.android.ui.features.speakerdetail.SpeakerNavigator
 import org.dukecon.android.ui.utils.DrawableUtils
+import org.dukecon.domain.features.time.CurrentTimeProvider
 import org.dukecon.presentation.feature.eventdetail.EventDetailContract
 import org.dukecon.presentation.model.EventView
 import org.dukecon.presentation.model.SpeakerView
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
@@ -26,6 +28,10 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
 
     @Inject
     lateinit var speakerNavigator: SpeakerNavigator
+
+    @Inject
+    lateinit var currentTimeProvider: CurrentTimeProvider
+
 
     private val speakerAdapter: SpeakerAdapter
     private var sessionId: String? = null
@@ -85,15 +91,16 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
                 startTime, endTime)
 
         description.text = session.description
+        val now = DateTime(currentTimeProvider.currentTimeMillis())
 
-        if (session.startTime.isAfterNow) {
+        if (session.startTime.isAfter(now)) {
             status.visibility = GONE
             favorite.visibility = VISIBLE
         } else {
             status.visibility = VISIBLE
             favorite.visibility = GONE
 
-            val statusString = if (session.endTime.isAfterNow) {
+            val statusString = if (session.endTime.isAfter(now)) {
                 R.string.status_in_progress
             } else {
                 R.string.status_over

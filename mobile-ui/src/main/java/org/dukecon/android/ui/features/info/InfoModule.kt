@@ -1,4 +1,4 @@
-package com.chicagoroboto.features.info
+package org.dukecon.android.ui.features.info
 
 import android.content.Context
 import dagger.Module

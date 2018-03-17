@@ -1,4 +1,4 @@
-package org.dukecon.android.ui.injection
+package org.dukecon.android.ui.configuration
 
 import android.app.Application
 import org.dukecon.android.ui.app.ConferenceConfiguration

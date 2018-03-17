@@ -11,6 +11,8 @@
     <string name="action_info">Info</string>
 
     <string name="session_time" translatable="false">%1$s\nto\n%2$s</string>
+    <string name="session_start_time" translatable="false">%1$s</string>
+    <string name="session_duration" translatable="false">(%1$s min)</string>
     <string name="session_detail_time" translatable="false">%1$s, %2$s - %3$s</string>
 
     <string name="cancel">cancel</string>

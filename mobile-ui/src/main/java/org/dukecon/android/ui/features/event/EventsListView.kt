@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import org.dukecon.android.ui.ext.getComponent
 import org.dukecon.android.ui.features.main.MainComponent
+import org.dukecon.domain.features.time.CurrentTimeProvider
 import org.dukecon.presentation.feature.event.EventListContract
 import org.dukecon.presentation.model.EventView
 import org.dukecon.presentation.model.RoomView
@@ -20,8 +21,12 @@ class EventsListView(context: Context, attrs: AttributeSet? = null, defStyle: In
     private val adapter: EventsAdapter
     private var date: DateTime? = null
 
-    @Inject lateinit var presenter: EventListContract.Presenter
-    @Inject lateinit var sessionNavigator: SessionNavigator
+    @Inject
+    lateinit var presenter: EventListContract.Presenter
+    @Inject
+    lateinit var sessionNavigator: SessionNavigator
+    @Inject
+    lateinit var currentTimeProvider: CurrentTimeProvider
 
     init {
         context.getComponent<MainComponent>().sessionListComponent().inject(this)
@@ -29,7 +34,7 @@ class EventsListView(context: Context, attrs: AttributeSet? = null, defStyle: In
         layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         layoutManager = LinearLayoutManager(context, VERTICAL, false)
         addItemDecoration(EventItemDecoration(context))
-        adapter = EventsAdapter({ session ->
+        adapter = EventsAdapter(currentTimeProvider, { session ->
             sessionNavigator.showSession(session)
         })
         super.setAdapter(adapter)
