@@ -43,7 +43,8 @@ android {
 
     buildTypes {
         debug {
-            testCoverageEnabled true
+            testCoverageEnabled false
+            minifyEnabled false
         }
         release {
             minifyEnabled false
@@ -89,6 +90,13 @@ android {
             versionCode 3
             versionName gitVersionName
         }
+        apexconn {
+            dimension "dukecon"
+            applicationIdSuffix ".apexconn"
+
+            versionCode 3
+            versionName gitVersionName
+        }
     }
 }
 
@@ -112,6 +120,8 @@ dependencies {
     implementation project(':remote')
 
     implementation mobileUiDependencies.javaxAnnotation
+
+    compile 'com.android.support:multidex:1.0.1'
 
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
     implementation "com.squareup.retrofit2:converter-scalars:$rootProject.retrofitVersion"

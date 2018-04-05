@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "863194239987",
+    "firebase_url": "https://apexconn-b54da.firebaseio.com",
+    "project_id": "apexconn-b54da",
+    "storage_bucket": "apexconn-b54da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:863194239987:android:811ac2e75ec9e833",
+        "android_client_info": {
+          "package_name": "org.dukecon.android.ui.apexconn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "863194239987-31un8iolf5ljv8elp08t2l4hhgv43g72.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhb7Vjz245ERlM4fdMhcJj2HiQrJXrDKU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
