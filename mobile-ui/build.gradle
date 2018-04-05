@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'jacoco-android'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'io.fabric'
 apply from: '../config/git.gradle'
@@ -28,10 +27,8 @@ android {
     defaultConfig {
         minSdkVersion globalConfiguration["androidMinSdkVersion"]
         targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
-        multiDexEnabled = false
+        multiDexEnabled = true
         testInstrumentationRunner "org.buffer.android.boilerplate.ui.test.TestRunner"
-
-
     }
 
     signingConfigs {
@@ -84,7 +81,6 @@ android {
 
     flavorDimensions "dukecon"
 
-    buildToolsVersion '26.0.2'
     productFlavors {
         javaland {
             dimension "dukecon"
