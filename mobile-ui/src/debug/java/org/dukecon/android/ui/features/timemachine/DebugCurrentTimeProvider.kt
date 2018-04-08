@@ -5,7 +5,6 @@ import org.joda.time.DateTime
 
 private val logger = KotlinLogging.logger {}
 
-
 class DebugCurrentTimeProvider : CustomizableCurrentTimeProvider {
     override fun currentTimeMillis(): Long {
         return DateTime().millis + offset

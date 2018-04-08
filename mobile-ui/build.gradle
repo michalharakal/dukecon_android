@@ -84,7 +84,6 @@ android {
 
     flavorDimensions "dukecon"
 
-    buildToolsVersion '26.0.2'
     productFlavors {
         javaland {
             dimension "dukecon"

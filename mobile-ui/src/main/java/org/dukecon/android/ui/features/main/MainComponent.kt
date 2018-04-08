@@ -8,5 +8,6 @@ import org.dukecon.android.ui.features.speaker.SpeakerListComponent
 interface MainComponent {
     fun sessionListComponent(): EventsListComponent
     fun speakerListComponent(): SpeakerListComponent
+    fun inject(mainActivity: MainActivity)
 //    fun locationComponent(): LocationComponent
 }
