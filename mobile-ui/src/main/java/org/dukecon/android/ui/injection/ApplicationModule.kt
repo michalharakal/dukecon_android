@@ -2,6 +2,7 @@ package org.dukecon.android.ui.injection
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
 import com.fatboyindustrial.gsonjodatime.Converters
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
@@ -13,16 +14,21 @@ import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.dukecon.android.api.ConferencesApi
-import org.dukecon.android.cache.EventCacheImpl
+import org.dukecon.android.cache.ConferenceDataCacheImpl
 import org.dukecon.android.cache.PreferencesHelper
 import org.dukecon.android.cache.persistance.ConferenceCacheGsonSerializer
 import org.dukecon.android.ui.UiThread
 import org.dukecon.android.ui.app.ConferenceConfiguration
+import org.dukecon.android.ui.features.networking.AndroidNetworkUtils
+import org.dukecon.android.ui.features.networking.ConnectionStateMonitor
+import org.dukecon.android.ui.features.networking.LolipopConnectionStateMonitor
+import org.dukecon.android.ui.features.networking.NetworkOfflineChecker
 import org.dukecon.data.executor.JobExecutor
-import org.dukecon.data.repository.EventCache
+import org.dukecon.data.repository.ConferenceDataCache
 import org.dukecon.data.repository.EventRemote
 import org.dukecon.domain.executor.PostExecutionThread
 import org.dukecon.domain.executor.ThreadExecutor
+import org.dukecon.domain.features.networking.NetworkUtils
 import org.dukecon.remote.mapper.EventEntityMapper
 import org.dukecon.remote.mapper.EventRemoteImpl
 import org.dukecon.remote.mapper.RoomEntityMapper
@@ -51,12 +57,28 @@ open class ApplicationModule {
         return PreferencesHelper(context)
     }
 
+    @Singleton
+    @Provides
+    fun provideNetworkOfflineChecker(context: Context, networkUtils: NetworkUtils): NetworkOfflineChecker {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            LolipopConnectionStateMonitor(context, networkUtils)
+        } else {
+            ConnectionStateMonitor(context, networkUtils)
+        }
+    }
 
     @Provides
     @Singleton
-    internal fun provideEventCache(application: Application, gson: Gson, preferencesHelper: PreferencesHelper): EventCache {
+    internal fun provideFestivalNetworkUtils(context: Context): NetworkUtils {
+        return AndroidNetworkUtils(context)
+    }
+
+
+    @Provides
+    @Singleton
+    internal fun provideEventCache(application: Application, gson: Gson, preferencesHelper: PreferencesHelper): ConferenceDataCache {
         val baseCacheFolder = application.filesDir.absolutePath
-        return EventCacheImpl(ConferenceCacheGsonSerializer(baseCacheFolder, gson), preferencesHelper)
+        return ConferenceDataCacheImpl(ConferenceCacheGsonSerializer(baseCacheFolder, gson), preferencesHelper)
     }
 
     @Provides
