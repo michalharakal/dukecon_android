@@ -16,6 +16,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.view_speaker_detail.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getActivity
@@ -43,14 +44,6 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
             speakerId = it.intent.getStringExtra("speaker_id")
         }
 
-        // FIXME: the shared image is transition properly. The start/end locations are off
-        //  ViewCompat.setTransitionName(image, "image_$speakerId")
-        toolbar.setNavigationOnClickListener {
-            if (context is Activity) {
-                ActivityCompat.finishAfterTransition(context)
-            }
-        }
-
         presenter.onAttach(this)
     }
 
@@ -68,19 +61,24 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
         bio.text = speaker.bio
 
         if (speaker.twitter != null && speaker.twitter.isNotEmpty()) {
-            twitter.visibility = VISIBLE
-            twitter.text = speaker.twitter
-            twitter.setCompoundDrawablesWithIntrinsicBounds(
-                    DrawableUtils.create(context, R.drawable.ic_logo_twitter),
-                    null,
-                    null,
-                    null)
 
-            twitter.setOnClickListener {
-                val twitterIntent = Intent(Intent.ACTION_VIEW).apply {
-                    data = Uri.parse("${speaker.twitter}")
+            val twitterIntent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse("${speaker.twitter}")
+            }
+
+            if (twitterIntent.resolveActivity(context.getPackageManager()) != null) {
+                twitter.visibility = VISIBLE
+                twitter.text = speaker.twitter
+                twitter.setCompoundDrawablesWithIntrinsicBounds(
+                        DrawableUtils.create(context, R.drawable.ic_logo_twitter),
+                        null,
+                        null,
+                        null)
+
+                twitter.setOnClickListener {
+                    context.startActivity(twitterIntent)
+
                 }
-                context.startActivity(twitterIntent)
             }
         } else {
             twitter.visibility = GONE
