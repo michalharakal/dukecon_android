@@ -271,7 +271,7 @@ class DukeconDataRepository @Inject constructor(private val factory: EventDataSt
                             event.speakers, Favorite(event.name, false), event.room))
                 }
             }
-            return newlist.filter { it -> it != null }
+            return newlist
         } else {
             return events
         }

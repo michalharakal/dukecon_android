@@ -25,7 +25,7 @@ interface ConferenceRepository {
     fun getEventDates(): Single<List<DateTime>>
 
     fun getSpeakers(): Single<List<Speaker>>
-    fun getSpeaker(s: String): Single<Speaker>
+    fun getSpeaker(id: String): Single<Speaker>
     fun saveSpeakers(speakers: List<Speaker>): Completable
 
     fun getRooms(): Single<List<Room>>
