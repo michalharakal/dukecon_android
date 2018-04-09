@@ -18,7 +18,7 @@ import org.dukecon.android.cache.ConferenceDataCacheImpl
 import org.dukecon.android.cache.PreferencesHelper
 import org.dukecon.android.cache.persistance.ConferenceCacheGsonSerializer
 import org.dukecon.android.ui.UiThread
-import org.dukecon.android.ui.app.ConferenceConfiguration
+import org.dukecon.data.source.ConferenceConfiguration
 import org.dukecon.android.ui.features.networking.AndroidNetworkUtils
 import org.dukecon.android.ui.features.networking.ConnectionStateMonitor
 import org.dukecon.android.ui.features.networking.LolipopConnectionStateMonitor
