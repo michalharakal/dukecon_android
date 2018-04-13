@@ -18,7 +18,6 @@ import org.dukecon.android.cache.ConferenceDataCacheImpl
 import org.dukecon.android.cache.PreferencesHelper
 import org.dukecon.android.cache.persistance.ConferenceCacheGsonSerializer
 import org.dukecon.android.ui.UiThread
-import org.dukecon.data.source.ConferenceConfiguration
 import org.dukecon.android.ui.features.networking.AndroidNetworkUtils
 import org.dukecon.android.ui.features.networking.ConnectionStateMonitor
 import org.dukecon.android.ui.features.networking.LolipopConnectionStateMonitor
@@ -26,6 +25,8 @@ import org.dukecon.android.ui.features.networking.NetworkOfflineChecker
 import org.dukecon.data.executor.JobExecutor
 import org.dukecon.data.repository.ConferenceDataCache
 import org.dukecon.data.repository.EventRemote
+import org.dukecon.data.source.ConferenceConfiguration
+import org.dukecon.domain.aspects.twitter.TwitterLinks
 import org.dukecon.domain.executor.PostExecutionThread
 import org.dukecon.domain.executor.ThreadExecutor
 import org.dukecon.domain.features.networking.NetworkUtils
@@ -79,6 +80,12 @@ open class ApplicationModule {
     internal fun provideEventCache(application: Application, gson: Gson, preferencesHelper: PreferencesHelper): ConferenceDataCache {
         val baseCacheFolder = application.filesDir.absolutePath
         return ConferenceDataCacheImpl(ConferenceCacheGsonSerializer(baseCacheFolder, gson), preferencesHelper)
+    }
+
+    @Provides
+    @Singleton
+    internal fun providetwitterLinkMapper(): TwitterLinks {
+        return TwitterLinks()
     }
 
     @Provides

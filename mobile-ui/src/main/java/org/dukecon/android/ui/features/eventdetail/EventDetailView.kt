@@ -50,7 +50,7 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
             }
         }
 
-        speakerAdapter = SpeakerAdapter(true, { speaker, image ->
+        speakerAdapter = SpeakerAdapter(true, { speaker, _ ->
             speakerNavigator.navigateToSpeaker(speaker.id)
         })
         speakers.adapter = speakerAdapter

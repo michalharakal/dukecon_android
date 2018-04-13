@@ -67,8 +67,7 @@ class ConferenceDataCacheImpl @Inject constructor(
         val currentTime = System.currentTimeMillis()
         val lastUpdateTime = preferencesHelper.lastCacheTime
 
-        val expired =  currentTime - lastUpdateTime > EXPIRATION_TIME
-        return true
+        return currentTime - lastUpdateTime > EXPIRATION_TIME
     }
 
     override fun saveRooms(rooms: List<RoomEntity>): Completable {
@@ -155,7 +154,7 @@ class ConferenceDataCacheImpl @Inject constructor(
             if (favorite.selected) {
                 val newlist: MutableList<FavoriteEntity> = cacheFavorites.toMutableList()
                 newlist.add(favorite)
-                cacheFavorites = newlist.filter { it -> it != null }
+                cacheFavorites = newlist
                 changed = true
             }
         } else {
@@ -167,7 +166,7 @@ class ConferenceDataCacheImpl @Inject constructor(
                         break
                     }
                 }
-                cacheFavorites = newlist.filter { it -> it != null }
+                cacheFavorites = newlist
                 changed = true
             }
         }

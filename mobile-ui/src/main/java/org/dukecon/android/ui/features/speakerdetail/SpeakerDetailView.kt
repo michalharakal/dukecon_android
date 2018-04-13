@@ -16,7 +16,6 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
-import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.view_speaker_detail.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getActivity
@@ -60,15 +59,14 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
         name.text = speaker.name
         bio.text = speaker.bio
 
-        if (speaker.twitter != null && speaker.twitter.isNotEmpty()) {
-
+        if (speaker.twitter.isNotEmpty()) {
             val twitterIntent = Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse("${speaker.twitter}")
             }
 
             if (twitterIntent.resolveActivity(context.getPackageManager()) != null) {
                 twitter.visibility = VISIBLE
-                twitter.text = speaker.twitter
+                twitter.text = speaker.twitterHandle
                 twitter.setCompoundDrawablesWithIntrinsicBounds(
                         DrawableUtils.create(context, R.drawable.ic_logo_twitter),
                         null,

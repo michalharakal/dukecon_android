@@ -37,7 +37,7 @@ class InfoAdapter(val libraryListener: (library: LibraryView) -> Unit) : Recycle
             return R.layout.view_info_topper
         }
         --i
-        for ((key, value) in libraries) {
+        for ((_, value) in libraries) {
             if (i == 0) {
                 return R.layout.view_info_header
             }

@@ -1,6 +1,7 @@
 package org.dukecon.data.mapper
 
 import org.dukecon.data.model.SpeakerEntity
+import org.dukecon.domain.aspects.twitter.TwitterLinks
 import org.dukecon.domain.model.Speaker
 import javax.inject.Inject
 
@@ -9,13 +10,14 @@ import javax.inject.Inject
  * Map a [SpeakerEntity] to and from a [Speaker] instance when data is moving between
  * this later and the Domain layer
  */
-open class SpeakerMapper @Inject constructor() : Mapper<SpeakerEntity, Speaker> {
+open class SpeakerMapper @Inject constructor(val twitterLinks: TwitterLinks) : Mapper<SpeakerEntity, Speaker> {
 
     /**
      * Map a [SpeakerEntity] instance to a [Speaker] instance
      */
     override fun mapFromEntity(type: SpeakerEntity): Speaker {
-        return Speaker(type.id, type.name, type.title, type.twitter, type.bio, type.website, type.avatar)
+        return Speaker(type.id, type.name, type.title, twitterLinks.getNormalizedTwitterUrl(type.twitter),
+                type.bio, type.website, type.avatar)
     }
 
     /**
