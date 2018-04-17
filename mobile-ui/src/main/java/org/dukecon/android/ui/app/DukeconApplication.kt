@@ -1,16 +1,13 @@
 package org.dukecon.android.ui.app
 
 import android.app.Application
-import android.content.Context
 import org.dukecon.android.ui.BuildConfig
 import org.dukecon.android.ui.injection.ApplicationComponent
 import org.dukecon.android.ui.injection.DaggerApplicationComponent
 import timber.log.Timber
-import android.support.multidex.MultiDex
-import android.support.multidex.MultiDexApplication
 
 
-class DukeconApplication : MultiDexApplication() {
+class DukeconApplication : Application() {
 
    lateinit var component: ApplicationComponent
 
@@ -23,11 +20,6 @@ class DukeconApplication : MultiDexApplication() {
 
         component.inject(this)
         setupTimber()
-    }
-
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(base)
-        MultiDex.install(this)
     }
 
     private fun setupTimber() {

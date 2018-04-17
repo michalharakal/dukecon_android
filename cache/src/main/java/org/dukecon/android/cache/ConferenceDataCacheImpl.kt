@@ -9,7 +9,6 @@ import org.dukecon.data.model.FavoriteEntity
 import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.repository.ConferenceDataCache
-import org.dukecon.domain.features.networking.NetworkUtils
 import org.joda.time.DateTime
 import javax.inject.Inject
 

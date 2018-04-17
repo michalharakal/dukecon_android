@@ -10,12 +10,6 @@ import android.support.v4.app.ActivityCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.ImageView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.view_speaker_detail.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getActivity
@@ -44,6 +38,7 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
         }
 
         presenter.onAttach(this)
+        presenter.setSpeakerId(speakerId)
     }
 
     override fun onDetachedFromWindow() {
@@ -100,7 +95,7 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
         } else {
             github.visibility = GONE
         }
-
+/*
         val options = RequestOptions()
                 .placeholder(DrawableUtils.create(context, R.drawable.ph_speaker))
 
@@ -109,22 +104,9 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
                 .apply(options)
                 .listener(GlideAnimationListener(image, getActivity()!!))
                 .into(image)
+                */
     }
 
-    class GlideAnimationListener(val image: ImageView, val activity: Activity) : RequestListener<Drawable> {
 
-        override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-            ActivityCompat.startPostponedEnterTransition(activity)
-            return false
-        }
-
-        override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-            image.setImageDrawable(resource)
-            ActivityCompat.startPostponedEnterTransition(activity)
-            return false
-        }
-
-
-    }
 
 }
