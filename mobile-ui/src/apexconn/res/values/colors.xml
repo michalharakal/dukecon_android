@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primaryColor">#297ABE</color> 
-    <color name="primaryLightColor">#58c7bd</color>
-    <color name="primaryDarkColor">#006760</color>
-    <color name="secondaryColor">#06517c</color>
+    <color name="primaryColor">#507ABB</color>
+    <color name="primaryLightColor">#83a9ee</color>
+    <color name="primaryDarkColor">#134e8b</color>
+    <color name="primaryTextColor">#ffffff</color>
 
-    <color name="colorAccent">#297ABE</color>
+    <color name="secondaryColor">#6F6F6F</color>
+    <color name="secondaryTextColor">#B1B1B1</color>
+    <color name="secondaryLightColor">#9d9d9d</color>
+    <color name="secondaryDarkColor">#444444</color>
+
+    <color name="colorAccent">#6F6F6F</color>
 
 
-    <color name="secondaryLightColor">#487dab</color>
-    <color name="secondaryDarkColor">#00294f</color>
-    <color name="primaryTextColor">#000000</color>
-    <color name="secondaryTextColor">#ffffff</color>
     <color name="twitter_blue">#55ACEE</color>
     <color name="bg_info_header">#1f000000</color>
     <color name="session_bg">#ffffffff</color>
