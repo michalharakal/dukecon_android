@@ -45,7 +45,7 @@ class EventListPresenter @Inject constructor(val currentTimeProvider: CurrentTim
 
     override fun setDate(conferenceDay: DateTime) {
 
-        this.date = date
+        this.date = conferenceDay
 
         getEventsUseCase.execute(EventSubscriber(), date.dayOfMonth)
 

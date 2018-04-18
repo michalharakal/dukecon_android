@@ -1,15 +1,12 @@
 package org.dukecon.android.ui.features.speakerdetail
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.support.constraint.ConstraintLayout
-import android.support.v4.app.ActivityCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.ImageView
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.view_speaker_detail.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getActivity
@@ -95,18 +92,6 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
         } else {
             github.visibility = GONE
         }
-/*
-        val options = RequestOptions()
-                .placeholder(DrawableUtils.create(context, R.drawable.ph_speaker))
-
-        Glide.with(context)
-                .load(speaker.avatar)
-                .apply(options)
-                .listener(GlideAnimationListener(image, getActivity()!!))
-                .into(image)
-                */
+        Picasso.with(context).load(speaker.avatar).into(image)
     }
-
-
-
 }
