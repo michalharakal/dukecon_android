@@ -54,6 +54,7 @@ internal class SpeakerAdapter(val wrapsWidth: Boolean = true, val onSpeakerClick
 
             Picasso.with(itemView.context)
                     .load(speaker.avatar)
+                    .placeholder(R.drawable.ph_speaker)
                     .into(image)
         }
 

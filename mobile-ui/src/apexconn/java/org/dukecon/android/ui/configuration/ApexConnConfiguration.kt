@@ -5,7 +5,7 @@ import org.dukecon.data.source.ConferenceConfiguration
 
 class ApexConnConfiguration(val application: Application) : ConferenceConfiguration {
     override val speakerAvatarUrl: String
-        get() = "https://programm.doag.org/apex/2018/rest/"
+        get() = baseUrl + "speaker/images/"
     override val baseUrl: String
         get() = "https://programm.doag.org/apex/2018/rest/"
     override val conferenceId: String
