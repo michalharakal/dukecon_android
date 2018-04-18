@@ -1,5 +1,6 @@
 package org.dukecon.android.ui.features.speakerdetail
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -28,6 +29,12 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
         context.getComponent<SpeakerDetailComponent>().inject(this)
 
         LayoutInflater.from(context).inflate(R.layout.view_speaker_detail, this, true)
+
+        toolbar.setNavigationOnClickListener {
+            if (context is Activity) {
+                context.finish()
+            }
+        }
 
         var speakerId = ""
         getActivity()?.let {
@@ -92,6 +99,7 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
         } else {
             github.visibility = GONE
         }
-        Picasso.with(context).load(speaker.avatar).into(image)
+
+        Picasso.with(context).load(speaker.avatar).placeholder(R.drawable.ph_speaker).into(image)
     }
 }
