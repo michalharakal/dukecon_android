@@ -3,6 +3,7 @@ package org.dukecon.android.ui.features.eventdetail
 import android.app.Activity
 import android.content.Context
 import android.support.design.widget.CoordinatorLayout
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.text.format.DateUtils
 import android.util.AttributeSet
@@ -44,11 +45,6 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
         context.getComponent<EventDetailComponent>().inject(this)
 
         LayoutInflater.from(context).inflate(R.layout.view_session_detail, this, true)
-        toolbar.setNavigationOnClickListener {
-            if (context is Activity) {
-                context.finish()
-            }
-        }
 
         speakerAdapter = SpeakerAdapter(true, { speaker, _ ->
             speakerNavigator.navigateToSpeaker(speaker.id)
@@ -84,6 +80,11 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
 
     override fun showSessionDetail(session: EventView) {
         toolbar.title = session.title
+        val activity = context as AppCompatActivity
+        activity.setSupportActionBar(toolbar)
+        toolbar.setNavigationOnClickListener {
+            activity.finish()
+        }
 
         val startTime = DateUtils.formatDateTime(context, session.startTime.millis, DateUtils.FORMAT_SHOW_TIME)
         val endTime = DateUtils.formatDateTime(context, session.endTime.millis, DateUtils.FORMAT_SHOW_TIME)
