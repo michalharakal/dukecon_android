@@ -33,6 +33,7 @@ node {
             sh("find ${WORKSPACE} -name '*javaland*.apk' -exec cp {} ${WORKSPACE} \\;")
             sh("find ${WORKSPACE} -name '*apex*.apk' -exec cp {} ${WORKSPACE} \\;")
 			archive '*javaland*.apk'
+            archive '*apex*.apk'
 		} 
     } catch (e) {
         currentBuild.result = "FAILED"
