@@ -25,6 +25,7 @@ node {
 
         stage('Build application') {
             def workspace = pwd()
+            sh("keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -dname 'CN=Android Debug,O=Android,C=US'")
             sh("docker run --rm -v $workspace:/opt/workspace -u `id -u` -w /opt/workspace ${project} ./gradlew --stacktrace --info clean assemble")
         }       
 
