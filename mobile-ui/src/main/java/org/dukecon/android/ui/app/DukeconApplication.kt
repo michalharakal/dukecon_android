@@ -6,6 +6,7 @@ import org.dukecon.android.ui.injection.ApplicationComponent
 import org.dukecon.android.ui.injection.DaggerApplicationComponent
 import timber.log.Timber
 
+
 class DukeconApplication : Application() {
 
    lateinit var component: ApplicationComponent

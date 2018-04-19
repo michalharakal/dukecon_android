@@ -11,6 +11,8 @@ class LibrariesListRepository : LibrariesRepository {
 
     val libraries = listOf(
             Library("Dukecon Android", "Dukecon", "Apache 2", "https://github.com/dukecon/dukecon_android"),
+            Library("Picasso", "Square", "Apache 2", "https://github.com/square/picasso"),
+            Library("okhttp", "Square", "Apache 2", "https://github.com/square/okhttp"),
             Library("Chicago Roboto", "Ryan Harter", "Apache 2", "https://github.com/rharter/chicago-roboto"),
             Library("Android Clean Architecture Boilerplate", "Buffer inc", "MIT License", "https://github.com/bufferapp/android-clean-architecture-boilerplate"),
             Library("AOSP", "Android", "Apache 2", "https://android.googlesource.com"),
@@ -22,8 +24,7 @@ class LibrariesListRepository : LibrariesRepository {
             Library("RxAndroid", "ReactiveX", "Apache 2", "https://github.com/ReactiveX/RxAndroid"),
             Library("Dagger 2", "Google", "Apache 2", "https://github.com/google/dagger"),
             Library("Kotlin", "JetBrains", "Apache 2", "http://kotlinlang.org/"),
-            Library("CircularImageView", "Lopez Mikhael", "Apache 2", "https://github.com/lopspower/CircularImageView"),
-            Library("Glide", "Sam Judd", "Apache 2", "https://github.com/bumptech/glide")
+            Library("CircularImageView", "Lopez Mikhael", "Apache 2", "https://github.com/lopspower/CircularImageView")
     )
 
 }

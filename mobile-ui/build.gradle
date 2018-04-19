@@ -9,14 +9,27 @@ apply from: '../config/git.gradle'
 // Create a variable called keystorePropertiesFile, and initialize it to your
 // keystore.properties file, in the rootProject folder.
 def javalandReleaseKeystorePropertiesFile = rootProject.file("../dukecon/dukecon_app_releases/javaland/javalandReleaseKeystore.properties")
+def apexReleaseKeystorePropertiesFile = rootProject.file("../dukecon/dukecon_app_releases/apex/apexReleaseKeystore.properties")
+
 
 // Initialize a new Properties() object called keystoreProperties.
 def javalandReleaseKeystoreProperties = new Properties()
+
+// Initialize a new Properties() object called keystoreProperties.
+def apexReleaseKeystoreProperties = new Properties()
+
 
 if (javalandReleaseKeystorePropertiesFile.canRead()) {
     // Load your keystore.properties file into the keystoreProperties object.
     javalandReleaseKeystoreProperties.load(new FileInputStream(javalandReleaseKeystorePropertiesFile))
 }
+
+if (apexReleaseKeystorePropertiesFile.canRead()) {
+    // Load your keystore.properties file into the keystoreProperties object.
+    apexReleaseKeystoreProperties.load(new FileInputStream(apexReleaseKeystorePropertiesFile))
+}
+
+
 
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
@@ -27,17 +40,25 @@ android {
     defaultConfig {
         minSdkVersion globalConfiguration["androidMinSdkVersion"]
         targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
-        multiDexEnabled = true
+        multiDexEnabled = false
         testInstrumentationRunner "org.buffer.android.boilerplate.ui.test.TestRunner"
     }
 
     signingConfigs {
         javalandRelease {
-
             keyAlias javalandReleaseKeystoreProperties['keyAlias']
             keyPassword javalandReleaseKeystoreProperties['keyPassword']
             storeFile rootProject.file("../dukecon/dukecon_app_releases/javaland/" + javalandReleaseKeystoreProperties['storeFile'])
             storePassword javalandReleaseKeystoreProperties['storePassword']
+        }
+        apexRelease {
+            keyAlias apexReleaseKeystoreProperties['keyAlias']
+            keyPassword apexReleaseKeystoreProperties['keyPassword']
+            storeFile rootProject.file("../dukecon/dukecon_app_releases/javaland/" + apexReleaseKeystoreProperties['storeFile'])
+            storePassword apexReleaseKeystoreProperties['storePassword']
+        }
+        debug {
+            storeFile file("debug.keystore")
         }
     }
 
@@ -49,7 +70,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             proguardFile 'proguard-release-app.pro'
-            signingConfig signingConfigs.javalandRelease
+            signingConfig signingConfigs.apexRelease
         }
     }
 
@@ -89,6 +110,13 @@ android {
             versionCode 3
             versionName gitVersionName
         }
+        apexconn {
+            dimension "dukecon"
+            applicationIdSuffix ".apexconn"
+
+            versionCode 3
+            versionName gitVersionName
+        }
     }
 }
 
@@ -113,16 +141,6 @@ dependencies {
 
     implementation mobileUiDependencies.javaxAnnotation
 
-    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-scalars:$rootProject.retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
-    implementation('com.fatboyindustrial.gson-jodatime-serialisers:gson-jodatime-serialisers:1.6.0') {
-        exclude group: 'joda-time', module: 'joda-time'
-    }
-    implementation "com.squareup.okhttp3:logging-interceptor:3.9.1"
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-
-
     implementation mobileUiDependencies.kotlin
     implementation mobileUiDependencies.javaxInject
     implementation mobileUiDependencies.rxKotlin
@@ -136,15 +154,24 @@ dependencies {
     implementation mobileUiDependencies.supportDesign
     implementation mobileUiDependencies.timber
     implementation mobileUiDependencies.rxAndroid
-    implementation mobileUiDependencies.glide
-    implementation mobileUiDependencies.glideOktthp
+    implementation mobileUiDependencies.picasso
     implementation mobileUiDependencies.dagger
     implementation mobileUiDependencies.daggerSupport
     implementation mobileUiDependencies.kotlinLogging
     implementation mobileUiDependencies.slf4jAndroid
     implementation mobileUiDependencies.circularView
+    implementation mobileUiDependencies.firebaseCore
+    implementation mobileUiDependencies.crashlytics
+    implementation mobileUiDependencies.okHttp
+    implementation mobileUiDependencies.okHttpLogger
+    implementation mobileUiDependencies.jodaTime
+    implementation mobileUiDependencies.retrofit
+    implementation mobileUiDependencies.retrofitConverter
+    implementation mobileUiDependencies.retrofitAdapter
 
-    kapt mobileUiDependencies.glideAnnotation
+    implementation(mobileUiDependencies.jodaGsonSerializer) {
+        exclude group: 'joda-time', module: 'joda-time'
+    }
 
     testImplementation mobileUiTestDependencies.kotlinJUnit
 
@@ -177,12 +204,6 @@ dependencies {
         exclude module: 'recyclerview-v7'
         exclude module: 'design'
     }
-    implementation 'com.google.firebase:firebase-core:11.8.0'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
-        transitive = true
-    }
-    implementation 'com.google.firebase:firebase-core:11.8.0'
-
     kaptTest mobileUiDependencies.daggerCompiler
     kaptAndroidTest mobileUiDependencies.daggerCompiler
 }

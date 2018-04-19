@@ -2,6 +2,6 @@
 <resources>
 
     <style name="JavaLand" parent="android:Theme.Material.Light.NoActionBar" >
-        <item name="android:colorAccent">@color/colorPrimary</item>
+        <item name="android:colorAccent">@color/primaryColor</item>
     </style>
 </resources>

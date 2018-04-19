@@ -3,8 +3,8 @@ package org.dukecon.remote.mapper
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import org.dukecon.android.api.model.Speaker
-import org.dukecon.domain.aspects.twitter.TwitterLinkMapper
 import org.dukecon.data.source.ConferenceConfiguration
+import org.dukecon.domain.aspects.twitter.TwitterLinks
 import org.junit.Before
 import org.junit.Test
 
@@ -17,7 +17,7 @@ class SpeakerEntityMapperTest {
     @Before
     fun setUp() {
         conferenceConfiguration = mock()
-        mapper = SpeakerEntityMapper(conferenceConfiguration, TwitterLinkMapper())
+        mapper = SpeakerEntityMapper(conferenceConfiguration, TwitterLinks())
         whenever(conferenceConfiguration.speakerAvatarUrl).thenReturn("https://conference.com/speaker/avatar")
     }
 
