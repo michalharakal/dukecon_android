@@ -11,4 +11,11 @@
     <string name="submit">Senden</string>
     <string name="cd_logo">Logo</string>
     <string name="info_topper">"Entwickelt in Kotlin by Michal Harakaľ und Falk Sippach als Projekt der Java user Group Darmstadt und mit Benutzung und Hilfe folgenden Bibiliotheken. Diese App basiert auf der Chicago-Roboto App. "</string>
+
+    <string name="feedback_title">Bewertung</string>
+    <string name="feedback_session">Vortrag gesamt</string>
+    <string name="feedback_comment">Kommentar</string>
+
+
+
 </resources>

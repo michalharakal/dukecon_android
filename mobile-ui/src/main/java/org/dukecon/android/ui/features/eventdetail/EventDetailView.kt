@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.text.format.DateUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
+import com.chicagoroboto.features.sessiondetail.feedback.FeedbackDialog
 import kotlinx.android.synthetic.main.view_session_detail.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getComponent
@@ -55,7 +57,7 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
         // initially hide the feedback button until we get a session
         feedback.visibility = GONE
         feedback.setOnClickListener {
-            // FeedbackDialog(context, sessionId!!).show()
+            FeedbackDialog(context, sessionId!!).show()
         }
         favorite.setOnClickListener {
             presenter.toggleFavorite()
@@ -108,7 +110,7 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
             }
             status.setText(statusString)
 
-            feedback.visibility = GONE // TODO to be added
+            feedback.visibility = View.VISIBLE
         }
     }
 

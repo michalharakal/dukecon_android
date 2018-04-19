@@ -31,6 +31,9 @@ class DukeconDataRepository @Inject constructor(private val factory: EventDataSt
                                                 private val roomMapper: RoomMapper,
                                                 private val favoriteMapper: FavoriteMapper) :
         ConferenceRepository {
+    override fun submitFeedback(feedback: Feedback): Single<Any> {
+        return Single.just(Any())
+    }
 
     private var relay: PublishRelay<Change> = PublishRelay.create<Change>()
 
