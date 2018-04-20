@@ -9,7 +9,7 @@ import org.dukecon.data.model.FeedbackEntity
 import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.repository.EventRemote
-import java.net.SocketTimeoutException
+import java.io.IOException
 import javax.inject.Inject
 
 
@@ -35,7 +35,7 @@ class EventRemoteImpl @Inject constructor(private val conferenceApi: Conferences
                 } else {
                     s.onError(Throwable())
                 }
-            } catch (e: SocketTimeoutException) {
+            } catch (e: IOException) {
                 s.onError(e)
             }
         })
@@ -60,7 +60,7 @@ class EventRemoteImpl @Inject constructor(private val conferenceApi: Conferences
                 } else {
                     s.onError(Throwable())
                 }
-            } catch (e: SocketTimeoutException) {
+            } catch (e: IOException) {
                 s.onError(e)
             }
         })
@@ -91,8 +91,8 @@ class EventRemoteImpl @Inject constructor(private val conferenceApi: Conferences
                 } else {
                     s.onError(Throwable())
                 }
-            } catch (e: SocketTimeoutException) {
-                s.onError(e)
+            } catch (ex: IOException) {
+                s.onError(ex)
             }
         })
     }
@@ -120,7 +120,7 @@ class EventRemoteImpl @Inject constructor(private val conferenceApi: Conferences
                 } else {
                     s.onError(Throwable())
                 }
-            } catch (e: SocketTimeoutException) {
+            } catch (e: IOException) {
                 s.onError(e)
             }
         })
@@ -144,7 +144,7 @@ class EventRemoteImpl @Inject constructor(private val conferenceApi: Conferences
                 } else {
                     s.onError(Throwable())
                 }
-            } catch (e: SocketTimeoutException) {
+            } catch (e: IOException) {
                 s.onError(e)
             }
         })
@@ -171,7 +171,7 @@ class EventRemoteImpl @Inject constructor(private val conferenceApi: Conferences
                 } else {
                     s.onError(Throwable())
                 }
-            } catch (e: SocketTimeoutException) {
+            } catch (e: IOException) {
                 s.onError(e)
             }
         })

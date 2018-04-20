@@ -4,15 +4,23 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/feedback_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primaryColor"
+        android:padding="@dimen/_1_BU"
+        android:text="@string/feedback_title"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:textColor="#fff"
+        android:textStyle="bold" />
+
     <LinearLayout
         android:id="@+id/container_ratings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="16dp">
+        android:padding="@dimen/_1_BU">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,8 +30,10 @@
 
 
             <RadioGroup
+                android:id="@+id/rating"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/_1_BU"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
@@ -37,7 +47,8 @@
                     android:background="@drawable/feedback_radion_button_green"
                     android:button="@android:color/transparent"
                     android:text="@string/rating_good"
-                    android:textColor="@drawable/feedback_tectcolor_green" />
+                    android:textColor="@drawable/feedback_tectcolor_green"
+                    android:textStyle="bold" />
 
                 <RadioButton
                     android:id="@+id/ok"
@@ -46,10 +57,11 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/traffic_light_rating_margin"
                     android:layout_weight="1"
-                    android:text="@string/rating_ok"
                     android:background="@drawable/feedback_radion_button_yellow"
                     android:button="@android:color/transparent"
-                    android:textColor="@drawable/feedback_tectcolor_yellow" />
+                    android:text="@string/rating_ok"
+                    android:textColor="@drawable/feedback_tectcolor_yellow"
+                    android:textStyle="bold" />
 
                 <RadioButton
                     android:id="@+id/bad"
@@ -58,27 +70,28 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/traffic_light_rating_margin"
                     android:layout_weight="1"
-                    android:text="@string/rating_bad"
-                    android:button="@android:color/transparent"
                     android:background="@drawable/feedback_radion_button_red"
-                    android:textColor="@drawable/feedback_tectcolor_red" />
+                    android:button="@android:color/transparent"
+                    android:text="@string/rating_bad"
+                    android:textColor="@drawable/feedback_tectcolor_red"
+                    android:textStyle="bold" />
             </RadioGroup>
-
 
 
         </LinearLayout>
 
         <EditText
             android:id="@+id/comment"
-            android:padding="@dimen/_1_BU"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/edittextbackground"
             android:gravity="top"
             android:hint="@string/feedback_comment"
             android:inputType="text|textMultiLine|textImeMultiLine|textNoSuggestions|textShortMessage"
-            android:lines="5"
+            android:lines="7"
+            android:padding="@dimen/_1_BU"
             android:singleLine="false"
-            android:background="@drawable/edittextbackground"
+
             android:textAppearance="?android:textAppearanceMedium" />
     </LinearLayout>
 
@@ -86,7 +99,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/_1_BU"
+        android:paddingLeft="@dimen/_1_BU"
+        android:paddingRight="@dimen/_1_BU">
 
         <Button
             android:id="@+id/cancel"

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import kotlinx.android.synthetic.main.dialog_feedback.view.*
+import kotlinx.android.synthetic.main.view_session_detail.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getComponent
 import org.dukecon.android.ui.features.eventdetail.di.EventDetailComponent
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 class FeedbackDialog(context: Context, val sessionId: String) : Dialog(context, true, null), FeedbackMvp.View {
 
-    @Inject lateinit var presenter: FeedbackMvp.Presenter
+    @Inject
+    lateinit var presenter: FeedbackMvp.Presenter
 
     lateinit var view: View
 
@@ -24,10 +26,10 @@ class FeedbackDialog(context: Context, val sessionId: String) : Dialog(context, 
         presenter.setSessionId(sessionId)
 
         view = LayoutInflater.from(context).inflate(R.layout.dialog_feedback, null, false)
-        this.setTitle(R.string.feedback_title)
+        view.feedback_title.setText(R.string.feedback_title)
         view.submit.setOnClickListener {
             // view.overall.rating.toInt()
-            presenter.submit(1, view.comment.editableText.toString())
+            presenter.submit(getRating(), view.comment.editableText.toString())
         }
 
         view.cancel.setOnClickListener {
@@ -35,6 +37,17 @@ class FeedbackDialog(context: Context, val sessionId: String) : Dialog(context, 
         }
 
         setContentView(view)
+    }
+
+    private fun getRating(): Int {
+        when (view.rating.checkedRadioButtonId) {
+            R.id.good -> return 1
+            R.id.ok -> return 2
+            R.id.bad -> return 3
+            else -> { // Note the block
+                return 0
+            }
+        }
     }
 
     override fun onAttachedToWindow() {
