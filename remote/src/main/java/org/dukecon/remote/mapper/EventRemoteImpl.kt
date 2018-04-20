@@ -5,6 +5,7 @@ import org.dukecon.android.api.ConferencesApi
 import org.dukecon.android.api.model.Event
 import org.dukecon.android.api.model.Speaker
 import org.dukecon.data.model.EventEntity
+import org.dukecon.data.model.FeedbackEntity
 import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.repository.EventRemote
@@ -20,9 +21,25 @@ import javax.inject.Inject
 class EventRemoteImpl @Inject constructor(private val conferenceApi: ConferencesApi,
                                           private val conferenceId: String,
                                           private val entityMapper: EventEntityMapper,
+                                          private val feedbackEntityMapper: FeedbackEntityMapper,
                                           private val speakersEntityMapper: SpeakerEntityMapper,
                                           private val roomEntityMapper: RoomEntityMapper) :
         EventRemote {
+    override fun submitFeedback(feedback: FeedbackEntity): Single<Any> {
+        return Single.create({ s ->
+            val call = conferenceApi.updateFeedback(conferenceId, feedback.sessionId, feedbackEntityMapper.mapToRemote(feedback))
+            try {
+                val response = call.execute()
+                if (response.isSuccessful) {
+                    s.onSuccess(Any())
+                } else {
+                    s.onError(Throwable())
+                }
+            } catch (e: SocketTimeoutException) {
+                s.onError(e)
+            }
+        })
+    }
 
     override fun getSpeaker(id: String): Single<SpeakerEntity> {
         return Single.create({ s ->

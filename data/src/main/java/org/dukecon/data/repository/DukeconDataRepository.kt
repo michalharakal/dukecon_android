@@ -5,10 +5,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import org.dukecon.data.mapper.EventMapper
-import org.dukecon.data.mapper.FavoriteMapper
-import org.dukecon.data.mapper.RoomMapper
-import org.dukecon.data.mapper.SpeakerMapper
+import org.dukecon.data.mapper.*
 import org.dukecon.data.model.EventEntity
 import org.dukecon.data.model.FavoriteEntity
 import org.dukecon.data.model.RoomEntity
@@ -29,10 +26,11 @@ class DukeconDataRepository @Inject constructor(private val factory: EventDataSt
                                                 private val eventMapper: EventMapper,
                                                 private val speakerMapper: SpeakerMapper,
                                                 private val roomMapper: RoomMapper,
+                                                private val feedbackMapper: FeedbackMapper,
                                                 private val favoriteMapper: FavoriteMapper) :
         ConferenceRepository {
     override fun submitFeedback(feedback: Feedback): Single<Any> {
-        return Single.just(Any())
+        return factory.retrieveRemoteDataStore().submitFeedback(feedbackMapper.mapToEntity(feedback))
     }
 
     private var relay: PublishRelay<Change> = PublishRelay.create<Change>()

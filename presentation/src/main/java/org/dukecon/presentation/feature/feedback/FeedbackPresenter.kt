@@ -5,7 +5,6 @@ import org.dukecon.domain.features.feedback.SubmitFeedbackUseCase
 import org.dukecon.domain.model.Feedback
 
 class FeedbackPresenter(private val submitFeedbackUseCase: SubmitFeedbackUseCase) : FeedbackMvp.Presenter {
-
     private var view: FeedbackMvp.View? = null
     private var sessionId: String? = null
 
@@ -31,10 +30,10 @@ class FeedbackPresenter(private val submitFeedbackUseCase: SubmitFeedbackUseCase
         this.sessionId = sessionId
     }
 
-    override fun submit(overall: Int) {
+    override fun submit(overall: Int, comment: String) {
         val sessionId = this.sessionId
         if (sessionId != null) {
-            submitFeedbackUseCase.execute(FeedSubscriber(), Feedback(sessionId, overall))
+            submitFeedbackUseCase.execute(FeedSubscriber(), Feedback(sessionId, overall, comment))
         }
     }
 }

@@ -13,6 +13,6 @@ interface FeedbackMvp {
     interface Presenter : BasePresenter<FeedbackMvp.View> {
         fun setSessionId(sessionId: String)
 
-        fun submit(overall: Int)
+        fun submit(overall: Int, comment: String)
     }
 }

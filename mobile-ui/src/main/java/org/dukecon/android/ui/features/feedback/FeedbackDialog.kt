@@ -24,8 +24,10 @@ class FeedbackDialog(context: Context, val sessionId: String) : Dialog(context, 
         presenter.setSessionId(sessionId)
 
         view = LayoutInflater.from(context).inflate(R.layout.dialog_feedback, null, false)
+        this.setTitle(R.string.feedback_title)
         view.submit.setOnClickListener {
-            presenter.submit(1) //view.overall.rating)
+            // view.overall.rating.toInt()
+            presenter.submit(1, view.comment.editableText.toString())
         }
 
         view.cancel.setOnClickListener {

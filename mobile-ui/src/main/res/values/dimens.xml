@@ -6,4 +6,6 @@
 
     <!-- Z-axis elevation -->
     <dimen name="app_bar_elevation">4dp</dimen>
+    <dimen name="_1_BU">16dp</dimen>
+    <dimen name="traffic_light_rating_margin">4dp</dimen>
 </resources>
