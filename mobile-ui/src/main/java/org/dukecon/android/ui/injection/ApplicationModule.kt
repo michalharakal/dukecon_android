@@ -30,14 +30,12 @@ import org.dukecon.domain.aspects.twitter.TwitterLinks
 import org.dukecon.domain.executor.PostExecutionThread
 import org.dukecon.domain.executor.ThreadExecutor
 import org.dukecon.domain.features.networking.NetworkUtils
-import org.dukecon.remote.mapper.EventEntityMapper
-import org.dukecon.remote.mapper.EventRemoteImpl
-import org.dukecon.remote.mapper.RoomEntityMapper
-import org.dukecon.remote.mapper.SpeakerEntityMapper
+import org.dukecon.remote.mapper.*
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.security.cert.X509Certificate
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 private val logger = KotlinLogging.logger {}
@@ -93,8 +91,10 @@ open class ApplicationModule {
                                     factory: EventEntityMapper,
                                     speakerMapper: SpeakerEntityMapper,
                                     roomEntityMapper: RoomEntityMapper,
+                                    feedbackEntityMapper: FeedbackEntityMapper,
                                     conferenceConfiguration: ConferenceConfiguration): EventRemote {
-        return EventRemoteImpl(service, conferenceConfiguration.conferenceId, factory, speakerMapper, roomEntityMapper)
+        return EventRemoteImpl(service, conferenceConfiguration.conferenceId, factory, feedbackEntityMapper,
+                speakerMapper, roomEntityMapper)
     }
 
 
@@ -151,6 +151,8 @@ open class ApplicationModule {
         return OkHttpClient.Builder()
                 .addInterceptor(interceptor)
                 .cache(cache)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
                 .sslSocketFactory(sslContext.getSocketFactory(), xtm)
                 .hostnameVerifier(DO_NOT_VERIFY_IMP())
                 .build()

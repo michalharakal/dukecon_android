@@ -5,10 +5,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import org.dukecon.data.mapper.EventMapper
-import org.dukecon.data.mapper.FavoriteMapper
-import org.dukecon.data.mapper.RoomMapper
-import org.dukecon.data.mapper.SpeakerMapper
+import org.dukecon.data.mapper.*
 import org.dukecon.data.model.EventEntity
 import org.dukecon.data.model.FavoriteEntity
 import org.dukecon.data.model.RoomEntity
@@ -29,8 +26,12 @@ class DukeconDataRepository @Inject constructor(private val factory: EventDataSt
                                                 private val eventMapper: EventMapper,
                                                 private val speakerMapper: SpeakerMapper,
                                                 private val roomMapper: RoomMapper,
+                                                private val feedbackMapper: FeedbackMapper,
                                                 private val favoriteMapper: FavoriteMapper) :
         ConferenceRepository {
+    override fun submitFeedback(feedback: Feedback): Single<Any> {
+        return factory.retrieveRemoteDataStore().submitFeedback(feedbackMapper.mapToEntity(feedback))
+    }
 
     private var relay: PublishRelay<Change> = PublishRelay.create<Change>()
 
@@ -90,7 +91,7 @@ class DukeconDataRepository @Inject constructor(private val factory: EventDataSt
         val foundEvent = favorites.find { it.id.equals(event.name) }
 
         if (foundEvent != null) {
-            return Event(event.name, event.title, event.description, event.startTime, event.endTime,
+            return Event(event.eventId, event.name, event.title, event.description, event.startTime, event.endTime,
                     event.speakers, Favorite(event.name, true), event.name)
         } else {
             return event
@@ -101,7 +102,7 @@ class DukeconDataRepository @Inject constructor(private val factory: EventDataSt
         val foundRoom = rooms.find { it.id.equals(event.room) }
 
         if (foundRoom != null) {
-            return Event(event.name, event.title, event.description, event.startTime, event.endTime,
+            return Event(event.eventId, event.name, event.title, event.description, event.startTime, event.endTime,
                     event.speakers, event.favorite, foundRoom.name)
         } else {
             return event
@@ -120,7 +121,7 @@ class DukeconDataRepository @Inject constructor(private val factory: EventDataSt
         }
 
         if (foundSpeakers.isNotEmpty()) {
-            return Event(event.name, event.title, event.description, event.startTime, event.endTime,
+            return Event(event.eventId, event.name, event.title, event.description, event.startTime, event.endTime,
                     foundSpeakers, event.favorite, event.room)
         } else {
             return event
@@ -264,10 +265,10 @@ class DukeconDataRepository @Inject constructor(private val factory: EventDataSt
                 val foundEvent = favorites.find { it.id.equals(event.name) }
 
                 if (foundEvent != null) {
-                    newlist.add(Event(event.name, event.title, event.description, event.startTime, event.endTime,
+                    newlist.add(Event(event.eventId, event.name, event.title, event.description, event.startTime, event.endTime,
                             event.speakers, Favorite(event.name, true), event.room))
                 } else {
-                    newlist.add(Event(event.name, event.title, event.description, event.startTime, event.endTime,
+                    newlist.add(Event(event.eventId, event.name, event.title, event.description, event.startTime, event.endTime,
                             event.speakers, Favorite(event.name, false), event.room))
                 }
             }

@@ -3,11 +3,7 @@ package org.dukecon.domain.repository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.dukecon.domain.model.Event
-import org.dukecon.domain.model.Favorite
-import org.dukecon.domain.model.Room
-import org.dukecon.domain.model.Speaker
-import org.dukecon.domain.model.Change
+import org.dukecon.domain.model.*
 import org.joda.time.DateTime
 
 /**
@@ -37,4 +33,6 @@ interface ConferenceRepository {
     fun getFavorites(): Single<List<Favorite>>
 
     fun getEventChanges():Observable<Change>
+
+    fun submitFeedback(feedback: Feedback): Single<Any>
 }

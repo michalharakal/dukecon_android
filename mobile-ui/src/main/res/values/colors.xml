@@ -4,4 +4,8 @@
     <color name="bg_info_header">#1f000000</color>
     <color name="session_bg">#ffffffff</color>
     <color name="session_finished_bg">#e1e1e1</color>
+    <color name="feedback_green">#008000</color>
+    <color name="feedback_yellow">#FFB13C</color>
+
+
 </resources>

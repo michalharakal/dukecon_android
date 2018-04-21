@@ -2,10 +2,7 @@ package org.dukecon.android.ui.injection
 
 import dagger.Module
 import dagger.Provides
-import org.dukecon.data.mapper.EventMapper
-import org.dukecon.data.mapper.FavoriteMapper
-import org.dukecon.data.mapper.RoomMapper
-import org.dukecon.data.mapper.SpeakerMapper
+import org.dukecon.data.mapper.*
 import org.dukecon.data.repository.DukeconDataRepository
 import org.dukecon.data.source.EventDataStoreFactory
 import org.dukecon.domain.repository.ConferenceRepository
@@ -20,8 +17,9 @@ class DataModule {
                                         mapper: EventMapper,
                                         speakerMapper: SpeakerMapper,
                                         roomMapper: RoomMapper,
+                                        feedbackMapper: FeedbackMapper,
                                         favoriteMapper: FavoriteMapper): ConferenceRepository {
-        return DukeconDataRepository(factory, mapper, speakerMapper, roomMapper, favoriteMapper)
+        return DukeconDataRepository(factory, mapper, speakerMapper, roomMapper, feedbackMapper, favoriteMapper)
     }
 
 }
