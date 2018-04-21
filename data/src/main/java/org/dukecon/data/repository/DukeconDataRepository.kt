@@ -91,7 +91,7 @@ class DukeconDataRepository @Inject constructor(private val factory: EventDataSt
         val foundEvent = favorites.find { it.id.equals(event.name) }
 
         if (foundEvent != null) {
-            return Event(event.name, event.title, event.description, event.startTime, event.endTime,
+            return Event(event.eventId, event.name, event.title, event.description, event.startTime, event.endTime,
                     event.speakers, Favorite(event.name, true), event.name)
         } else {
             return event
@@ -102,7 +102,7 @@ class DukeconDataRepository @Inject constructor(private val factory: EventDataSt
         val foundRoom = rooms.find { it.id.equals(event.room) }
 
         if (foundRoom != null) {
-            return Event(event.name, event.title, event.description, event.startTime, event.endTime,
+            return Event(event.eventId, event.name, event.title, event.description, event.startTime, event.endTime,
                     event.speakers, event.favorite, foundRoom.name)
         } else {
             return event
@@ -121,7 +121,7 @@ class DukeconDataRepository @Inject constructor(private val factory: EventDataSt
         }
 
         if (foundSpeakers.isNotEmpty()) {
-            return Event(event.name, event.title, event.description, event.startTime, event.endTime,
+            return Event(event.eventId, event.name, event.title, event.description, event.startTime, event.endTime,
                     foundSpeakers, event.favorite, event.room)
         } else {
             return event
@@ -265,10 +265,10 @@ class DukeconDataRepository @Inject constructor(private val factory: EventDataSt
                 val foundEvent = favorites.find { it.id.equals(event.name) }
 
                 if (foundEvent != null) {
-                    newlist.add(Event(event.name, event.title, event.description, event.startTime, event.endTime,
+                    newlist.add(Event(event.eventId, event.name, event.title, event.description, event.startTime, event.endTime,
                             event.speakers, Favorite(event.name, true), event.room))
                 } else {
-                    newlist.add(Event(event.name, event.title, event.description, event.startTime, event.endTime,
+                    newlist.add(Event(event.eventId, event.name, event.title, event.description, event.startTime, event.endTime,
                             event.speakers, Favorite(event.name, false), event.room))
                 }
             }

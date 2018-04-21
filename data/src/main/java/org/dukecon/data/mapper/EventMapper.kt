@@ -16,7 +16,7 @@ open class EventMapper @Inject constructor() : Mapper<EventEntity, Event> {
      * Map a [EventEntity] instance to a [Event] instance
      */
     override fun mapFromEntity(type: EventEntity): Event {
-        return Event(type.id, type.title, type.abstractText, type.startTime, type.endTime,
+        return Event(type.id, type.id, type.title, type.abstractText, type.startTime, type.endTime,
                 createSpeakerList(type.speakerIds), Favorite("0", false), type.roomId)
     }
 
