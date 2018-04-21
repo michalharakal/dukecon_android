@@ -1,6 +1,5 @@
 package org.dukecon.android.ui.features.eventdetail
 
-import android.app.Activity
 import android.content.Context
 import android.support.design.widget.CoordinatorLayout
 import android.support.v7.app.AppCompatActivity
@@ -17,6 +16,7 @@ import org.dukecon.android.ui.features.eventdetail.di.EventDetailComponent
 import org.dukecon.android.ui.features.speaker.SpeakerAdapter
 import org.dukecon.android.ui.features.speakerdetail.SpeakerNavigator
 import org.dukecon.android.ui.utils.DrawableUtils
+import org.dukecon.data.source.ConferenceConfiguration
 import org.dukecon.domain.features.time.CurrentTimeProvider
 import org.dukecon.presentation.feature.eventdetail.EventDetailContract
 import org.dukecon.presentation.model.EventView
@@ -34,6 +34,9 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
 
     @Inject
     lateinit var currentTimeProvider: CurrentTimeProvider
+
+    @Inject
+    lateinit var conferenceConfiguration: ConferenceConfiguration
 
 
     private val speakerAdapter: SpeakerAdapter
@@ -110,7 +113,9 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
             }
             status.setText(statusString)
 
-            feedback.visibility = View.VISIBLE
+            if (conferenceConfiguration.supportsFeedback) {
+                feedback.visibility = View.VISIBLE
+            }
         }
     }
 
