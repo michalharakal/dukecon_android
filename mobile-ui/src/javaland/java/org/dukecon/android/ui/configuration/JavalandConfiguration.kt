@@ -4,6 +4,8 @@ import android.app.Application
 import org.dukecon.data.source.ConferenceConfiguration
 
 class JavalandConfiguration(val application: Application) : ConferenceConfiguration {
+    override val supportsFeedback: Boolean
+        get() = false
     override val speakerAvatarUrl: String
         get() = baseUrl + "speaker/images/"
     override val baseUrl: String
