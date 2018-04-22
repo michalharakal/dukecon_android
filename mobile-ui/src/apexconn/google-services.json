@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "863194239987",
-    "firebase_url": "https://apexconn-b54da.firebaseio.com",
-    "project_id": "apexconn-b54da",
-    "storage_bucket": "apexconn-b54da.appspot.com"
+    "project_number": "1023375287845",
+    "firebase_url": "https://dukecon-2e7b3.firebaseio.com",
+    "project_id": "dukecon-2e7b3",
+    "storage_bucket": "dukecon-2e7b3.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:863194239987:android:811ac2e75ec9e833",
+        "mobilesdk_app_id": "1:1023375287845:android:80ebeaa6798e4f50",
         "android_client_info": {
-          "package_name": "org.dukecon.android.ui.apexconn"
+          "package_name": "org.dukecon.android.ui.apexconnect"
         }
       },
       "oauth_client": [
         {
-          "client_id": "863194239987-31un8iolf5ljv8elp08t2l4hhgv43g72.apps.googleusercontent.com",
+          "client_id": "1023375287845-bn1pi251863ilrmrd4rqni35jvpr39vi.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBhb7Vjz245ERlM4fdMhcJj2HiQrJXrDKU"
+          "current_key": "AIzaSyCVze2DX7qz9IQD3K7idRKNapqRqgLIo2g"
         }
       ],
       "services": {

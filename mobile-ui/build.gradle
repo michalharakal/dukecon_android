@@ -112,7 +112,7 @@ android {
         }
         apexconn {
             dimension "dukecon"
-            applicationIdSuffix ".apexconn"
+            applicationIdSuffix ".apexconnect"
 
             versionCode 3
             versionName gitVersionName
