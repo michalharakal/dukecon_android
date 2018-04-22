@@ -62,8 +62,8 @@ class ConferenceCacheGsonSerializer(private val baseFolder: String, val gson: Gs
         }
     }
 
-    override fun writeRooms(rooms: List<RoomEntity>) {
-        writeList(getRoomsFullName(), rooms)
+    override fun writeRooms(cachedRooms: List<RoomEntity>) {
+        writeList(getRoomsFullName(), cachedRooms)
     }
 
     override fun writeEvents(events: List<EventEntity>) {

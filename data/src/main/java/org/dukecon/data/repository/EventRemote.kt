@@ -1,10 +1,7 @@
 package org.dukecon.data.repository
 
 import io.reactivex.Single
-import org.dukecon.data.model.EventEntity
-import org.dukecon.data.model.FavoriteEntity
-import org.dukecon.data.model.RoomEntity
-import org.dukecon.data.model.SpeakerEntity
+import org.dukecon.data.model.*
 
 interface EventRemote {
 
@@ -13,4 +10,5 @@ interface EventRemote {
     fun getRooms(): Single<List<RoomEntity>>
     fun getEvent(id: String): Single<EventEntity>
     fun getSpeaker(id: String): Single<SpeakerEntity>
+    fun submitFeedback(feedback: FeedbackEntity): Single<Any>
 }

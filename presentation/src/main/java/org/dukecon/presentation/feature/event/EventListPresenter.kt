@@ -38,14 +38,14 @@ class EventListPresenter @Inject constructor(val currentTimeProvider: CurrentTim
     private fun subscribeForChanges() {
         conferenceRepository.getEventChanges()
                 .subscribeOn(Schedulers.newThread())
-                .subscribe { result ->
+                .subscribe { _ ->
                     getEventsUseCase.execute(EventSubscriber(), date.dayOfMonth)
                 }
     }
 
-    override fun setDate(date: DateTime) {
+    override fun setDate(conferenceDay: DateTime) {
 
-        this.date = date
+        this.date = conferenceDay
 
         getEventsUseCase.execute(EventSubscriber(), date.dayOfMonth)
 

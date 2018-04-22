@@ -1,12 +1,14 @@
 package org.dukecon.android.ui.features.eventdetail
 
-import android.app.Activity
 import android.content.Context
 import android.support.design.widget.CoordinatorLayout
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.text.format.DateUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
+import com.chicagoroboto.features.sessiondetail.feedback.FeedbackDialog
 import kotlinx.android.synthetic.main.view_session_detail.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getComponent
@@ -14,6 +16,7 @@ import org.dukecon.android.ui.features.eventdetail.di.EventDetailComponent
 import org.dukecon.android.ui.features.speaker.SpeakerAdapter
 import org.dukecon.android.ui.features.speakerdetail.SpeakerNavigator
 import org.dukecon.android.ui.utils.DrawableUtils
+import org.dukecon.data.source.ConferenceConfiguration
 import org.dukecon.domain.features.time.CurrentTimeProvider
 import org.dukecon.presentation.feature.eventdetail.EventDetailContract
 import org.dukecon.presentation.model.EventView
@@ -32,6 +35,9 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
     @Inject
     lateinit var currentTimeProvider: CurrentTimeProvider
 
+    @Inject
+    lateinit var conferenceConfiguration: ConferenceConfiguration
+
 
     private val speakerAdapter: SpeakerAdapter
     private var sessionId: String? = null
@@ -44,13 +50,8 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
         context.getComponent<EventDetailComponent>().inject(this)
 
         LayoutInflater.from(context).inflate(R.layout.view_session_detail, this, true)
-        toolbar.setNavigationOnClickListener {
-            if (context is Activity) {
-                context.finish()
-            }
-        }
 
-        speakerAdapter = SpeakerAdapter(true, { speaker, image ->
+        speakerAdapter = SpeakerAdapter(true, { speaker, _ ->
             speakerNavigator.navigateToSpeaker(speaker.id)
         })
         speakers.adapter = speakerAdapter
@@ -59,7 +60,7 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
         // initially hide the feedback button until we get a session
         feedback.visibility = GONE
         feedback.setOnClickListener {
-            // FeedbackDialog(context, sessionId!!).show()
+            FeedbackDialog(context, sessionId!!).show()
         }
         favorite.setOnClickListener {
             presenter.toggleFavorite()
@@ -84,6 +85,11 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
 
     override fun showSessionDetail(session: EventView) {
         toolbar.title = session.title
+        val activity = context as AppCompatActivity
+        activity.setSupportActionBar(toolbar)
+        toolbar.setNavigationOnClickListener {
+            activity.finish()
+        }
 
         val startTime = DateUtils.formatDateTime(context, session.startTime.millis, DateUtils.FORMAT_SHOW_TIME)
         val endTime = DateUtils.formatDateTime(context, session.endTime.millis, DateUtils.FORMAT_SHOW_TIME)
@@ -107,7 +113,9 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
             }
             status.setText(statusString)
 
-            feedback.visibility = GONE // TODO to be added
+            if (conferenceConfiguration.supportsFeedback) {
+                feedback.visibility = View.VISIBLE
+            }
         }
     }
 

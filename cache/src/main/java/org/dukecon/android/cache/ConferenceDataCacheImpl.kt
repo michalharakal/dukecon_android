@@ -8,7 +8,7 @@ import org.dukecon.data.model.EventEntity
 import org.dukecon.data.model.FavoriteEntity
 import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
-import org.dukecon.data.repository.EventCache
+import org.dukecon.data.repository.ConferenceDataCache
 import org.joda.time.DateTime
 import javax.inject.Inject
 
@@ -16,11 +16,13 @@ private val logger = KotlinLogging.logger {}
 
 /**
  * Cached implementation for retrieving and saving Event instances. This class implements the
- * [EventCache] from the Data layer as it is that layers responsibility for defining the
+ * [ConferenceDataCache] from the Data layer as it is that layers responsibility for defining the
  * operations in which data store implementation layers can carry out. Just simple in memory chache
  */
-class EventCacheImpl @Inject constructor(val conferenceCacheSerializer: ConferenceCacheSerializer, val preferencesHelper: PreferencesHelper) :
-        EventCache {
+class ConferenceDataCacheImpl @Inject constructor(
+        val conferenceCacheSerializer: ConferenceCacheSerializer,
+        val preferencesHelper: PreferencesHelper) :
+        ConferenceDataCache {
 
     var cachedRooms: List<RoomEntity> = listOf()
     var cachedEvents: List<EventEntity> = listOf()
@@ -52,7 +54,8 @@ class EventCacheImpl @Inject constructor(val conferenceCacheSerializer: Conferen
     }
 
     override fun isCached(): Boolean {
-        return cachedEvents.isNotEmpty() && cacheSpeakers.isNotEmpty() && cachedRooms.isNotEmpty()
+        val cached =  cachedEvents.isNotEmpty() && cacheSpeakers.isNotEmpty() && cachedRooms.isNotEmpty()
+        return cached
     }
 
     override fun setLastCacheTime(lastCache: Long) {
@@ -150,7 +153,7 @@ class EventCacheImpl @Inject constructor(val conferenceCacheSerializer: Conferen
             if (favorite.selected) {
                 val newlist: MutableList<FavoriteEntity> = cacheFavorites.toMutableList()
                 newlist.add(favorite)
-                cacheFavorites = newlist.filter { it -> it != null }
+                cacheFavorites = newlist
                 changed = true
             }
         } else {
@@ -162,7 +165,7 @@ class EventCacheImpl @Inject constructor(val conferenceCacheSerializer: Conferen
                         break
                     }
                 }
-                cacheFavorites = newlist.filter { it -> it != null }
+                cacheFavorites = newlist
                 changed = true
             }
         }

@@ -45,7 +45,7 @@ class EventDetailPresenter @Inject constructor(val eventDetailUseCase: GetEventD
     private fun handleGetEventSuccess(event: Event) {
         this.view?.let {
             it.showSessionDetail(eventsMapper.mapToView(event))
-            it.showSpeakerInfo(event.speakers.map { it -> speakerMapper.mapToView(it) })
+            it.showSpeakerInfo(event.speakers.map { speaker -> speakerMapper.mapToView(speaker) })
             this.currentFavouriteStatus = event.favorite.selected
             it.setIsFavorite(event.favorite.selected)
         }

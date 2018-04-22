@@ -7,26 +7,32 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
-import org.dukecon.android.ui.features.info.InfoView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getAppComponent
 import org.dukecon.android.ui.features.event.EventDateView
 import org.dukecon.android.ui.features.event.SessionNavigator
 import org.dukecon.android.ui.features.eventdetail.EventDetailActivity
+import org.dukecon.android.ui.features.info.InfoView
+import org.dukecon.android.ui.features.networking.NetworkOfflineChecker
 import org.dukecon.android.ui.features.speaker.SpeakerListView
 import org.dukecon.android.ui.features.speakerdetail.SpeakerDetailActivity
 import org.dukecon.android.ui.features.speakerdetail.SpeakerNavigator
 import org.dukecon.presentation.model.EventView
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNavigationItemSelectedListener, SpeakerNavigator {
 
     lateinit var component: MainComponent
 
+    @Inject
+    lateinit var networkOfflineChecker: NetworkOfflineChecker
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         component = getAppComponent().mainComponent(MainModule(this, this))
+        component.inject(this)
 
         setContentView(R.layout.activity_main)
 
@@ -43,6 +49,16 @@ class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNav
 
         nav_view.setNavigationItemSelectedListener(this)
         nav_view.setCheckedItem(R.id.action_schedule)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        networkOfflineChecker.enable()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        networkOfflineChecker.disable()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

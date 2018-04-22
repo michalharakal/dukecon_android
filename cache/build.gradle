@@ -41,8 +41,6 @@ android {
         disable 'IconDensities'             //For testing purpose. This is safe to remove.
         disable 'IconMissingDensityFolder'  //For testing purpose. This is safe to remove.
     }
-
-    buildToolsVersion '26.0.2'
 }
 
 dependencies {

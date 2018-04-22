@@ -6,13 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_speaker.view.*
 import org.dukecon.android.ui.R
-import org.dukecon.android.ui.utils.DrawableUtils
 import org.dukecon.presentation.model.SpeakerView
-import com.bumptech.glide.request.RequestOptions
-
 
 
 internal class SpeakerAdapter(val wrapsWidth: Boolean = true, val onSpeakerClickedListener: ((speaker: SpeakerView, view: View) -> Unit)) :
@@ -55,12 +52,9 @@ internal class SpeakerAdapter(val wrapsWidth: Boolean = true, val onSpeakerClick
             name.text = speaker.name
             title.text = speaker.title
 
-            val options = RequestOptions()
-                    .placeholder(DrawableUtils.create(itemView.context, R.drawable.ph_speaker))
-
-            Glide.with(itemView.context)
+            Picasso.with(itemView.context)
                     .load(speaker.avatar)
-                    .apply(options)
+                    .placeholder(R.drawable.ph_speaker)
                     .into(image)
         }
 

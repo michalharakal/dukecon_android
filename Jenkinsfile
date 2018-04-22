@@ -25,13 +25,15 @@ node {
 
         stage('Build application') {
             def workspace = pwd()
-            sh("docker run --rm -v $workspace:/opt/workspace -u `id -u` -w /opt/workspace ${project} ./gradlew --stacktrace --info clean assemble")
+            sh("docker run --rm -v $workspace:/opt/workspace -u `id -u` -w /opt/workspace ${project} ./gradlew --stacktrace --info clean assembleDebug")
         }       
 
         stage("Archive")   {
             // move all apk file from various build variants folder into working path
             sh("find ${WORKSPACE} -name '*javaland*.apk' -exec cp {} ${WORKSPACE} \\;")
+            sh("find ${WORKSPACE} -name '*apex*.apk' -exec cp {} ${WORKSPACE} \\;")
 			archive '*javaland*.apk'
+            archive '*apex*.apk'
 		} 
     } catch (e) {
         currentBuild.result = "FAILED"

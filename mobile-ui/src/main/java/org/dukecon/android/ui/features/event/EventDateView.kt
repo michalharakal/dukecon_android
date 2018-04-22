@@ -56,11 +56,11 @@ class EventDateView(context: Context, attrs: AttributeSet? = null, defStyle: Int
         adapter.notifyDataSetChanged()
     }
 
-    override fun showSessionDates(eventDate: List<DateTime>) {
-        adapter.showEventDates(eventDate)
+    override fun showSessionDates(sessioDates: List<DateTime>) {
+        adapter.showEventDates(sessioDates)
         adapter.notifyDataSetChanged()
 
-        if (eventDate.size > 1) {
+        if (sessioDates.size > 1) {
             tabs.visibility = View.VISIBLE
         }
     }

@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.30'
+    ext.kotlin_version = '1.2.40'
     repositories {
         jcenter()
         google()
@@ -11,15 +11,16 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "gradle.plugin.org.detoeuf:swagger-codegen-plugin:1.7.2"
-        classpath "com.dicedmelon.gradle:jacoco-android:0.1.1"
+        classpath "com.dicedmelon.gradle:jacoco-android:0.1.2"
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
         classpath 'com.google.gms:google-services:3.2.0' // google-services plugin
-        classpath 'io.fabric.tools:gradle:1.25.1'
+        classpath 'io.fabric.tools:gradle:1.25.2'
 
     }
+    configurations.all { exclude module: 'groovy-all' }
 }
 
 apply from: 'dependencies.gradle'
