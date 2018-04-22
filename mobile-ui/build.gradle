@@ -54,7 +54,7 @@ android {
         apexRelease {
             keyAlias apexReleaseKeystoreProperties['keyAlias']
             keyPassword apexReleaseKeystoreProperties['keyPassword']
-            storeFile rootProject.file("../dukecon/dukecon_app_releases/javaland/" + apexReleaseKeystoreProperties['storeFile'])
+            storeFile rootProject.file("../dukecon/dukecon_app_releases/apex/" + apexReleaseKeystoreProperties['storeFile'])
             storePassword apexReleaseKeystoreProperties['storePassword']
         }
         debug {
@@ -112,7 +112,7 @@ android {
         }
         apexconn {
             dimension "dukecon"
-            applicationIdSuffix ".apexconn"
+            applicationIdSuffix ".apexconnect"
 
             versionCode 3
             versionName gitVersionName
