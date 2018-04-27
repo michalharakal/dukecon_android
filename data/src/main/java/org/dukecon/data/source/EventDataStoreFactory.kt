@@ -17,8 +17,15 @@ open class EventDataStoreFactory @Inject constructor(
      * has not expired
      */
     open fun retrieveDataStore(): EventDataStore {
-        if ((conferenceDataCache.isCached() && !conferenceDataCache.isExpired()) || (conferenceDataCache.isCached() && networkUtils.isOffline)) {
-            return retrieveCacheDataStore()
+        if (networkUtils.isInternetConected) {
+            if (conferenceDataCache.isCached() && !conferenceDataCache.isExpired()) {
+                return retrieveCacheDataStore()
+            }
+        } else {
+            // ignore data expiration, if device has cache and no internet
+            if (conferenceDataCache.isCached()) {
+                return retrieveCacheDataStore()
+            }
         }
         return retrieveRemoteDataStore()
     }
