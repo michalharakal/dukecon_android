@@ -117,6 +117,14 @@ android {
             versionCode 3
             versionName gitVersionName
         }
+
+        apachecon {
+            dimension "dukecon"
+            applicationIdSuffix ".apachecon"
+
+            versionCode 3
+            versionName gitVersionName
+        }
     }
 }
 
