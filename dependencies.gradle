@@ -17,8 +17,6 @@ ext {
     supportLibraryVersion = '27.1.0'
     constraintLayoutVersion = '1.0.2'
 
-
-
     //Libraries
     kotlinVersion = '1.2.40'
     butterKnifeVersion = '7.0.1'
@@ -45,7 +43,7 @@ ext {
     kotlinLoggingVersion = '1.5.3'
     slf4jAndroidVersion = '1.7.25'
     circularViewVersion = '3.0.2'
-    firebaseVersion = '15.0.0'
+    firebaseVersion = '15.0.2'
     firebaseDispatcherVersion = '0.8.5'
     crashlyticsVersion = '2.9.1'
 
@@ -215,6 +213,7 @@ ext {
             firebaseMessaging    : "com.google.firebase:firebase-messaging:${firebaseVersion}",
             firebaseJobDispatcher: "com.firebase:firebase-jobdispatcher:${firebaseDispatcherVersion}",
             crashlytics          : "com.crashlytics.sdk.android:crashlytics:${crashlyticsVersion}",
+            mutidex              : "com.android.support:multidex:${multiDexVersion}",
 
 
             supportDesign        : "com.android.support:design:${supportLibraryVersion}",
@@ -227,9 +226,9 @@ ext {
             okHttpLogger         : "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}",
             jodaTime             : "joda-time:joda-time:${jodaTimeVersion}",
             jodaGsonSerializer   : "com.fatboyindustrial.gson-jodatime-serialisers:gson-jodatime-serialisers:${jodaGsonSerializerVersion}",
-            retrofit          : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
-            retrofitConverter : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
-            retrofitAdapter   : "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}"
+            retrofit             : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
+            retrofitConverter    : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
+            retrofitAdapter      : "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}"
 
 
     ]

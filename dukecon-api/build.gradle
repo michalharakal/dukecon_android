@@ -34,7 +34,7 @@ dependencies {
     def apiDependencies = rootProject.ext.apiDependencies
     def apiTestDependencies = rootProject.ext.apiTestDependencies
 
-    implementation apiDependencies.swaggerAnnotations
+    compileOnly apiDependencies.swaggerAnnotations
     implementation apiDependencies.retrofit
     implementation apiDependencies.retrofitGsonConverter
     implementation apiDependencies.retrofitScalarsConverter
