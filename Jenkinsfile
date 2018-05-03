@@ -32,8 +32,10 @@ node {
             // move all apk file from various build variants folder into working path
             sh("find ${WORKSPACE} -name '*javaland*.apk' -exec cp {} ${WORKSPACE} \\;")
             sh("find ${WORKSPACE} -name '*apex*.apk' -exec cp {} ${WORKSPACE} \\;")
+            sh("find ${WORKSPACE} -name '*apache*.apk' -exec cp {} ${WORKSPACE} \\;")
 			archive '*javaland*.apk'
             archive '*apex*.apk'
+            archive '*apache*.apk'
 		} 
     } catch (e) {
         currentBuild.result = "FAILED"
