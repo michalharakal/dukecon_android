@@ -1,0 +1,47 @@
+apply plugin: 'java'
+apply plugin: "org.detoeuf.swagger-codegen"
+
+swagger {
+    inputSpec = "$project.rootDir/specs/swagger.json"
+
+    outputDir = "$buildDir/swagger"
+
+    lang = 'java'
+
+    additionalProperties = [
+            'invokerPackage'   : 'org.dukecon.android.api.service',
+            'modelPackage'     : 'org.dukecon.android.api.model',
+            'apiPackage'       : 'org.dukecon.android.api',
+            'library'          : 'retrofit2',
+            'serializableModel': 'false',
+            'dateLibrary'      : 'joda'
+    ]
+}
+
+sourceSets.main.java.srcDirs = ["$swagger.outputDir/src/main/java"]
+
+allprojects {
+    tasks.whenTaskAdded { theTask ->
+        if (theTask.name.equals('assemble')) {
+            jar.dependsOn(theTask.name)
+            theTask.name.dependsOn("swagger")
+        }
+    }
+}
+
+dependencies {
+
+    def apiDependencies = rootProject.ext.apiDependencies
+    def apiTestDependencies = rootProject.ext.apiTestDependencies
+
+    implementation apiDependencies.swaggerAnnotations
+    implementation apiDependencies.retrofit
+    implementation apiDependencies.retrofitGsonConverter
+    implementation apiDependencies.retrofitScalarsConverter
+    implementation apiDependencies.jodaTime
+    implementation(apiDependencies.oltuOAuth) {
+        exclude group: 'org.apache.oltu.oauth2', module: 'org.apache.oltu.oauth2.common'
+    }
+
+    testImplementation apiTestDependencies.junit
+}
