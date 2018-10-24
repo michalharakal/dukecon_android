@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "340994337060",
+    "firebase_url": "https://doag-1ee80.firebaseio.com",
+    "project_id": "doag-1ee80",
+    "storage_bucket": "doag-1ee80.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340994337060:android:ba6cacf822302eaf",
+        "android_client_info": {
+          "package_name": "org.dukecon.android.ui.doag"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "340994337060-vd32qdi216qm4hl80oj56tb3aeuv8ghf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAw15mgbkn8e8666VyyNkjFPF864STlDXk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

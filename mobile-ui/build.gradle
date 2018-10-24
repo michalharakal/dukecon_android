@@ -125,6 +125,14 @@ android {
             versionCode 3
             versionName gitVersionName
         }
+        
+        doagcon {
+            dimension "dukecon"
+            applicationIdSuffix ".doag"
+
+            versionCode 3
+            versionName gitVersionName
+        }
     }
 }
 
