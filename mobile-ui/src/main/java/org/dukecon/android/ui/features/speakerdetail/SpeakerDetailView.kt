@@ -16,7 +16,6 @@ import org.dukecon.android.ui.utils.DrawableUtils
 import org.dukecon.presentation.feature.speakerdetail.SpeakerDetailContract
 import javax.inject.Inject
 
-
 class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
         ConstraintLayout(context, attrs, defStyle), SpeakerDetailContract.View {
 
@@ -74,7 +73,6 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
 
                 twitter.setOnClickListener {
                     context.startActivity(twitterIntent)
-
                 }
             }
         } else {

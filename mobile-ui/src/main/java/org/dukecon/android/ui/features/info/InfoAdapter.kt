@@ -9,7 +9,6 @@ import org.dukecon.android.ui.R
 import org.dukecon.presentation.model.LibraryView
 import kotlinx.android.synthetic.main.view_info_library.view.*
 
-
 class InfoAdapter(val libraryListener: (library: LibraryView) -> Unit) : RecyclerView.Adapter<InfoAdapter.ViewHolder>() {
 
     private val libraries: MutableMap<String, MutableList<LibraryView>> = mutableMapOf()

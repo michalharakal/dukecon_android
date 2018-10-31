@@ -1,6 +1,5 @@
 package org.dukecon.android.ui.features.networking
 
-
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -9,7 +8,6 @@ import android.net.NetworkRequest
 import android.os.Build
 import android.support.annotation.RequiresApi
 import org.dukecon.domain.features.networking.NetworkUtils
-
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 class LolipopConnectionStateMonitor(val context: Context, val networkUtils: NetworkUtils)
@@ -34,7 +32,6 @@ class LolipopConnectionStateMonitor(val context: Context, val networkUtils: Netw
         connectivityManager.unregisterNetworkCallback(this)
     }
 
-
     override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
         checkoForCaptivePortal()
     }
@@ -47,6 +44,5 @@ class LolipopConnectionStateMonitor(val context: Context, val networkUtils: Netw
         Thread(Runnable {
             networkUtils.isConnectedToCaptivePortal = HTTP204CaptivePortalChecker.isCaptivePortal
         }).start()
-
     }
 }

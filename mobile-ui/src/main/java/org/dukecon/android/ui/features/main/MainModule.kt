@@ -17,5 +17,4 @@ class MainModule(val sessionNavigator: SessionNavigator, val speakerNavigator: S
     fun speakerNavigator(): SpeakerNavigator {
         return speakerNavigator
     }
-
 }

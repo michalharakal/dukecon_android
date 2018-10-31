@@ -11,5 +11,4 @@ class AndroidWebNavigator(private val context: Context) : WebNavigator {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         context.startActivity(intent)
     }
-
 }

@@ -33,5 +33,4 @@ interface ApplicationComponent {
     fun speakerDetailComponent(): SpeakerDetailComponent
     fun infoComponent(infoModule: InfoModule): InfoComponent
     fun inject(dukeconApplication: SetCustomdateTimeReceiver)
-
 }

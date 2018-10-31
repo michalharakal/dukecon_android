@@ -31,7 +31,6 @@ internal class SessionPagerAdapter : PagerAdapter() {
         container.removeView(`object` as View)
     }
 
-
     override fun getCount(): Int {
         return dates.size
     }

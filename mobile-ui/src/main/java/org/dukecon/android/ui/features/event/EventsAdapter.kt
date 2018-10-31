@@ -17,11 +17,12 @@ import org.dukecon.domain.features.time.CurrentTimeProvider
 import org.dukecon.presentation.model.EventView
 import org.dukecon.presentation.model.RoomView
 import org.dukecon.presentation.model.SpeakerView
-import org.joda.time.DateTime
 import org.joda.time.Duration
 
-internal class EventsAdapter(val currentTimeProvider: CurrentTimeProvider,
-                             val onSessionSelectedListener: ((session: EventView) -> Unit)) :
+internal class EventsAdapter(
+    val currentTimeProvider: CurrentTimeProvider,
+    val onSessionSelectedListener: ((session: EventView) -> Unit)
+) :
         RecyclerView.Adapter<EventsAdapter.ViewHolder>() {
 
     val sessions: MutableList<EventView> = mutableListOf()
@@ -68,7 +69,6 @@ internal class EventsAdapter(val currentTimeProvider: CurrentTimeProvider,
         } else {
             holder.speakers.visibility = View.GONE
         }
-
 
         if (session.room.isNotEmpty()) {
             val duration = String.format(context.getString(R.string.session_duration), Duration(session.startTime, session.endTime).standardMinutes)

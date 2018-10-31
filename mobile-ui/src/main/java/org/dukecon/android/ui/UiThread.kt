@@ -1,6 +1,5 @@
 package org.dukecon.android.ui
 
-
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.dukecon.domain.executor.PostExecutionThread
@@ -14,5 +13,4 @@ class UiThread @Inject internal constructor() : PostExecutionThread {
 
     override val scheduler: Scheduler
         get() = AndroidSchedulers.mainThread()
-
 }

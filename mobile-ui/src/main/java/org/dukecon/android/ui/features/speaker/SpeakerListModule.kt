@@ -14,5 +14,4 @@ class SpeakerListModule {
     fun speakerListPresenter(getSpeakers: GetSpeakers, speakerMapper: SpeakerMapper): SpeakerListContract.Presenter {
         return SpeakerListPresenter(getSpeakers, speakerMapper)
     }
-
 }

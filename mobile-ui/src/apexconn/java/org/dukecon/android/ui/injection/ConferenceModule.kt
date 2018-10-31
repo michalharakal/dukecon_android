@@ -14,4 +14,3 @@ open class ConferenceModule {
         return ApexConnConfiguration(application)
     }
 }
-

@@ -10,7 +10,6 @@ import org.dukecon.presentation.feature.eventdetail.EventDetailPresenter
 import org.dukecon.presentation.mapper.EventMapper
 import org.dukecon.presentation.mapper.SpeakerMapper
 
-
 @Module
 class EventDetailModule(val speakerNavigator: SpeakerNavigator) {
 
@@ -21,10 +20,11 @@ class EventDetailModule(val speakerNavigator: SpeakerNavigator) {
 
     @Provides
     fun provideEventDetailPresenter(
-            getEventDetailUseCase: GetEventDetailUseCase,
-            setFavoriteUseCase: SetFavoriteUseCase,
-            speakerMapper: SpeakerMapper,
-            eventsMapper: EventMapper): EventDetailContract.Presenter {
+        getEventDetailUseCase: GetEventDetailUseCase,
+        setFavoriteUseCase: SetFavoriteUseCase,
+        speakerMapper: SpeakerMapper,
+        eventsMapper: EventMapper
+    ): EventDetailContract.Presenter {
         return EventDetailPresenter(getEventDetailUseCase, setFavoriteUseCase, speakerMapper, eventsMapper)
     }
 }

@@ -8,7 +8,6 @@ import org.dukecon.android.ui.injection.DaggerApplicationComponent
 import timber.log.Timber
 import io.reactivex.plugins.RxJavaPlugins
 
-
 class DukeconApplication : Application() {
 
     lateinit var component: ApplicationComponent
@@ -35,12 +34,10 @@ class DukeconApplication : Application() {
         }
     }
 
-
     override fun getSystemService(name: String?): Any {
         when (name) {
             "component" -> return component
             else -> return super.getSystemService(name)
         }
     }
-
 }

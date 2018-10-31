@@ -52,6 +52,5 @@ class SpeakerListView(context: Context, attrs: AttributeSet? = null, defStyle: I
     }
 
     override fun showNoSpeakers() {
-
     }
 }
