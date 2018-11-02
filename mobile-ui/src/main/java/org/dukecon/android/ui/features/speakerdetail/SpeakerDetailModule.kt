@@ -10,8 +10,10 @@ import org.dukecon.presentation.mapper.SpeakerDetailMapper
 @Module
 class SpeakerDetailModule {
     @Provides
-    fun speakerDetailPresenter(speakerDetailUseCase: GetSpeakerDetailUseCase,
-                               speakerDetailMapper: SpeakerDetailMapper): SpeakerDetailContract.Presenter {
+    fun speakerDetailPresenter(
+        speakerDetailUseCase: GetSpeakerDetailUseCase,
+        speakerDetailMapper: SpeakerDetailMapper
+    ): SpeakerDetailContract.Presenter {
         return SpeakerDetailPresenter(speakerDetailUseCase, speakerDetailMapper)
     }
 }

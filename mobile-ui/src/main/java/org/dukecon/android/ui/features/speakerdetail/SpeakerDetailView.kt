@@ -16,7 +16,6 @@ import org.dukecon.android.ui.utils.DrawableUtils
 import org.dukecon.presentation.feature.speakerdetail.SpeakerDetailContract
 import javax.inject.Inject
 
-
 class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
         ConstraintLayout(context, attrs, defStyle), SpeakerDetailContract.View {
 
@@ -58,7 +57,7 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
         name.text = speaker.name
         bio.text = speaker.bio
 
-        if (speaker.twitter.isNotEmpty()) {
+        if (speaker.twitterHandle.isNotEmpty()) {
             val twitterIntent = Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse("${speaker.twitter}")
             }
@@ -74,7 +73,6 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
 
                 twitter.setOnClickListener {
                     context.startActivity(twitterIntent)
-
                 }
             }
         } else {

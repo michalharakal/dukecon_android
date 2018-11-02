@@ -11,7 +11,6 @@ import kotlinx.android.synthetic.main.item_speaker.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.presentation.model.SpeakerView
 
-
 internal class SpeakerAdapter(val wrapsWidth: Boolean = true, val onSpeakerClickedListener: ((speaker: SpeakerView, view: View) -> Unit)) :
         RecyclerView.Adapter<SpeakerAdapter.ViewHolder>() {
 

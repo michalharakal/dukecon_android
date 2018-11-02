@@ -72,7 +72,6 @@ open class ApplicationModule {
         return AndroidNetworkUtils(context)
     }
 
-
     @Provides
     @Singleton
     internal fun provideEventCache(application: Application, gson: Gson, preferencesHelper: PreferencesHelper): ConferenceDataCache {
@@ -87,16 +86,17 @@ open class ApplicationModule {
     }
 
     @Provides
-    internal fun provideEventRemote(service: ConferencesApi,
-                                    factory: EventEntityMapper,
-                                    speakerMapper: SpeakerEntityMapper,
-                                    roomEntityMapper: RoomEntityMapper,
-                                    feedbackEntityMapper: FeedbackEntityMapper,
-                                    conferenceConfiguration: ConferenceConfiguration): EventRemote {
+    internal fun provideEventRemote(
+        service: ConferencesApi,
+        factory: EventEntityMapper,
+        speakerMapper: SpeakerEntityMapper,
+        roomEntityMapper: RoomEntityMapper,
+        feedbackEntityMapper: FeedbackEntityMapper,
+        conferenceConfiguration: ConferenceConfiguration
+    ): EventRemote {
         return EventRemoteImpl(service, conferenceConfiguration.conferenceId, factory, feedbackEntityMapper,
                 speakerMapper, roomEntityMapper)
     }
-
 
     @Provides
     internal fun provideThreadExecutor(jobExecutor: JobExecutor): ThreadExecutor {
@@ -112,7 +112,6 @@ open class ApplicationModule {
         override fun verify(p0: String?, p1: javax.net.ssl.SSLSession?): Boolean {
             return true
         }
-
     }
 
     class XtmImp : javax.net.ssl.X509TrustManager {
@@ -126,7 +125,6 @@ open class ApplicationModule {
             val x509Certificates: Array<X509Certificate> = arrayOf()
             return x509Certificates
         }
-
     }
 
     @Singleton
@@ -178,5 +176,4 @@ open class ApplicationModule {
         return restAdapter.create(ConferencesApi::class.java)
     }
 }
-
 

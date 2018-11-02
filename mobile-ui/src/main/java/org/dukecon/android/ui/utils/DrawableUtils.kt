@@ -26,7 +26,6 @@ object DrawableUtils {
         }
         return drawable
     }
-
 }
 
 /**
@@ -37,5 +36,4 @@ fun Drawable.asBitmap(width: Int = intrinsicWidth, height: Int = intrinsicHeight
     val canvas = Canvas(bitmap)
     draw(canvas)
     return bitmap
-
 }

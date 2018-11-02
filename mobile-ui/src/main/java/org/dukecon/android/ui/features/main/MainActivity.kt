@@ -119,5 +119,4 @@ class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNav
             super.onBackPressed()
         }
     }
-
 }

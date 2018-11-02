@@ -38,10 +38,8 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
     @Inject
     lateinit var conferenceConfiguration: ConferenceConfiguration
 
-
     private val speakerAdapter: SpeakerAdapter
     private var sessionId: String? = null
-
 
     constructor(context: Context) : this(context, null, 0)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -80,7 +78,6 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
     }
 
     override fun showNoSession() {
-
     }
 
     override fun showSessionDetail(session: EventView) {

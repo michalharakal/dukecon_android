@@ -1,7 +1,6 @@
 package org.dukecon.android.ui.features.event
 
 import android.content.Context
-import android.text.format.DateUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +25,6 @@ class EventDateView(context: Context, attrs: AttributeSet? = null, defStyle: Int
 
     @Inject
     lateinit var presenter: EventDateListContract.Presenter
-
 
     private val adapter: SessionPagerAdapter
 

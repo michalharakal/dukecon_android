@@ -81,4 +81,3 @@ class EventsListView(context: Context, attrs: AttributeSet? = null, defStyle: In
         scrollToPosition(index)
     }
 }
-

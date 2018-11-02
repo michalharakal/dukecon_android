@@ -14,9 +14,7 @@ class ConnectionStateBroadcastReceiver(val networkUtils: NetworkUtils) : Broadca
         Thread(Runnable {
             networkUtils.isConnectedToCaptivePortal = HTTP204CaptivePortalChecker.isCaptivePortal
         }).start()
-
     }
-
 
     override fun onReceive(context: Context, intent: Intent) {
         logger.debug { "connection changed" }

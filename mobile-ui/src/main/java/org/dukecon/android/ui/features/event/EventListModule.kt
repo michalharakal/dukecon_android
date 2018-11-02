@@ -19,23 +19,22 @@ import org.dukecon.presentation.mapper.SpeakerMapper
 @Module
 class EventListModule() {
 
-
     @Provides
     fun provideSessionDatePresenter(getEventDateUseCase: GetEventDates): EventDateListContract.Presenter {
         return EventDatePresenter(getEventDateUseCase)
     }
 
     @Provides
-    fun sessionListPresenter(currentTimeProvider: CurrentTimeProvider,
-                             conferenceRepository: ConferenceRepository,
-                             getEvents: GetEvents,
-                             getSpeakers: GetSpeakers,
-                             getRooms: GetRooms,
-                             eventsMapper: EventMapper,
-                             speakerMapper: SpeakerMapper,
-                             roomMapper: RoomMapper): EventListContract.Presenter {
+    fun sessionListPresenter(
+        currentTimeProvider: CurrentTimeProvider,
+        conferenceRepository: ConferenceRepository,
+        getEvents: GetEvents,
+        getSpeakers: GetSpeakers,
+        getRooms: GetRooms,
+        eventsMapper: EventMapper,
+        speakerMapper: SpeakerMapper,
+        roomMapper: RoomMapper
+    ): EventListContract.Presenter {
         return EventListPresenter(currentTimeProvider, conferenceRepository, getEvents, getSpeakers, getRooms, eventsMapper, speakerMapper, roomMapper)
     }
-
-
 }

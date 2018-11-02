@@ -59,5 +59,4 @@ class FeedbackDialog(context: Context, val sessionId: String) : Dialog(context, 
         presenter.onDetach()
         super.onDetachedFromWindow()
     }
-
 }
