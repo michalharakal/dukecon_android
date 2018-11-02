@@ -57,7 +57,7 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
         name.text = speaker.name
         bio.text = speaker.bio
 
-        if (speaker.twitter.isNotEmpty()) {
+        if (speaker.twitterHandle.isNotEmpty()) {
             val twitterIntent = Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse("${speaker.twitter}")
             }

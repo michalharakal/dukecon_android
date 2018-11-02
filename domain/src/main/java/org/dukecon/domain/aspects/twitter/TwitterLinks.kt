@@ -28,6 +28,9 @@ class TwitterLinks {
                 val twiterRegEx = "((https?://|ftp://|www\\.|[^\\s:=]+@www\\.).*?[a-z_\\/0-9\\-\\#=&])(?=(\\.|,|;|\\?|\\!)?(\"|'|«|»|\\[|\\s|\\r|\\n|\$))".toRegex()
                 if (twiterRegEx.matches(twitter)) {
                     val a = "@${twitter.substring(twitter.lastIndexOf("/") + 1)}"
+                    if ("@".equals(a)) {
+                        return ""
+                    }
                     return a
                 } else {
                     return "@$twitter"
