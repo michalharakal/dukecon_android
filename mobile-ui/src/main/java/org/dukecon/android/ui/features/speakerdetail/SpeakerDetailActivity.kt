@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_speaker_detail.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getAppComponent

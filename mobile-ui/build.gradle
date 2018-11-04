@@ -11,7 +11,6 @@ apply from: '../config/git.gradle'
 def javalandReleaseKeystorePropertiesFile = rootProject.file("../dukecon/dukecon_app_releases/javaland/javalandReleaseKeystore.properties")
 def apexReleaseKeystorePropertiesFile = rootProject.file("../dukecon/dukecon_app_releases/apex/apexReleaseKeystore.properties")
 
-
 // Initialize a new Properties() object called keystoreProperties.
 def javalandReleaseKeystoreProperties = new Properties()
 
@@ -40,7 +39,7 @@ android {
     defaultConfig {
         minSdkVersion globalConfiguration["androidMinSdkVersion"]
         targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
-        multiDexEnabled = false
+        multiDexEnabled = true
         testInstrumentationRunner "org.buffer.android.boilerplate.ui.test.TestRunner"
     }
 
@@ -125,7 +124,7 @@ android {
             versionCode 3
             versionName gitVersionName
         }
-        
+
         doagcon {
             dimension "dukecon"
             applicationIdSuffix ".doag"
@@ -155,19 +154,23 @@ dependencies {
     implementation project(':cache')
     implementation project(':remote')
 
+    implementation 'com.android.support:multidex:1.0.3'
+
     implementation mobileUiDependencies.javaxAnnotation
 
     implementation mobileUiDependencies.kotlin
     implementation mobileUiDependencies.javaxInject
     implementation mobileUiDependencies.rxKotlin
     implementation mobileUiDependencies.androidAnnotations
+
     implementation mobileUiDependencies.androidSupportV4
     implementation mobileUiDependencies.androidSupportV13
-    implementation mobileUiDependencies.appCompatV7
-    implementation mobileUiDependencies.appCardViewV7
+    implementation mobileUiDependencies.cardview
     implementation mobileUiDependencies.supportRecyclerView
-    implementation mobileUiDependencies.constrantLayout
-    implementation mobileUiDependencies.supportDesign
+    implementation mobileUiDependencies.material
+    implementation mobileUiDependencies.coordinatorlayout
+    implementation mobileUiDependencies.constraintlayout
+    implementation mobileUiDependencies.appCompat
     implementation mobileUiDependencies.timber
     implementation mobileUiDependencies.rxAndroid
     implementation mobileUiDependencies.picasso
@@ -175,7 +178,6 @@ dependencies {
     implementation mobileUiDependencies.daggerSupport
     implementation mobileUiDependencies.kotlinLogging
     implementation mobileUiDependencies.slf4jAndroid
-    implementation mobileUiDependencies.circularView
     implementation mobileUiDependencies.firebaseCore
     implementation mobileUiDependencies.crashlytics
     implementation mobileUiDependencies.okHttp
@@ -199,27 +201,14 @@ dependencies {
     androidTestImplementation mobileUiTestDependencies.junit
     androidTestImplementation mobileUiTestDependencies.mockito
     androidTestImplementation mobileUiTestDependencies.mockitoAndroid
-    androidTestImplementation(mobileUiTestDependencies.espressoCore) {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-    androidTestImplementation(mobileUiTestDependencies.androidRunner) {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-    androidTestImplementation(mobileUiTestDependencies.androidRules) {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-    androidTestImplementation(mobileUiTestDependencies.espressoIntents) {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-    androidTestImplementation(mobileUiTestDependencies.espressoContrib) {
-        exclude module: 'appcompat'
-        exclude module: 'appcompat-v7'
-        exclude module: 'support-v4'
-        exclude module: 'support-v13'
-        exclude module: 'support-annotations'
-        exclude module: 'recyclerview-v7'
-        exclude module: 'design'
-    }
+
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-web:3.1.0'
+    androidTestImplementation 'androidx.test.espresso.idling:idling-concurrent:3.1.0'
+
     kaptTest mobileUiDependencies.daggerCompiler
     kaptAndroidTest mobileUiDependencies.daggerCompiler
 }

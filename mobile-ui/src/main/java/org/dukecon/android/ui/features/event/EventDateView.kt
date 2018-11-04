@@ -15,7 +15,7 @@ import org.joda.time.DateTime
 import javax.inject.Inject
 
 class EventDateView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
-        FrameLayout(context, attrs, defStyle), EventDateListContract.View {
+    FrameLayout(context, attrs, defStyle), EventDateListContract.View {
 
     constructor(context: Context) : this(context, null, 0)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)

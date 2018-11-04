@@ -1,13 +1,13 @@
 package org.dukecon.android.ui.features.eventdetail
 
 import android.content.Context
-import android.support.design.widget.CoordinatorLayout
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.appcompat.app.AppCompatActivity
 import android.text.format.DateUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.chicagoroboto.features.sessiondetail.feedback.FeedbackDialog
 import kotlinx.android.synthetic.main.view_session_detail.view.*
 import org.dukecon.android.ui.R
@@ -49,14 +49,14 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
 
         LayoutInflater.from(context).inflate(R.layout.view_session_detail, this, true)
 
-        speakerAdapter = SpeakerAdapter(true, { speaker, _ ->
+        speakerAdapter = SpeakerAdapter(true) { speaker ->
             speakerNavigator.navigateToSpeaker(speaker.id)
-        })
+        }
         speakers.adapter = speakerAdapter
         speakers.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         // initially hide the feedback button until we get a session
-        feedback.visibility = GONE
+        feedback.hide()
         feedback.setOnClickListener {
             FeedbackDialog(context, sessionId!!).show()
         }
@@ -98,10 +98,10 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
 
         if (session.startTime.isAfter(now)) {
             status.visibility = GONE
-            favorite.visibility = VISIBLE
+            favorite.show()
         } else {
             status.visibility = VISIBLE
-            favorite.visibility = GONE
+            favorite.hide()
 
             val statusString = if (session.endTime.isAfter(now)) {
                 R.string.status_in_progress
@@ -111,7 +111,7 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
             status.setText(statusString)
 
             if (conferenceConfiguration.supportsFeedback) {
-                feedback.visibility = View.VISIBLE
+                feedback.show()
             }
         }
     }

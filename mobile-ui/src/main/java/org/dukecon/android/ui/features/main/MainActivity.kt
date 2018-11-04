@@ -2,11 +2,11 @@ package org.dukecon.android.ui.features.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v4.view.GravityCompat
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
+import androidx.fragment.app.Fragment
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getAppComponent
@@ -18,10 +18,12 @@ import org.dukecon.android.ui.features.networking.NetworkOfflineChecker
 import org.dukecon.android.ui.features.speaker.SpeakerListView
 import org.dukecon.android.ui.features.speakerdetail.SpeakerDetailActivity
 import org.dukecon.android.ui.features.speakerdetail.SpeakerNavigator
+import org.dukecon.android.ui.utils.consume
 import org.dukecon.presentation.model.EventView
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNavigationItemSelectedListener, SpeakerNavigator {
+class MainActivity : AppCompatActivity(), SessionNavigator,
+    SpeakerNavigator {
 
     lateinit var component: MainComponent
 
@@ -36,7 +38,7 @@ class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNav
 
         setContentView(R.layout.activity_main)
 
-        setSupportActionBar(toolbar)
+        //setSupportActionBar(toolbar)
 
         supportActionBar?.let {
             it.setHomeAsUpIndicator(R.drawable.ic_menu)
@@ -47,9 +49,35 @@ class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNav
 
         showView(R.id.action_schedule)
 
-        nav_view.setNavigationItemSelectedListener(this)
-        nav_view.setCheckedItem(R.id.action_schedule)
+        navigation.setOnNavigationItemSelectedListener {
+            showView(it.itemId)
+        }
+            /*
+            when (it.itemId) {
+                R.id.action_schedule -> consume { replaceFragment(EventDateView(this) }
+            }
+            R.id.action_speakers -> SpeakerListView(this)
+            R.id.action_info -> InfoView(this)
+            R.id.navigation_schedule -> consume { replaceFragment(ScheduleFragment()) }
+            R.id.navigation_map -> consume {
+            // Scroll to current event next time the schedule is opened.
+            scheduleViewModel.userHasInteracted = false
+            replaceFragment(MapFragment())
+        }
+            R.id.navigation_info -> consume {
+            // Scroll to current event next time the schedule is opened.
+            scheduleViewModel.userHasInteracted = false
+            replaceFragment(InfoFragment())
+        }
+            else -> false
+        }
+        */
     }
+
+    /*
+    nav_view.setNavigationItemSelectedListener(this)
+    nav_view.setCheckedItem(R.id.action_schedule)
+    */
 
     override fun onResume() {
         super.onResume()
@@ -61,19 +89,10 @@ class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNav
         networkOfflineChecker.disable()
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        if (showView(item.itemId)) {
-            drawer_layout.closeDrawers()
-            return true
-        } else {
-            return false
-        }
-    }
-
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
-                drawer_layout.openDrawer(GravityCompat.START)
+                //drawer_layout.openDrawer(GravityCompat.START)
                 return true
             }
         }
@@ -110,13 +129,5 @@ class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNav
 
     override fun navigateToSpeaker(id: String) {
         SpeakerDetailActivity.navigate(this, id)
-    }
-
-    override fun onBackPressed() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
     }
 }

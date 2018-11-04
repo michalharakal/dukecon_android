@@ -1,10 +1,10 @@
 package org.dukecon.android.ui.features.event
 
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.dukecon.android.ui.ext.getComponent
 import org.dukecon.android.ui.features.main.MainComponent
 import org.dukecon.domain.features.time.CurrentTimeProvider
@@ -34,9 +34,9 @@ class EventsListView(context: Context, attrs: AttributeSet? = null, defStyle: In
         layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         layoutManager = LinearLayoutManager(context, VERTICAL, false)
         addItemDecoration(EventItemDecoration(context))
-        adapter = EventsAdapter(currentTimeProvider, { session ->
+        adapter = EventsAdapter(currentTimeProvider) { session ->
             sessionNavigator.showSession(session)
-        })
+        }
         super.setAdapter(adapter)
     }
 

@@ -4,9 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.view_speaker_detail.view.*
 import org.dukecon.android.ui.R

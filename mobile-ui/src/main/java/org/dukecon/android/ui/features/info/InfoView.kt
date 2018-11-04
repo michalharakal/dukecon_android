@@ -1,9 +1,9 @@
 package org.dukecon.android.ui.features.info
 
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.dukecon.android.ui.ext.getAppComponent
 import org.dukecon.presentation.feature.info.InfoContract
 import org.dukecon.presentation.model.LibraryView

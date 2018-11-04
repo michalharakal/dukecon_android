@@ -1,7 +1,7 @@
 package org.dukecon.android.ui.features.eventdetail
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_session_detail.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getAppComponent

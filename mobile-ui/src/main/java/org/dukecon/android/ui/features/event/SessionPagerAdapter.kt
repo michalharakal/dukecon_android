@@ -1,10 +1,10 @@
 package org.dukecon.android.ui.features.event
 
 import android.content.Context
-import android.support.v4.view.PagerAdapter
 import android.text.format.DateUtils
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewpager.widget.PagerAdapter
 import org.joda.time.DateTime
 
 internal class SessionPagerAdapter : PagerAdapter() {

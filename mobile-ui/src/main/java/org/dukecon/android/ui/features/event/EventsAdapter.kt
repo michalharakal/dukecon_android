@@ -1,8 +1,6 @@
 package org.dukecon.android.ui.features.event
 
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.CardView
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.ContextCompat
 import android.text.format.DateUtils
 import android.text.format.DateUtils.formatDateTime
 import android.view.LayoutInflater
@@ -10,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_session.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.utils.DrawableUtils
