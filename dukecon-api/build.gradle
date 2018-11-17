@@ -18,7 +18,7 @@ swagger {
     ]
 }
 
-sourceSets.main.java.srcDirs = ["$swagger.outputDir/src/main/java"]
+sourceSets.main.java.srcDirs += ["$swagger.outputDir/src/main/java"]
 
 allprojects {
     tasks.whenTaskAdded { theTask ->

@@ -19,6 +19,6 @@
     <string name="rating_ok">Okay</string>
     <string name="rating_bad">Schlecht</string>
 
-
-
+    <string name="licences_title">Lizenzen</string>
+    <string name="login_title">Login</string>
 </resources>

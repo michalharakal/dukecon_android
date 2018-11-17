@@ -9,10 +9,6 @@ import org.dukecon.domain.model.Speaker
 import org.dukecon.domain.repository.ConferenceRepository
 import javax.inject.Inject
 
-
-/**
- * Use case used for retreiving a single [Speaker] instances from the [ConferenceRepository] with id
- */
 open class SubmitFeedbackUseCase @Inject constructor(val conferenceRepository: ConferenceRepository,
                                                      threadExecutor: ThreadExecutor,
                                                      postExecutionThread: PostExecutionThread) :
@@ -20,5 +16,4 @@ open class SubmitFeedbackUseCase @Inject constructor(val conferenceRepository: C
     override fun buildUseCaseObservable(params: Feedback?): Single<Any> {
         return conferenceRepository.submitFeedback(params as Feedback)
     }
-
 }

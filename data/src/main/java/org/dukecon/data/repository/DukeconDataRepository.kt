@@ -28,11 +28,17 @@ class DukeconDataRepository @Inject constructor(
     private val factory: EventDataStoreFactory,
     private val eventMapper: EventMapper,
     private val speakerMapper: SpeakerMapper,
+    private val keycloakMapper: KeycloakMapper,
     private val roomMapper: RoomMapper,
     private val feedbackMapper: FeedbackMapper,
     private val favoriteMapper: FavoriteMapper
 ) :
     ConferenceRepository {
+
+    override fun getKeyCloak(): Single<Keycloak> {
+        return getDataStore().getKeycloak().map { keycloakMapper.mapFromEntity(it) }
+    }
+
     override fun submitFeedback(feedback: Feedback): Single<Any> {
         return factory.retrieveRemoteDataStore().submitFeedback(feedbackMapper.mapToEntity(feedback))
     }

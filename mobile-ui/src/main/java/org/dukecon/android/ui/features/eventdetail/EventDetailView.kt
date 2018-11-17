@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.text.format.DateUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chicagoroboto.features.sessiondetail.feedback.FeedbackDialog
 import kotlinx.android.synthetic.main.view_session_detail.view.*

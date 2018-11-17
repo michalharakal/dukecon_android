@@ -3,6 +3,8 @@ package org.dukecon.android.ui.features.event
 import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
+import androidx.annotation.NonNull
+import androidx.annotation.Nullable
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.dukecon.android.ui.ext.getComponent
@@ -15,8 +17,8 @@ import org.dukecon.presentation.model.SpeakerView
 import org.joda.time.DateTime
 import javax.inject.Inject
 
-class EventsListView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
-        RecyclerView(context, attrs, defStyle), EventListContract.View {
+class EventsListView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
+    RecyclerView(context, attrs, defStyle), EventListContract.View {
 
     private val adapter: EventsAdapter
     private var date: DateTime? = null
@@ -28,10 +30,15 @@ class EventsListView(context: Context, attrs: AttributeSet? = null, defStyle: In
     @Inject
     lateinit var currentTimeProvider: CurrentTimeProvider
 
+
+
     init {
         context.getComponent<MainComponent>().sessionListComponent().inject(this)
 
-        layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
         layoutManager = LinearLayoutManager(context, VERTICAL, false)
         addItemDecoration(EventItemDecoration(context))
         adapter = EventsAdapter(currentTimeProvider) { session ->

@@ -3,12 +3,14 @@ package org.dukecon.android.cache.persistance
 import com.google.gson.Gson
 import org.dukecon.data.model.EventEntity
 import org.dukecon.data.model.FavoriteEntity
+import org.dukecon.data.model.KeycloakEntity
 import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import java.io.*
 
 class ConferenceCacheGsonSerializer(private val baseFolder: String, val gson: Gson) : ConferenceCacheSerializer {
 
+    private fun getKeycloakFullName() = baseFolder + "/keycloak.json"
     private fun getSpeakersFullName() = baseFolder + "/speakers.json"
     private fun getRoomsFullName() = baseFolder + "/rooms.json"
     private fun getEventsFullName() = baseFolder + "/events.json"
@@ -62,6 +64,24 @@ class ConferenceCacheGsonSerializer(private val baseFolder: String, val gson: Gs
         }
     }
 
+    override fun readKeyCloack(): KeycloakEntity {
+        val sd = File(getKeycloakFullName())
+        if (sd.exists()) {
+            val inputStream = FileInputStream(sd)
+            val reader = InputStreamReader(inputStream)
+            return gson.fromJson(reader, KeycloakEntity::class.java)
+        } else {
+            return  KeycloakEntity(
+                "dukecon-latest",
+                "https://keycloak.dukecon.org/auth",
+                "none",
+                "dukecon",
+                "/rest/preferences",
+                false
+            )
+        }
+    }
+
     override fun writeRooms(cachedRooms: List<RoomEntity>) {
         writeList(getRoomsFullName(), cachedRooms)
     }
@@ -76,6 +96,17 @@ class ConferenceCacheGsonSerializer(private val baseFolder: String, val gson: Gs
 
     override fun writeFavorites(favorites: List<FavoriteEntity>) {
         writeList(getFavoritesFullName(), favorites)
+    }
+
+    override fun writeKeyCloack(keycloakEntity: KeycloakEntity) {
+        val sd = File(getKeycloakFullName())
+        sd.createNewFile()
+
+        val fOut = FileOutputStream(sd)
+        val myOutWriter = OutputStreamWriter(fOut)
+        val json = gson.toJson(keycloakEntity)
+        myOutWriter.write(json)
+        myOutWriter.flush()
     }
 
     fun writeList(fileName: String, events: List<Any>) {
@@ -99,4 +130,6 @@ interface ConferenceCacheSerializer {
     fun writeSpeakers(speakers: List<SpeakerEntity>)
     fun readFavorites(): List<FavoriteEntity>
     fun writeFavorites(favorites: List<FavoriteEntity>)
+    fun readKeyCloack(): KeycloakEntity
+    fun writeKeyCloack(keycloakEntity: KeycloakEntity)
 }

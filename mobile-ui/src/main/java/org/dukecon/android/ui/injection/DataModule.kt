@@ -22,7 +22,8 @@ class DataModule {
         speakerMapper: SpeakerMapper,
         roomMapper: RoomMapper,
         feedbackMapper: FeedbackMapper,
-        favoriteMapper: FavoriteMapper
+        favoriteMapper: FavoriteMapper,
+        keycloakMapper: KeycloakMapper
     ): ConferenceRepository {
         return DukeconDataRepository(
             cache,
@@ -30,6 +31,7 @@ class DataModule {
             factory,
             mapper,
             speakerMapper,
+            keycloakMapper,
             roomMapper,
             feedbackMapper,
             favoriteMapper

@@ -186,11 +186,14 @@ dependencies {
     implementation mobileUiDependencies.retrofit
     implementation mobileUiDependencies.retrofitConverter
     implementation mobileUiDependencies.retrofitAdapter
+    implementation mobileUiDependencies.browser
+    implementation mobileUiDependencies.androidxCore
 
     implementation(mobileUiDependencies.jodaGsonSerializer) {
         exclude group: 'joda-time', module: 'joda-time'
     }
 
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0-alpha1'
     testImplementation mobileUiTestDependencies.kotlinJUnit
 
     kapt mobileUiDependencies.daggerCompiler

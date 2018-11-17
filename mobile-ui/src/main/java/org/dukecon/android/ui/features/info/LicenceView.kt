@@ -9,7 +9,7 @@ import org.dukecon.presentation.feature.info.InfoContract
 import org.dukecon.presentation.model.LibraryView
 import javax.inject.Inject
 
-class InfoView(context: Context, attrs: AttributeSet? = null) : RecyclerView(context, attrs), InfoContract.View {
+class LicenceView(context: Context, attrs: AttributeSet? = null) : RecyclerView(context, attrs), InfoContract.View {
 
     @Inject
     lateinit var presenter: InfoContract.Presenter
@@ -20,9 +20,9 @@ class InfoView(context: Context, attrs: AttributeSet? = null) : RecyclerView(con
         context.getAppComponent().infoComponent(InfoModule(context)).inject(this)
 
         layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        adapter = InfoAdapter({ library: LibraryView ->
+        adapter = InfoAdapter { library: LibraryView ->
             presenter.onLibraryClicked(library)
-        })
+        }
         super.setAdapter(adapter)
     }
 

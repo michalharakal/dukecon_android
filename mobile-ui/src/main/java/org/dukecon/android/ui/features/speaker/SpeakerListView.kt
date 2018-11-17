@@ -12,9 +12,9 @@ import org.dukecon.presentation.feature.speakers.SpeakerListContract
 import org.dukecon.presentation.model.SpeakerView
 import javax.inject.Inject
 
-class SpeakerListView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
-        RecyclerView(context, attrs, defStyle),
-        SpeakerListContract.View {
+class SpeakerListView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
+    RecyclerView(context, attrs, defStyle),
+    SpeakerListContract.View {
 
     private val adapter: SpeakerAdapter
 

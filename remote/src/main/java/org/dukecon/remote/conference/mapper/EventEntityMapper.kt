@@ -1,4 +1,4 @@
-package org.dukecon.remote.mapper
+package org.dukecon.remote.conference.mapper
 
 import org.dukecon.android.api.model.Event
 import org.dukecon.data.model.EventEntity
@@ -16,5 +16,4 @@ open class EventEntityMapper @Inject constructor(): EntityMapper<Event, EventEnt
     override fun mapFromRemote(type: org.dukecon.android.api.model.Event): EventEntity {
         return EventEntity(type.id, type.title, type.abstractText ?: "" , type.start, type.end, type.speakerIds, type.locationId)
     }
-
 }

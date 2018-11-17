@@ -14,6 +14,9 @@ import javax.inject.Inject
  */
 open class EventRemoteDataStore @Inject constructor(private val eventRemote: EventRemote) :
         EventDataStore {
+    override fun getKeycloak(): Single<KeycloakEntity> {
+        return eventRemote.getKeycloak()
+    }
 
     override fun submitFeedback(feedback: FeedbackEntity): Single<Any> {
         return eventRemote.submitFeedback(feedback)
