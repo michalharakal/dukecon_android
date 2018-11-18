@@ -11,4 +11,8 @@
     <dimen name="_1_BU">16dp</dimen>
     <dimen name="traffic_light_rating_margin">4dp</dimen>
     <dimen name="bottom_navigation_height">56dp</dimen>
+    <dimen name="a11y_min_touch_target">48dp</dimen>
+    <dimen name="spacing_micro">4dp</dimen>
+    <dimen name="margin_normal">16dp</dimen>
+
 </resources>

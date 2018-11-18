@@ -17,6 +17,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.dukecon.android.api.ConferencesApi
 import org.dukecon.android.cache.ConferenceDataCacheImpl
 import org.dukecon.android.cache.PreferencesHelper
+import org.dukecon.android.cache.SharedPreferencesTokenStorage
 import org.dukecon.android.cache.persistance.ConferenceCacheGsonSerializer
 import org.dukecon.android.ui.UiThread
 import org.dukecon.android.ui.features.login.DukeconAuthManager
@@ -36,6 +37,7 @@ import org.dukecon.domain.aspects.twitter.TwitterLinks
 import org.dukecon.domain.executor.PostExecutionThread
 import org.dukecon.domain.executor.ThreadExecutor
 import org.dukecon.domain.features.networking.NetworkUtils
+import org.dukecon.domain.features.oauth.TokensStorage
 import org.dukecon.remote.conference.EventRemoteImpl
 import org.dukecon.remote.conference.mapper.EventEntityMapper
 import org.dukecon.remote.conference.mapper.FeedbackEntityMapper
@@ -43,6 +45,9 @@ import org.dukecon.remote.conference.mapper.KeycloakEntityMapper
 import org.dukecon.remote.conference.mapper.RoomEntityMapper
 import org.dukecon.remote.conference.mapper.SpeakerEntityMapper
 import org.dukecon.remote.oauth.OAuthServiceImpl
+import org.dukecon.remote.oauth.interceptor.OauthAuthorizationInterceptor
+import org.dukecon.remote.oauth.interceptor.TokenRefreshAfterFailInterceptor
+import org.dukecon.remote.oauth.mapper.OAuthTokenMapper
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -184,14 +189,27 @@ open class ApplicationModule {
     }
 
     @Provides
-    internal fun provideConfernceService(
+    @Singleton
+    fun provideTokensStorage(application: Application): TokensStorage {
+        return SharedPreferencesTokenStorage(application);
+    }
+
+    @Provides
+    internal fun provideConferenceService(
         client: OkHttpClient,
         gson: Gson,
-        conferenceConfiguration: ConferenceConfiguration
+        conferenceConfiguration: ConferenceConfiguration,
+        tokensStorage: TokensStorage,
+        oAuthService: OAuthService,
+        oAuthTokenMapper: OAuthTokenMapper
     ): ConferencesApi {
+        val authorizingOkHttpClient = client.newBuilder()
+            .addInterceptor(OauthAuthorizationInterceptor(tokensStorage))
+            .addInterceptor(TokenRefreshAfterFailInterceptor(tokensStorage, oAuthService, oAuthTokenMapper))
+            .build()
         val restAdapter = Retrofit.Builder()
             .baseUrl(conferenceConfiguration.baseUrl)
-            .client(client)
+            .client(authorizingOkHttpClient)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
@@ -224,8 +242,13 @@ open class ApplicationModule {
     }
 
     @Provides
-    fun provideAuthManager(application: Application, oauthServce: OAuthService): AuthManager {
-        return DukeconAuthManager(application, oauthServce)
+    fun provideAuthManager(
+        application: Application,
+        oauthServce: OAuthService,
+        tokensStorage: TokensStorage,
+        mapper: OAuthTokenMapper
+    ): AuthManager {
+        return DukeconAuthManager(application, oauthServce, tokensStorage, mapper)
     }
 }
 

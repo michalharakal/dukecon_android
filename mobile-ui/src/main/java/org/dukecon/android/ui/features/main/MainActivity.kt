@@ -76,6 +76,7 @@ class MainActivity : AppCompatActivity(), SessionNavigator,
         if (savedInstanceState == null) {
             // Show Schedule on first creation
             navigation.selectedItemId = R.id.action_schedule
+            replaceFragment(ScheduleFragment())
         } else {
             // Find the current fragment
             currentFragment =
@@ -88,10 +89,6 @@ class MainActivity : AppCompatActivity(), SessionNavigator,
             exchangeCodeForToken.execute(ExchangeCodeSubscriber(), uri?.getQueryParameter("code") ?: "")
         }
 
-    }
-
-    private fun getCodeFromUri(uri: Uri?): String {
-        return uri?.getQueryParameter("code") ?: "XXX"
     }
 
     override fun onResume() {

@@ -15,4 +15,13 @@ public interface KeycloakOAuthApi {
             @Field("redirect_uri") String redirect_uri,
             @Field("code") String code
     );
+
+    @FormUrlEncoded
+    @POST("oauth2/tokens")
+    Call<OAuthToken> refreshOAuthToken(
+            @Field("client_id") String clientId,
+            @Field("grant_type") String grantType,
+            @Field("scope") String scope,
+            @Field("refresh_token") String refreshToken
+    );
 }

@@ -11,5 +11,4 @@ interface MainComponent {
     fun speakerListComponent(): SpeakerListComponent
     fun loginComponent(): LoginComponent
     fun inject(mainActivity: MainActivity)
-//    fun locationComponent(): LocationComponent
 }

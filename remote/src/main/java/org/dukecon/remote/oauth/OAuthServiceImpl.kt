@@ -11,6 +11,33 @@ class OAuthServiceImpl @Inject constructor(
     private val conferenceApi: KeycloakOAuthApi,
     private val oAuthConfiguration: OAuthConfiguration
 ) : OAuthService {
+    override fun refresh(refreshToken: String): OAuthToken {
+        val call = conferenceApi.refreshOAuthToken(
+            oAuthConfiguration.clientId,
+            "authorization_code",
+            "dukecon_mobile",
+            refreshToken
+        )
+        try {
+            val response = call.execute()
+            if (response.isSuccessful) {
+                if (response.body() != null) {
+                    val token = response.body()
+                    if (token != null) {
+                        return OAuthToken(
+                            token.accessToken,
+                            token.refreshToken,
+                            token.expiresIn
+                        )
+                    }
+                }
+            }
+        } catch (e: IOException) {
+
+        }
+        return OAuthToken("", "", 0)
+    }
+
     override fun code2token(code: String): OAuthToken {
         val call = conferenceApi.getOpenIdToken(
             oAuthConfiguration.clientId,
@@ -26,7 +53,8 @@ class OAuthServiceImpl @Inject constructor(
                     if (token != null) {
                         return OAuthToken(
                             token.accessToken,
-                            token.refreshToken, true
+                            token.refreshToken,
+                            token.expiresIn
                         )
                     }
                 }
@@ -34,6 +62,6 @@ class OAuthServiceImpl @Inject constructor(
         } catch (e: IOException) {
 
         }
-        return OAuthToken("", "", false)
+        return OAuthToken("", "", 0)
     }
 }

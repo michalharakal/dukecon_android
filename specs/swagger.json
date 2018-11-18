@@ -660,6 +660,13 @@
         },
         "refresh_token": {
           "type": "string"
+        },
+        "id_token" : {
+          "type": "string"
+        },
+        "expires_in": {
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
