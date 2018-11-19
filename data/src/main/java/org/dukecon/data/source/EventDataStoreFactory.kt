@@ -17,7 +17,7 @@ open class EventDataStoreFactory @Inject constructor(
             if (isCached) {
                 return retrieveCacheDataStore()
             } else {
-                retrieveRemoteDataStore()
+                return retrieveRemoteDataStore()
             }
         }
         return retrieveCacheDataStore()
