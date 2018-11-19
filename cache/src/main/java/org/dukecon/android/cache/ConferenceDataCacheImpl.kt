@@ -23,8 +23,7 @@ private val logger = KotlinLogging.logger {}
 class ConferenceDataCacheImpl @Inject constructor(
     val conferenceCacheSerializer: ConferenceCacheSerializer,
     val preferencesHelper: PreferencesHelper
-) :
-    ConferenceDataCache {
+) : ConferenceDataCache {
     override fun getKeycloak(): Single<KeycloakEntity> {
         logger.info { "reading getRooms from memory cache" }
         return Single.create { s ->
@@ -75,19 +74,6 @@ class ConferenceDataCacheImpl @Inject constructor(
     override fun isCached(): Boolean {
         val cached = cachedEvents.isNotEmpty() && cacheSpeakers.isNotEmpty() && cachedRooms.isNotEmpty()
         return cached
-    }
-
-    /*
-    override fun setLastCacheTime(lastCache: Long) {
-        preferencesHelper.lastCacheTime = System.currentTimeMillis()
-    }
-    */
-
-    override fun isExpired(): Boolean {
-        val currentTime = System.currentTimeMillis()
-        val lastUpdateTime = preferencesHelper.lastCacheTime
-
-        return currentTime - lastUpdateTime > EXPIRATION_TIME
     }
 
     override fun saveRooms(rooms: List<RoomEntity>): Completable {

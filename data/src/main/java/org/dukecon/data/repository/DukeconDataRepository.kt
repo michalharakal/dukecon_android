@@ -77,7 +77,6 @@ class DukeconDataRepository @Inject constructor(
     private fun getDataStore(): EventDataStore {
         return factory.retrieveDataStore(
             conferenceDataCache.isCached(),
-            conferenceDataCache.isExpired(),
             networkUtils.isInternetConected
         )
     }

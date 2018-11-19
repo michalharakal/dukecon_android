@@ -32,10 +32,6 @@ interface ConferenceDataCache {
 
     fun isCached(): Boolean
 
-    //fun setLastCacheTime(lastCache: Long)
-
-    fun isExpired(): Boolean
-
     fun getSpeakers(): Single<List<SpeakerEntity>>
     fun getSpeaker(id: String): Single<SpeakerEntity>
 

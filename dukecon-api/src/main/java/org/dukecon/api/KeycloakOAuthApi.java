@@ -17,7 +17,7 @@ public interface KeycloakOAuthApi {
     );
 
     @FormUrlEncoded
-    @POST("oauth2/tokens")
+    @POST("token")
     Call<OAuthToken> refreshOAuthToken(
             @Field("client_id") String clientId,
             @Field("grant_type") String grantType,

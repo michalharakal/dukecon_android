@@ -27,5 +27,6 @@
 
     <string name="licences_title">Licences</string>
     <string name="login_title">Login</string>
+    <string name="filters">filters</string>
 
 </resources>

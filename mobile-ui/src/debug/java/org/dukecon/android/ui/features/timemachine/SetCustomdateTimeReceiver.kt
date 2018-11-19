@@ -47,6 +47,7 @@ class SetCustomdateTimeReceiver : BroadcastReceiver() {
         if (sharedText != null) {
             logger.info { sharedText }
             try {
+                val current = DateTime.now()
                 currentTimeProvider.setCustomMillis(DateTime.parse(sharedText).millis)
             } catch (e: IllegalArgumentException) {
                 // ignore

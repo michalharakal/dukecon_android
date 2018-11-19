@@ -19,6 +19,7 @@ import org.dukecon.android.cache.ConferenceDataCacheImpl
 import org.dukecon.android.cache.PreferencesHelper
 import org.dukecon.android.cache.SharedPreferencesTokenStorage
 import org.dukecon.android.cache.persistance.ConferenceCacheGsonSerializer
+import org.dukecon.android.ui.BuildConfig
 import org.dukecon.android.ui.UiThread
 import org.dukecon.android.ui.features.login.DukeconAuthManager
 import org.dukecon.android.ui.features.networking.AndroidNetworkUtils
@@ -168,7 +169,11 @@ open class ApplicationModule {
             e.printStackTrace()
         }
 
-        val interceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { it -> Log.d("LOGGER", it) })
+        val interceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { it ->
+            if (BuildConfig.DEBUG) {
+                Log.d("LOGGER", it)
+            }
+        })
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
@@ -191,7 +196,7 @@ open class ApplicationModule {
     @Provides
     @Singleton
     fun provideTokensStorage(application: Application): TokensStorage {
-        return SharedPreferencesTokenStorage(application);
+        return SharedPreferencesTokenStorage(application)
     }
 
     @Provides
@@ -244,11 +249,12 @@ open class ApplicationModule {
     @Provides
     fun provideAuthManager(
         application: Application,
+        oAuthConfiguration: OAuthConfiguration,
         oauthServce: OAuthService,
         tokensStorage: TokensStorage,
         mapper: OAuthTokenMapper
     ): AuthManager {
-        return DukeconAuthManager(application, oauthServce, tokensStorage, mapper)
+        return DukeconAuthManager(application, oAuthConfiguration, oauthServce, tokensStorage, mapper)
     }
 }
 

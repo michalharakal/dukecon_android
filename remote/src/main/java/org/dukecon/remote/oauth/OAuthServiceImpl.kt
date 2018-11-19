@@ -8,13 +8,13 @@ import java.io.IOException
 import javax.inject.Inject
 
 class OAuthServiceImpl @Inject constructor(
-    private val conferenceApi: KeycloakOAuthApi,
+    private val oauthApi: KeycloakOAuthApi,
     private val oAuthConfiguration: OAuthConfiguration
 ) : OAuthService {
     override fun refresh(refreshToken: String): OAuthToken {
-        val call = conferenceApi.refreshOAuthToken(
+        val call = oauthApi.refreshOAuthToken(
             oAuthConfiguration.clientId,
-            "authorization_code",
+            "refresh_token",
             "dukecon_mobile",
             refreshToken
         )
@@ -39,7 +39,7 @@ class OAuthServiceImpl @Inject constructor(
     }
 
     override fun code2token(code: String): OAuthToken {
-        val call = conferenceApi.getOpenIdToken(
+        val call = oauthApi.getOpenIdToken(
             oAuthConfiguration.clientId,
             "authorization_code",
             "appdoag://redirect2token",

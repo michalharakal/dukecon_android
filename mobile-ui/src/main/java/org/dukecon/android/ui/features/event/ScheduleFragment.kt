@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import org.dukecon.android.ui.R
 
 class ScheduleFragment : Fragment() {
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
