@@ -14,11 +14,8 @@ import org.dukecon.presentation.feature.event.EventDateListContract
 import org.joda.time.DateTime
 import javax.inject.Inject
 
-class EventDateView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
+class EventDateView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
     FrameLayout(context, attrs, defStyle), EventDateListContract.View {
-
-    constructor(context: Context) : this(context, null, 0)
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
     @Inject
     lateinit var currentTimeProvider: CurrentTimeProvider

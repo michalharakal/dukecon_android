@@ -1,9 +1,8 @@
-package org.dukecon.remote.mapper
+package org.dukecon.remote.conference.mapper
 
 import org.dukecon.android.api.model.Event
 import org.dukecon.data.model.EventEntity
 import org.dukecon.data.model.RoomEntity
-import org.dukecon.domain.model.Room
 import javax.inject.Inject
 
 /**

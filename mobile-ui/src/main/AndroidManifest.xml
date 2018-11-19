@@ -14,12 +14,19 @@
         <activity android:name=".features.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="appdoag" android:host="redirect2token" />
             </intent-filter>
         </activity>
         <activity android:name=".features.eventdetail.EventDetailActivity" />
         <activity android:name=".features.speakerdetail.SpeakerDetailActivity" />
+        <activity android:name=".features.redirect.RedirectUriReceiverActivity">
+        </activity>
     </application>
 </manifest>

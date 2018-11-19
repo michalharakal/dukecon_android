@@ -10,6 +10,7 @@ apply from: '../config/git.gradle'
 // keystore.properties file, in the rootProject folder.
 def javalandReleaseKeystorePropertiesFile = rootProject.file("../dukecon/dukecon_app_releases/javaland/javalandReleaseKeystore.properties")
 def apexReleaseKeystorePropertiesFile = rootProject.file("../dukecon/dukecon_app_releases/apex/apexReleaseKeystore.properties")
+def doagReleaseKeystorePropertiesFile = rootProject.file("../dukecon/dukecon_app_releases/doag/doagReleaseKeystore.properties")
 
 // Initialize a new Properties() object called keystoreProperties.
 def javalandReleaseKeystoreProperties = new Properties()
@@ -17,6 +18,8 @@ def javalandReleaseKeystoreProperties = new Properties()
 // Initialize a new Properties() object called keystoreProperties.
 def apexReleaseKeystoreProperties = new Properties()
 
+// Initialize a new Properties() object called keystoreProperties.
+def doagReleaseKeystoreProperties = new Properties()
 
 if (javalandReleaseKeystorePropertiesFile.canRead()) {
     // Load your keystore.properties file into the keystoreProperties object.
@@ -28,7 +31,10 @@ if (apexReleaseKeystorePropertiesFile.canRead()) {
     apexReleaseKeystoreProperties.load(new FileInputStream(apexReleaseKeystorePropertiesFile))
 }
 
-
+if (doagReleaseKeystorePropertiesFile.canRead()) {
+    // Load your keystore.properties file into the keystoreProperties object.
+    doagReleaseKeystoreProperties.load(new FileInputStream(doagReleaseKeystorePropertiesFile))
+}
 
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
@@ -41,6 +47,7 @@ android {
         targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
         multiDexEnabled = true
         testInstrumentationRunner "org.buffer.android.boilerplate.ui.test.TestRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     signingConfigs {
@@ -56,6 +63,12 @@ android {
             storeFile rootProject.file("../dukecon/dukecon_app_releases/apex/" + apexReleaseKeystoreProperties['storeFile'])
             storePassword apexReleaseKeystoreProperties['storePassword']
         }
+        doagconRelease {
+            keyAlias doagReleaseKeystoreProperties['keyAlias']
+            keyPassword doagReleaseKeystoreProperties['keyPassword']
+            storeFile rootProject.file("../dukecon/dukecon_app_releases/doag/" + doagReleaseKeystoreProperties['storeFile'])
+            storePassword doagReleaseKeystoreProperties['storePassword']
+        }
         debug {
             storeFile file("debug.keystore")
         }
@@ -69,7 +82,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             proguardFile 'proguard-release-app.pro'
-            signingConfig signingConfigs.apexRelease
+            signingConfig signingConfigs.doagconRelease
         }
     }
 
@@ -186,11 +199,14 @@ dependencies {
     implementation mobileUiDependencies.retrofit
     implementation mobileUiDependencies.retrofitConverter
     implementation mobileUiDependencies.retrofitAdapter
+    implementation mobileUiDependencies.browser
+    implementation mobileUiDependencies.androidxCore
 
     implementation(mobileUiDependencies.jodaGsonSerializer) {
         exclude group: 'joda-time', module: 'joda-time'
     }
 
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0-alpha1'
     testImplementation mobileUiTestDependencies.kotlinJUnit
 
     kapt mobileUiDependencies.daggerCompiler

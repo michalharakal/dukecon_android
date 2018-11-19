@@ -1,4 +1,4 @@
-package org.dukecon.remote.mapper
+package org.dukecon.remote.conference.mapper
 
 
 import org.dukecon.android.api.model.Speaker

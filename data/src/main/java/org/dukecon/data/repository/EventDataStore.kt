@@ -25,4 +25,5 @@ interface EventDataStore {
     fun saveFavorite(favorite: FavoriteEntity): Single<List<FavoriteEntity>>
     fun submitFeedback(feedback: FeedbackEntity): Single<Any>
 
+    fun getKeycloak():Single<KeycloakEntity>
 }

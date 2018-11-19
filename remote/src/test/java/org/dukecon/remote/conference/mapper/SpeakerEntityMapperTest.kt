@@ -1,4 +1,4 @@
-package org.dukecon.remote.mapper
+package org.dukecon.remote.conference.mapper
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever

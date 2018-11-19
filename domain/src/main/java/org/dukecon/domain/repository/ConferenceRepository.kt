@@ -35,4 +35,6 @@ interface ConferenceRepository {
     fun getEventChanges():Observable<Change>
 
     fun submitFeedback(feedback: Feedback): Single<Any>
+
+    fun getKeyCloak():Single<Keycloak>
 }

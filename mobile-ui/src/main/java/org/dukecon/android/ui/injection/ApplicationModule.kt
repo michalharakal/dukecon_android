@@ -3,6 +3,7 @@ package org.dukecon.android.ui.injection
 import android.app.Application
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import com.fatboyindustrial.gsonjodatime.Converters
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
@@ -16,21 +17,38 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.dukecon.android.api.ConferencesApi
 import org.dukecon.android.cache.ConferenceDataCacheImpl
 import org.dukecon.android.cache.PreferencesHelper
+import org.dukecon.android.cache.SharedPreferencesTokenStorage
 import org.dukecon.android.cache.persistance.ConferenceCacheGsonSerializer
+import org.dukecon.android.ui.BuildConfig
 import org.dukecon.android.ui.UiThread
+import org.dukecon.android.ui.features.login.DukeconAuthManager
 import org.dukecon.android.ui.features.networking.AndroidNetworkUtils
 import org.dukecon.android.ui.features.networking.ConnectionStateMonitor
 import org.dukecon.android.ui.features.networking.LolipopConnectionStateMonitor
 import org.dukecon.android.ui.features.networking.NetworkOfflineChecker
+import org.dukecon.api.KeycloakOAuthApi
 import org.dukecon.data.executor.JobExecutor
 import org.dukecon.data.repository.ConferenceDataCache
 import org.dukecon.data.repository.EventRemote
+import org.dukecon.data.service.OAuthService
 import org.dukecon.data.source.ConferenceConfiguration
+import org.dukecon.data.source.OAuthConfiguration
+import org.dukecon.domain.aspects.auth.AuthManager
 import org.dukecon.domain.aspects.twitter.TwitterLinks
 import org.dukecon.domain.executor.PostExecutionThread
 import org.dukecon.domain.executor.ThreadExecutor
 import org.dukecon.domain.features.networking.NetworkUtils
-import org.dukecon.remote.mapper.*
+import org.dukecon.domain.features.oauth.TokensStorage
+import org.dukecon.remote.conference.EventRemoteImpl
+import org.dukecon.remote.conference.mapper.EventEntityMapper
+import org.dukecon.remote.conference.mapper.FeedbackEntityMapper
+import org.dukecon.remote.conference.mapper.KeycloakEntityMapper
+import org.dukecon.remote.conference.mapper.RoomEntityMapper
+import org.dukecon.remote.conference.mapper.SpeakerEntityMapper
+import org.dukecon.remote.oauth.OAuthServiceImpl
+import org.dukecon.remote.oauth.interceptor.OauthAuthorizationInterceptor
+import org.dukecon.remote.oauth.interceptor.TokenRefreshAfterFailInterceptor
+import org.dukecon.remote.oauth.mapper.OAuthTokenMapper
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -74,7 +92,11 @@ open class ApplicationModule {
 
     @Provides
     @Singleton
-    internal fun provideEventCache(application: Application, gson: Gson, preferencesHelper: PreferencesHelper): ConferenceDataCache {
+    internal fun provideEventCache(
+        application: Application,
+        gson: Gson,
+        preferencesHelper: PreferencesHelper
+    ): ConferenceDataCache {
         val baseCacheFolder = application.filesDir.absolutePath
         return ConferenceDataCacheImpl(ConferenceCacheGsonSerializer(baseCacheFolder, gson), preferencesHelper)
     }
@@ -92,10 +114,13 @@ open class ApplicationModule {
         speakerMapper: SpeakerEntityMapper,
         roomEntityMapper: RoomEntityMapper,
         feedbackEntityMapper: FeedbackEntityMapper,
-        conferenceConfiguration: ConferenceConfiguration
+        conferenceConfiguration: ConferenceConfiguration,
+        keycloakEntityMapper: KeycloakEntityMapper
     ): EventRemote {
-        return EventRemoteImpl(service, conferenceConfiguration.conferenceId, factory, feedbackEntityMapper,
-                speakerMapper, roomEntityMapper)
+        return EventRemoteImpl(
+            service, conferenceConfiguration.conferenceId, factory, feedbackEntityMapper,
+            speakerMapper, roomEntityMapper, keycloakEntityMapper
+        )
     }
 
     @Provides
@@ -144,16 +169,20 @@ open class ApplicationModule {
             e.printStackTrace()
         }
 
-        val interceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { it -> logger.info { it } })
+        val interceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { it ->
+            if (BuildConfig.DEBUG) {
+                Log.d("LOGGER", it)
+            }
+        })
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
-                .addInterceptor(interceptor)
-                .cache(cache)
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .sslSocketFactory(sslContext.getSocketFactory(), xtm)
-                .hostnameVerifier(DO_NOT_VERIFY_IMP())
-                .build()
+            .addInterceptor(interceptor)
+            .cache(cache)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .sslSocketFactory(sslContext.getSocketFactory(), xtm)
+            .hostnameVerifier(DO_NOT_VERIFY_IMP())
+            .build()
     }
 
     @Provides
@@ -165,15 +194,67 @@ open class ApplicationModule {
     }
 
     @Provides
-    internal fun provideConfernceService(client: OkHttpClient, gson: Gson, conferenceConfiguration: ConferenceConfiguration): ConferencesApi {
-        var restAdapter = Retrofit.Builder()
-                .baseUrl(conferenceConfiguration.baseUrl)
-                .client(client)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build()
+    @Singleton
+    fun provideTokensStorage(application: Application): TokensStorage {
+        return SharedPreferencesTokenStorage(application)
+    }
+
+    @Provides
+    internal fun provideConferenceService(
+        client: OkHttpClient,
+        gson: Gson,
+        conferenceConfiguration: ConferenceConfiguration,
+        tokensStorage: TokensStorage,
+        oAuthService: OAuthService,
+        oAuthTokenMapper: OAuthTokenMapper
+    ): ConferencesApi {
+        val authorizingOkHttpClient = client.newBuilder()
+            .addInterceptor(OauthAuthorizationInterceptor(tokensStorage))
+            .addInterceptor(TokenRefreshAfterFailInterceptor(tokensStorage, oAuthService, oAuthTokenMapper))
+            .build()
+        val restAdapter = Retrofit.Builder()
+            .baseUrl(conferenceConfiguration.baseUrl)
+            .client(authorizingOkHttpClient)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
 
         return restAdapter.create(ConferencesApi::class.java)
+    }
+
+    @Provides
+    internal fun provideOAuthApi(
+        client: OkHttpClient,
+        gson: Gson,
+        oAuthConfiguration: OAuthConfiguration
+    ): KeycloakOAuthApi {
+        val restAdapter = Retrofit.Builder()
+            .baseUrl(oAuthConfiguration.baseUrl)
+            .client(client)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+
+        return restAdapter.create(KeycloakOAuthApi::class.java)
+    }
+
+    @Provides
+    internal fun provideOAuthService(
+        apiClinet: KeycloakOAuthApi,
+        oAuthConfiguration: OAuthConfiguration
+    ): OAuthService {
+        return OAuthServiceImpl(apiClinet, oAuthConfiguration)
+    }
+
+    @Provides
+    fun provideAuthManager(
+        application: Application,
+        oAuthConfiguration: OAuthConfiguration,
+        oauthServce: OAuthService,
+        tokensStorage: TokensStorage,
+        mapper: OAuthTokenMapper
+    ): AuthManager {
+        return DukeconAuthManager(application, oAuthConfiguration, oauthServce, tokensStorage, mapper)
     }
 }
 

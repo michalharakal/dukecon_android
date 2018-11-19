@@ -12,17 +12,15 @@ open class EventDataStoreFactory @Inject constructor(
      * Returns a DataStore based on whether or not there is content in the cache and the cache
      * has not expired
      */
-    open fun retrieveDataStore(isCached: Boolean, isExpired: Boolean, hasInternetConnected: Boolean): EventDataStore {
+    open fun retrieveDataStore(isCached: Boolean, hasInternetConnected: Boolean): EventDataStore {
         if (hasInternetConnected) {
-            if (isCached && !isExpired) {
-                return retrieveCacheDataStore()
-            }
-        } else {
             if (isCached) {
                 return retrieveCacheDataStore()
+            } else {
+                retrieveRemoteDataStore()
             }
         }
-        return retrieveRemoteDataStore()
+        return retrieveCacheDataStore()
     }
 
     /**

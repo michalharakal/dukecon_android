@@ -1,4 +1,4 @@
-package org.dukecon.remote.mapper
+package org.dukecon.remote.conference.mapper
 
 /**
  * Interface for model mappers. It provides helper methods that facilitate

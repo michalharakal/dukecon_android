@@ -19,6 +19,8 @@ dependencies {
     implementation presentationDependencies.javaxInject
     implementation presentationDependencies.rxKotlin
     implementation presentationDependencies.jodaTime
+    implementation presentationDependencies.kotlinLogging
+
 
     testImplementation presentationTestDependencies.junit
     testImplementation presentationTestDependencies.mockito

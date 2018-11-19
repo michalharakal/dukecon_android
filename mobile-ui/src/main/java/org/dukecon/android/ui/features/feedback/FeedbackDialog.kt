@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import kotlinx.android.synthetic.main.dialog_feedback.view.*
-import kotlinx.android.synthetic.main.view_session_detail.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getComponent
 import org.dukecon.android.ui.features.eventdetail.di.EventDetailComponent

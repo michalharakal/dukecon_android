@@ -203,7 +203,53 @@
               "$ref": "#/definitions/Feedback"
             }
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Speaker"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/token": {
+      "post": {
+        "summary": "submit code to obtain oauth token",
+        "description": "",
+        "operationId": "postCode",
+        "tags": [
+          "oauth"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "field",
+            "name": "exchange",
+            "description": "task object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RequestToken"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/OAuthToken"
+            }
+          }
+        }
       }
     },
     "/conferences/{id}/styles.css": {
@@ -227,6 +273,36 @@
             "description": "successful operation",
             "schema": {
               "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/conferences/{id}/keycloak.json": {
+      "get": {
+        "tags": [
+          "conferences"
+        ],
+        "summary": "returns keycloak setup",
+        "description": "",
+        "operationId": "getKeyCloak",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/Keycloak"
             }
           }
         }
@@ -549,6 +625,64 @@
           }
         },
         "icon": {
+          "type": "string"
+        }
+      }
+    },
+    "Keycloak": {
+      "type": "object",
+      "properties": {
+        "realm": {
+          "type": "string"
+        },
+        "auth-server-url": {
+          "type": "string"
+        },
+        "ssl-required": {
+          "type": "string"
+        },
+        "resource": {
+          "type": "string"
+        },
+        "redirectUri": {
+          "type": "string"
+        },
+        "useAccountManagement": {
+          "type": "string"
+        }
+      }
+    },
+    "OAuthToken": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string"
+        },
+        "refresh_token": {
+          "type": "string"
+        },
+        "id_token" : {
+          "type": "string"
+        },
+        "expires_in": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "RequestToken": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "code",
+          "type": "string"
+        },
+        "client_id": {
+          "description": "client id",
+          "type": "string"
+        },
+        "grant_type": {
+          "description": "grant type",
           "type": "string"
         }
       }

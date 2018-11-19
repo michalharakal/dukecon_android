@@ -47,5 +47,4 @@ abstract class SingleUseCase<T, in Params> constructor(
     private fun addDisposable(disposable: Disposable) {
         disposables.add(disposable)
     }
-
 }

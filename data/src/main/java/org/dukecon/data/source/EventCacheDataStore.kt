@@ -14,6 +14,10 @@ import javax.inject.Inject
  */
 open class EventCacheDataStore @Inject constructor(private val conferenceDataCache: ConferenceDataCache) :
         EventDataStore {
+    override fun getKeycloak(): Single<KeycloakEntity> {
+        return conferenceDataCache.getKeycloak()
+    }
+
     override fun submitFeedback(feedback: FeedbackEntity): Single<Any> {
         throw UnsupportedOperationException()
     }

@@ -43,6 +43,9 @@ ext {
     firebaseVersion = '15.0.2'
     firebaseDispatcherVersion = '0.8.5'
     crashlyticsVersion = '2.9.1'
+    openIdApiVersion = '0.7.1'
+    androidxBrowserVersion = '1.0.0'
+    androidXVersion = '1.0.0'
 
     //Testing
     robolectricVersion = '3.4.2'
@@ -78,6 +81,7 @@ ext {
             dagger            : "com.google.dagger:dagger:${daggerVersion}",
             rxKotlin          : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
             kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
+            kotlinLogging     : "io.github.microutils:kotlin-logging:${kotlinLoggingVersion}",
             rxAndroid         : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
             javaxAnnotation   : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject       : "javax.inject:javax.inject:${javaxInjectVersion}",
@@ -215,7 +219,10 @@ ext {
             jodaGsonSerializer   : "com.fatboyindustrial.gson-jodatime-serialisers:gson-jodatime-serialisers:${jodaGsonSerializerVersion}",
             retrofit             : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
             retrofitConverter    : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
-            retrofitAdapter      : "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}"
+            retrofitAdapter      : "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
+            browser              : "androidx.browser:browser:${androidxBrowserVersion}",
+            androidxCore         : "androidx.core:core-ktx:${androidXVersion}"
+
     ]
 
     mobileUiTestDependencies = [
@@ -232,4 +239,21 @@ ext {
             androidRunner  : "com.android.support.test:runner:${runnerVersion}",
             androidRules   : "com.android.support.test:rules:${runnerVersion}"
     ]
+
+    authDependencies = [
+            daggerCompiler    : "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger            : "com.google.dagger:dagger:${daggerVersion}",
+            rxKotlin          : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
+            daggerSupport     : "com.google.dagger:dagger-android-support:${daggerVersion}",
+            daggerProcessor   : "com.google.dagger:dagger-android-processor:${daggerVersion}",
+            kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
+            kotlinLogging     : "io.github.microutils:kotlin-logging:${kotlinLoggingVersion}",
+            javaxAnnotation   : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+            javaxInject       : "javax.inject:javax.inject:${javaxInjectVersion}",
+            androidAnnotations: "androidx.annotation:annotation:${androidxAnnotationVersion}",
+            openIdApi         : "net.openid:appauth:${openIdApiVersion}",
+            browser           : "androidx.browser:browser:${androidxBrowserVersion}",
+    ]
+
+
 }

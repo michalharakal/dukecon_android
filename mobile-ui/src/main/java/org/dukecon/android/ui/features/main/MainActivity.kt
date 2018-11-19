@@ -1,34 +1,47 @@
 package org.dukecon.android.ui.features.main
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import android.view.MenuItem
-import android.view.View
 import androidx.fragment.app.Fragment
-import com.google.android.material.navigation.NavigationView
+import io.reactivex.observers.DisposableSingleObserver
 import kotlinx.android.synthetic.main.activity_main.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getAppComponent
-import org.dukecon.android.ui.features.event.EventDateView
+import org.dukecon.android.ui.features.event.ScheduleFragment
 import org.dukecon.android.ui.features.event.SessionNavigator
 import org.dukecon.android.ui.features.eventdetail.EventDetailActivity
-import org.dukecon.android.ui.features.info.InfoView
+import org.dukecon.android.ui.features.info.InfoFragment
 import org.dukecon.android.ui.features.networking.NetworkOfflineChecker
-import org.dukecon.android.ui.features.speaker.SpeakerListView
+import org.dukecon.android.ui.features.speaker.SpeakersFragment
 import org.dukecon.android.ui.features.speakerdetail.SpeakerDetailActivity
 import org.dukecon.android.ui.features.speakerdetail.SpeakerNavigator
 import org.dukecon.android.ui.utils.consume
+import org.dukecon.android.ui.utils.inTransaction
+import org.dukecon.domain.aspects.auth.AuthManager
+import org.dukecon.domain.features.login.ExchangeCodeForToken
 import org.dukecon.presentation.model.EventView
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), SessionNavigator,
     SpeakerNavigator {
 
+    companion object {
+        private const val FRAGMENT_ID = R.id.content
+    }
+
     lateinit var component: MainComponent
 
     @Inject
     lateinit var networkOfflineChecker: NetworkOfflineChecker
+
+    @Inject
+    lateinit var exchangeCodeForToken: ExchangeCodeForToken
+
+
+    @Inject
+    lateinit var authManager: AuthManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,46 +51,45 @@ class MainActivity : AppCompatActivity(), SessionNavigator,
 
         setContentView(R.layout.activity_main)
 
-        //setSupportActionBar(toolbar)
-
-        supportActionBar?.let {
-            it.setHomeAsUpIndicator(R.drawable.ic_menu)
-            it.setDisplayHomeAsUpEnabled(true)
-        }
-
         setTitle(R.string.event_name)
 
-        showView(R.id.action_schedule)
-
         navigation.setOnNavigationItemSelectedListener {
-            showView(it.itemId)
-        }
-            /*
             when (it.itemId) {
-                R.id.action_schedule -> consume { replaceFragment(EventDateView(this) }
+                R.id.action_schedule -> consume {
+                    replaceFragment(ScheduleFragment())
+                }
+                R.id.action_speakers -> consume {
+                    // Scroll to current event next time the schedule is opened.
+                    replaceFragment(SpeakersFragment())
+                }
+                R.id.action_info -> consume {
+                    // Scroll to current event next time the schedule is opened.
+                    replaceFragment(InfoFragment())
+                }
+                else -> false
             }
-            R.id.action_speakers -> SpeakerListView(this)
-            R.id.action_info -> InfoView(this)
-            R.id.navigation_schedule -> consume { replaceFragment(ScheduleFragment()) }
-            R.id.navigation_map -> consume {
-            // Scroll to current event next time the schedule is opened.
-            scheduleViewModel.userHasInteracted = false
-            replaceFragment(MapFragment())
         }
-            R.id.navigation_info -> consume {
-            // Scroll to current event next time the schedule is opened.
-            scheduleViewModel.userHasInteracted = false
-            replaceFragment(InfoFragment())
-        }
-            else -> false
-        }
-        */
-    }
 
-    /*
-    nav_view.setNavigationItemSelectedListener(this)
-    nav_view.setCheckedItem(R.id.action_schedule)
-    */
+        // Add a listener to prevent reselects from being treated as selects.
+        navigation.setOnNavigationItemReselectedListener {}
+
+        if (savedInstanceState == null) {
+            // Show Schedule on first creation
+            navigation.selectedItemId = R.id.action_schedule
+            replaceFragment(ScheduleFragment())
+        } else {
+            // Find the current fragment
+            currentFragment =
+                supportFragmentManager.findFragmentById(FRAGMENT_ID)
+                ?: throw IllegalStateException("Activity recreated, but no fragment found!")
+        }
+
+        val uri = intent.data
+        if (intent.data != null) {
+            exchangeCodeForToken.execute(ExchangeCodeSubscriber(), uri?.getQueryParameter("code") ?: "")
+        }
+
+    }
 
     override fun onResume() {
         super.onResume()
@@ -89,35 +101,19 @@ class MainActivity : AppCompatActivity(), SessionNavigator,
         networkOfflineChecker.disable()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            android.R.id.home -> {
-                //drawer_layout.openDrawer(GravityCompat.START)
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
+    private lateinit var currentFragment: Fragment
 
-    private fun showView(viewId: Int): Boolean {
-        val view: View? = when (viewId) {
-            R.id.action_schedule -> EventDateView(this)
-            R.id.action_speakers -> SpeakerListView(this)
-            R.id.action_info -> InfoView(this)
-            else -> null
+    private fun <F> replaceFragment(fragment: F) where F : Fragment {
+        supportFragmentManager.inTransaction {
+            currentFragment = fragment
+            replace(FRAGMENT_ID, fragment)
         }
-        if (view != null) {
-            content.removeAllViews()
-            content.addView(view)
-            return true
-        }
-        return false
     }
 
     override fun getSystemService(name: String?): Any {
-        when (name) {
-            "component" -> return component
-            else -> return super.getSystemService(name)
+        return when (name) {
+            "component" -> component
+            else -> super.getSystemService(name)
         }
     }
 
@@ -129,5 +125,14 @@ class MainActivity : AppCompatActivity(), SessionNavigator,
 
     override fun navigateToSpeaker(id: String) {
         SpeakerDetailActivity.navigate(this, id)
+    }
+
+    inner class ExchangeCodeSubscriber : DisposableSingleObserver<String>() {
+        override fun onSuccess(t: String) {
+            //mainNavigator.startMain()
+        }
+
+        override fun onError(e: Throwable) {
+        }
     }
 }

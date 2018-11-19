@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.dukecon.data.model.EventEntity
 import org.dukecon.data.model.FavoriteEntity
+import org.dukecon.data.model.KeycloakEntity
 import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 
@@ -31,10 +32,6 @@ interface ConferenceDataCache {
 
     fun isCached(): Boolean
 
-    fun setLastCacheTime(lastCache: Long)
-
-    fun isExpired(): Boolean
-
     fun getSpeakers(): Single<List<SpeakerEntity>>
     fun getSpeaker(id: String): Single<SpeakerEntity>
 
@@ -47,5 +44,8 @@ interface ConferenceDataCache {
 
     fun getFavorites(): Single<List<FavoriteEntity>>
     fun saveFavorite(favorite: FavoriteEntity): Single<List<FavoriteEntity>>
+
+    fun getKeycloak():Single<KeycloakEntity>
+
 
 }
