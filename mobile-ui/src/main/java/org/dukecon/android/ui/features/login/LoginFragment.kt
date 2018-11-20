@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_login.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getComponent
-import org.dukecon.android.ui.features.login.di.LoginComponent
 import org.dukecon.android.ui.features.main.MainComponent
 import org.dukecon.domain.aspects.auth.AuthManager
 import javax.inject.Inject
@@ -36,7 +35,7 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         login_button.setOnClickListener {
-            authManager.login()
+            authManager.login(activity as Object)
         }
     }
 }

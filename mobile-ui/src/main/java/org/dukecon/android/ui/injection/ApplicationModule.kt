@@ -248,13 +248,12 @@ open class ApplicationModule {
 
     @Provides
     fun provideAuthManager(
-        application: Application,
         oAuthConfiguration: OAuthConfiguration,
         oauthServce: OAuthService,
         tokensStorage: TokensStorage,
         mapper: OAuthTokenMapper
     ): AuthManager {
-        return DukeconAuthManager(application, oAuthConfiguration, oauthServce, tokensStorage, mapper)
+        return DukeconAuthManager(oAuthConfiguration, oauthServce, tokensStorage, mapper)
     }
 }
 

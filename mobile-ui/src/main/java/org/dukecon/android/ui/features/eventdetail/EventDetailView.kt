@@ -1,11 +1,13 @@
 package org.dukecon.android.ui.features.eventdetail
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.appcompat.app.AppCompatActivity
 import android.text.format.DateUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chicagoroboto.features.sessiondetail.feedback.FeedbackDialog
 import kotlinx.android.synthetic.main.view_session_detail.view.*
@@ -79,6 +81,7 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
     override fun showNoSession() {
     }
 
+    @SuppressLint("RestrictedApi")
     override fun showSessionDetail(session: EventView) {
         toolbar.title = session.title
         val activity = context as AppCompatActivity
@@ -97,9 +100,12 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
 
         if (session.startTime.isAfter(now)) {
             status.visibility = GONE
+            favorite.visibility = View.VISIBLE
+            feedback.visibility = View.GONE
             favorite.show()
         } else {
             status.visibility = VISIBLE
+            favorite.visibility = View.GONE
             favorite.hide()
 
             val statusString = if (session.endTime.isAfter(now)) {
@@ -111,6 +117,7 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
 
             if (conferenceConfiguration.supportsFeedback) {
                 feedback.show()
+                feedback.visibility = View.VISIBLE
             }
         }
     }

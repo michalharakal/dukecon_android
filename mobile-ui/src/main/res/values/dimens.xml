@@ -14,5 +14,7 @@
     <dimen name="a11y_min_touch_target">48dp</dimen>
     <dimen name="spacing_micro">4dp</dimen>
     <dimen name="margin_normal">16dp</dimen>
+    <dimen name="activity_vertical_margin">15dp</dimen>
+    <dimen name="activity_horizontal_margin">15dp</dimen>
 
 </resources>
