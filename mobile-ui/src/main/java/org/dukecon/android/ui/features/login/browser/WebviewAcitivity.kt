@@ -3,13 +3,10 @@ package org.dukecon.android.ui.features.login.browser
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
-import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.features.main.MainActivity
@@ -42,15 +39,23 @@ class WebviewActivity : AppCompatActivity() {
 
     inner class CodeSniffingWebViewClient : WebViewClient() {
 
+        // return true => Indicates WebView to NOT load the url;
+        override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+            val uri = Uri.parse(url)
+            if (uri.getQueryParameter("code") != null) {
+                val code = uri.getQueryParameter("code")
+                if (code != null) {
+                    if (code.isNotBlank()) {
+                        sendUri(uri)
+                        return true
+                    }
+                    finish()
+                }
+            }
+            return false
+        }
 
         override fun onPageFinished(view: WebView, url: String) {
-            val uri = Uri.parse(url)
-            val code = uri.getQueryParameter("code")
-            if (code.isNotBlank()) {
-                sendUri(uri)
-            } else {
-                finish()
-            }
         }
     }
 

@@ -10,6 +10,7 @@ import org.dukecon.data.service.OAuthService
 import org.dukecon.data.source.OAuthConfiguration
 import org.dukecon.domain.aspects.auth.AuthManager
 import org.dukecon.domain.features.oauth.TokensStorage
+import org.dukecon.domain.model.OAuthToken
 import org.dukecon.remote.oauth.mapper.OAuthTokenMapper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,6 +22,9 @@ class DukeconAuthManager @Inject constructor(
     private val tokensStorage: TokensStorage,
     private val oAuthTokenMapper: OAuthTokenMapper
 ) : AuthManager {
+    override fun hasSession(token: OAuthToken): Boolean {
+        return token.refreshToken.isNotEmpty()
+    }
 
     override fun exchangeToken(code: String) {
         val token = oAuthService.code2token(code)

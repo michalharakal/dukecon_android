@@ -15,8 +15,8 @@ class OauthAuthorizationInterceptor(private val tokenStorage: TokensStorage) : I
 
         return if (accessToken.isNotBlank()) {
             val requestWithAuthorizationHeaderBuilder = chain.request().newBuilder()
-            requestWithAuthorizationHeaderBuilder.addHeader(
-                "Authorization", accessToken
+            requestWithAuthorizationHeaderBuilder.header(
+                "Authorization", "bearer " + accessToken
             )
             chain.proceed(requestWithAuthorizationHeaderBuilder.build())
         } else {

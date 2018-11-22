@@ -142,7 +142,7 @@ android {
             dimension "dukecon"
             applicationIdSuffix ".doag"
 
-            versionCode 4
+            versionCode 5
             versionName gitVersionName
         }
     }

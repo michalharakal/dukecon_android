@@ -20,5 +20,9 @@
     <string name="rating_bad">Schlecht</string>
 
     <string name="licences_title">Lizenzen</string>
-    <string name="login_title">Login</string>
+    <string name="login_title">Anmelden</string>
+    <string name="logout">Abmelden</string>
+    <string name="filters">Filtern</string>
+    <string name="login">Anmelden</string>
+
 </resources>

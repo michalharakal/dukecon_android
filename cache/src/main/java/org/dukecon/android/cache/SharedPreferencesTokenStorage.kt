@@ -8,6 +8,11 @@ import javax.inject.Inject
 
 class SharedPreferencesTokenStorage @Inject constructor(context: Context) : TokensStorage {
 
+    override fun loginRequired(): Boolean {
+        val token = getToken()
+        return token.refreshToken.isNullOrEmpty()
+    }
+
     companion object {
         private val PREF_BUFFER_PACKAGE_NAME = "org.dukecon.ouath"
         private val PREF_KEY_ACCESS_TOKEN = "access_token"
@@ -29,6 +34,9 @@ class SharedPreferencesTokenStorage @Inject constructor(context: Context) : Toke
     }
 
     override fun clear() {
+        oauthTokenPref.edit().remove(PREF_KEY_ACCESS_TOKEN).apply()
+        oauthTokenPref.edit().remove(PREF_KEY_REFRESH_TOKEN).apply()
+        oauthTokenPref.edit().remove(PREF_KEY_EXPIRES_AT).apply()
     }
 
     override fun setToken(token: OAuthToken) {
