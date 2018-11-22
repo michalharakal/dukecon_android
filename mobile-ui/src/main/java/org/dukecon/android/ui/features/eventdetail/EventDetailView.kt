@@ -78,7 +78,13 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
         presenter.setSessionId(sessionId)
     }
 
-    override fun showNoSession() {
+    private var hasSession: Boolean = false
+
+    override fun setHasSession(hasSession: Boolean) {
+        this.hasSession = hasSession
+    }
+
+    override fun showNoEvent() {
     }
 
     @SuppressLint("RestrictedApi")
@@ -115,7 +121,7 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
             }
             status.setText(statusString)
 
-            if (conferenceConfiguration.supportsFeedback) {
+            if (conferenceConfiguration.supportsFeedback and hasSession) {
                 feedback.show()
                 feedback.visibility = View.VISIBLE
             }
