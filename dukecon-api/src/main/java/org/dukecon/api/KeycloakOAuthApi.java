@@ -16,6 +16,15 @@ public interface KeycloakOAuthApi {
             @Field("code") String code
     );
 
+    @retrofit2.http.FormUrlEncoded
+    @POST("token")
+    Call<OAuthToken> refresh(
+            @retrofit2.http.Field("code") String code,
+            @retrofit2.http.Field("client_id") String clientId,
+            @retrofit2.http.Field("grant_type") String grantType
+    );
+
+
     @FormUrlEncoded
     @POST("token")
     Call<OAuthToken> refreshOAuthToken(
