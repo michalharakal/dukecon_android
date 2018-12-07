@@ -51,7 +51,7 @@ task buildRefreshTokenClient(type: org.openapitools.generator.gradle.plugin.task
     ]
 }
 
-sourceSets.main.java.srcDirs = ["$buildDir/java/src/main/java"]
+sourceSets.main.java.srcDirs += ["$buildDir/java/src/main/java"]
 
 compileJava.dependsOn tasks.openApiGenerate, buildOauthCodeClient, buildRefreshTokenClient
 

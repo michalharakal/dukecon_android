@@ -87,12 +87,12 @@
             "description": "grant type",
             "type": "string"
           },
-          "refresh_token": {
-            "description": "refresh_token",
-            "type": "string"
-          },
           "scope": {
             "description": "scope",
+            "type": "string"
+          },
+          "refresh_token": {
+            "description": "refresh_token",
             "type": "string"
           }
         }

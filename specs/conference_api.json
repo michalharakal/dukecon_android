@@ -232,77 +232,6 @@
         }
       }
     },
-    "/token": {
-      "post": {
-        "summary": "submit code to obtain oauth token",
-        "description": "",
-        "operationId": "postCode",
-        "tags": [
-          "oauth"
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OAuthToken"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestToken"
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestToken"
-              }
-            }
-          },
-          "description": "Request token",
-          "required": true
-        }
-      }
-    },
-    "/token": {
-      "post": {
-        "summary": "submit refresh code to obtain oauth token",
-        "description": "",
-        "operationId": "refresh",
-        "tags": [
-          "oauth"
-        ],
-        "responses": {
-          "201": {
-            "description": "successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OAuthToken"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestToken"
-              }
-            }
-          },
-          "description": "Request token",
-          "required": true
-        }
-      }
-    },
     "/conferences/{id}/styles.css": {
       "get": {
         "summary": "Conference styles",
@@ -714,41 +643,6 @@
             "type": "string"
           },
           "useAccountManagement": {
-            "type": "string"
-          }
-        }
-      },
-      "OAuthToken": {
-        "type": "object",
-        "properties": {
-          "access_token": {
-            "type": "string"
-          },
-          "refresh_token": {
-            "type": "string"
-          },
-          "id_token": {
-            "type": "string"
-          },
-          "expires_in": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
-      "RequestToken": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "description": "code",
-            "type": "string"
-          },
-          "client_id": {
-            "description": "client id",
-            "type": "string"
-          },
-          "grant_type": {
-            "description": "grant type",
             "type": "string"
           }
         }

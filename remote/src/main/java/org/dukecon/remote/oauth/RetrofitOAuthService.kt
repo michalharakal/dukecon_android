@@ -1,22 +1,25 @@
 package org.dukecon.remote.oauth
 
-import org.dukecon.api.KeycloakOAuthApi
 import org.dukecon.data.model.OAuthToken
 import org.dukecon.data.service.OAuthService
 import org.dukecon.data.source.OAuthConfiguration
+import org.dukecon.oauth.api.code.OauthApi
+import org.dukecon.oauth.api.refresh.RefreshOauthApi
 import java.io.IOException
 import javax.inject.Inject
 
-class OAuthServiceImpl @Inject constructor(
-    private val oauthApi: KeycloakOAuthApi,
-    private val oAuthConfiguration: OAuthConfiguration
+class RetrofitOAuthService @Inject constructor(
+        private val oauthApi: OauthApi,
+        private val refreshApi: RefreshOauthApi,
+
+        private val oAuthConfiguration: OAuthConfiguration
 ) : OAuthService {
     override fun refresh(refreshToken: String): OAuthToken {
-        val call = oauthApi.refreshOAuthToken(
-            oAuthConfiguration.clientId,
-            "refresh_token",
-            "dukecon_mobile",
-            refreshToken
+        val call = refreshApi.refresh(
+                oAuthConfiguration.clientId,
+                "refresh_token",
+                "dukecon_mobile",
+                refreshToken
         )
         try {
             val response = call.execute()
@@ -25,9 +28,9 @@ class OAuthServiceImpl @Inject constructor(
                     val token = response.body()
                     if (token != null) {
                         return OAuthToken(
-                            token.accessToken,
-                            token.refreshToken,
-                            token.expiresIn
+                                token.accessToken,
+                                token.refreshToken,
+                                token.expiresIn
                         )
                     }
                 }
@@ -39,11 +42,11 @@ class OAuthServiceImpl @Inject constructor(
     }
 
     override fun code2token(code: String): OAuthToken {
-        val call = oauthApi.getOpenIdToken(
-            oAuthConfiguration.clientId,
-            "authorization_code",
-            "appdoag://redirect2token",
-            code
+        val call = oauthApi.postCode(
+                oAuthConfiguration.clientId,
+                "authorization_code",
+                "appdoag://redirect2token",
+                code
         )
         try {
             val response = call.execute()
@@ -52,9 +55,9 @@ class OAuthServiceImpl @Inject constructor(
                     val token = response.body()
                     if (token != null) {
                         return OAuthToken(
-                            token.accessToken,
-                            token.refreshToken,
-                            token.expiresIn
+                                token.accessToken,
+                                token.refreshToken,
+                                token.expiresIn
                         )
                     }
                 }

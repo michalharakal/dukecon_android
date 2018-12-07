@@ -79,10 +79,6 @@
       "RequestToken": {
         "type": "object",
         "properties": {
-          "code": {
-            "description": "code",
-            "type": "string"
-          },
           "client_id": {
             "description": "client id",
             "type": "string"
@@ -93,6 +89,10 @@
           },
           "redirect_uri": {
             "description": "redirect uri",
+            "type": "string"
+          },
+          "code": {
+            "description": "code",
             "type": "string"
           }
         }
