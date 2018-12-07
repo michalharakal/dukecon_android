@@ -1,33 +1,59 @@
-apply plugin: 'java'
-apply plugin: "org.detoeuf.swagger-codegen"
+plugins {
+    id 'java'
+    id 'org.openapi.generator'
+}
 
-swagger {
-    inputSpec = "$project.rootDir/specs/swagger.json"
+openApiGenerate {
+    generatorName = "java"
+    inputSpec = "$project.rootDir/specs/conference_api.json".toString()
+    outputDir = "$buildDir/java".toString()
+    modelPackage = 'org.dukecon.android.api.model'
+    invokerPackage = 'org.dukecon.android.api.service'
+    apiPackage = 'org.dukecon.android.api'
+    library = 'retrofit2'
 
-    outputDir = "$buildDir/swagger"
-
-    lang = 'java'
-
-    additionalProperties = [
-            'invokerPackage'   : 'org.dukecon.android.api.service',
-            'modelPackage'     : 'org.dukecon.android.api.model',
-            'apiPackage'       : 'org.dukecon.android.api',
-            'library'          : 'retrofit2',
-            'serializableModel': 'false',
-            'dateLibrary'      : 'joda'
+    configOptions = [
+            booleanGetterPrefix: "is",
+            serializableModel  : false,
+            dateLibrary        : 'joda'
     ]
 }
 
-sourceSets.main.java.srcDirs += ["$swagger.outputDir/src/main/java"]
+task buildOauthCodeClient(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask){
+    generatorName = "java"
+    inputSpec = "$project.rootDir/specs/oauth_api.json".toString()
+    outputDir = "$buildDir/java".toString()
+    modelPackage = 'org.dukecon.oauth.api.code.model'
+    invokerPackage = 'org.dukecon.oauth.api.code.service'
+    apiPackage = 'org.dukecon.oauth.api.code'
+    library = 'retrofit2'
 
-allprojects {
-    tasks.whenTaskAdded { theTask ->
-        if (theTask.name.equals('assemble')) {
-            jar.dependsOn(theTask.name)
-            theTask.name.dependsOn("swagger")
-        }
-    }
+    configOptions = [
+            booleanGetterPrefix: "is",
+            serializableModel  : false,
+            dateLibrary        : 'joda'
+    ]
 }
+
+task buildRefreshTokenClient(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask){
+    generatorName = "java"
+    inputSpec = "$project.rootDir/specs/refresh_token.json".toString()
+    outputDir = "$buildDir/java".toString()
+    modelPackage = 'org.dukecon.oauth.api.refresh.model'
+    invokerPackage = 'org.dukecon.oauth.api.refresh.service'
+    apiPackage = 'org.dukecon.oauth.api.refresh'
+    library = 'retrofit2'
+
+    configOptions = [
+            booleanGetterPrefix: "is",
+            serializableModel  : false,
+            dateLibrary        : 'joda'
+    ]
+}
+
+sourceSets.main.java.srcDirs += ["$buildDir/java/src/main/java"]
+
+compileJava.dependsOn tasks.openApiGenerate, buildOauthCodeClient, buildRefreshTokenClient
 
 dependencies {
 
@@ -39,6 +65,8 @@ dependencies {
     implementation apiDependencies.retrofitGsonConverter
     implementation apiDependencies.retrofitScalarsConverter
     implementation apiDependencies.jodaTime
+    implementation apiDependencies.jsonFire
+
     implementation(apiDependencies.oltuOAuth) {
         exclude group: 'org.apache.oltu.oauth2', module: 'org.apache.oltu.oauth2.common'
     }

@@ -26,7 +26,6 @@ import org.dukecon.android.ui.features.networking.AndroidNetworkUtils
 import org.dukecon.android.ui.features.networking.ConnectionStateMonitor
 import org.dukecon.android.ui.features.networking.LolipopConnectionStateMonitor
 import org.dukecon.android.ui.features.networking.NetworkOfflineChecker
-import org.dukecon.api.KeycloakOAuthApi
 import org.dukecon.data.executor.JobExecutor
 import org.dukecon.data.repository.ConferenceDataCache
 import org.dukecon.data.repository.EventRemote
@@ -39,13 +38,11 @@ import org.dukecon.domain.executor.PostExecutionThread
 import org.dukecon.domain.executor.ThreadExecutor
 import org.dukecon.domain.features.networking.NetworkUtils
 import org.dukecon.domain.features.oauth.TokensStorage
+import org.dukecon.oauth.api.code.OauthApi
+import org.dukecon.oauth.api.refresh.RefreshOauthApi
 import org.dukecon.remote.conference.EventRemoteImpl
-import org.dukecon.remote.conference.mapper.EventEntityMapper
-import org.dukecon.remote.conference.mapper.FeedbackEntityMapper
-import org.dukecon.remote.conference.mapper.KeycloakEntityMapper
-import org.dukecon.remote.conference.mapper.RoomEntityMapper
-import org.dukecon.remote.conference.mapper.SpeakerEntityMapper
-import org.dukecon.remote.oauth.OAuthServiceImpl
+import org.dukecon.remote.conference.mapper.*
+import org.dukecon.remote.oauth.RetrofitOAuthService
 import org.dukecon.remote.oauth.interceptor.OauthAuthorizationInterceptor
 import org.dukecon.remote.oauth.interceptor.TokenRefreshAfterFailInterceptor
 import org.dukecon.remote.oauth.mapper.OAuthTokenMapper
@@ -93,9 +90,9 @@ open class ApplicationModule {
     @Provides
     @Singleton
     internal fun provideEventCache(
-        application: Application,
-        gson: Gson,
-        preferencesHelper: PreferencesHelper
+            application: Application,
+            gson: Gson,
+            preferencesHelper: PreferencesHelper
     ): ConferenceDataCache {
         val baseCacheFolder = application.filesDir.absolutePath
         return ConferenceDataCacheImpl(ConferenceCacheGsonSerializer(baseCacheFolder, gson), preferencesHelper)
@@ -109,17 +106,17 @@ open class ApplicationModule {
 
     @Provides
     internal fun provideEventRemote(
-        service: ConferencesApi,
-        factory: EventEntityMapper,
-        speakerMapper: SpeakerEntityMapper,
-        roomEntityMapper: RoomEntityMapper,
-        feedbackEntityMapper: FeedbackEntityMapper,
-        conferenceConfiguration: ConferenceConfiguration,
-        keycloakEntityMapper: KeycloakEntityMapper
+            service: ConferencesApi,
+            factory: EventEntityMapper,
+            speakerMapper: SpeakerEntityMapper,
+            roomEntityMapper: RoomEntityMapper,
+            feedbackEntityMapper: FeedbackEntityMapper,
+            conferenceConfiguration: ConferenceConfiguration,
+            keycloakEntityMapper: KeycloakEntityMapper
     ): EventRemote {
         return EventRemoteImpl(
-            service, conferenceConfiguration.conferenceId, factory, feedbackEntityMapper,
-            speakerMapper, roomEntityMapper, keycloakEntityMapper
+                service, conferenceConfiguration.conferenceId, factory, feedbackEntityMapper,
+                speakerMapper, roomEntityMapper, keycloakEntityMapper
         )
     }
 
@@ -176,13 +173,13 @@ open class ApplicationModule {
         })
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
-            .addInterceptor(interceptor)
-            .cache(cache)
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .sslSocketFactory(sslContext.getSocketFactory(), xtm)
-            .hostnameVerifier(DO_NOT_VERIFY_IMP())
-            .build()
+                .addInterceptor(interceptor)
+                .cache(cache)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .sslSocketFactory(sslContext.getSocketFactory(), xtm)
+                .hostnameVerifier(DO_NOT_VERIFY_IMP())
+                .build()
     }
 
     @Provides
@@ -201,59 +198,68 @@ open class ApplicationModule {
 
     @Provides
     internal fun provideConferenceService(
-        client: OkHttpClient,
-        gson: Gson,
-        conferenceConfiguration: ConferenceConfiguration,
-        tokensStorage: TokensStorage,
-        oAuthService: OAuthService,
-        oAuthTokenMapper: OAuthTokenMapper
+            client: OkHttpClient,
+            gson: Gson,
+            conferenceConfiguration: ConferenceConfiguration,
+            tokensStorage: TokensStorage,
+            oAuthService: OAuthService,
+            oAuthTokenMapper: OAuthTokenMapper
     ): ConferencesApi {
         val authorizingOkHttpClient = client.newBuilder()
-            .addInterceptor(OauthAuthorizationInterceptor(tokensStorage))
-            .addInterceptor(TokenRefreshAfterFailInterceptor(tokensStorage, oAuthService, oAuthTokenMapper))
-            .build()
+                .addInterceptor(OauthAuthorizationInterceptor(tokensStorage))
+                .addInterceptor(TokenRefreshAfterFailInterceptor(tokensStorage, oAuthService, oAuthTokenMapper))
+                .build()
         val restAdapter = Retrofit.Builder()
-            .baseUrl(conferenceConfiguration.baseUrl)
-            .client(authorizingOkHttpClient)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
+                .baseUrl(conferenceConfiguration.baseUrl)
+                .client(authorizingOkHttpClient)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build()
 
         return restAdapter.create(ConferencesApi::class.java)
     }
 
     @Provides
     internal fun provideOAuthApi(
-        client: OkHttpClient,
-        gson: Gson,
-        oAuthConfiguration: OAuthConfiguration
-    ): KeycloakOAuthApi {
+            client: OkHttpClient,
+            gson: Gson,
+            oAuthConfiguration: OAuthConfiguration
+    ): OauthApi {
         val restAdapter = Retrofit.Builder()
-            .baseUrl(oAuthConfiguration.baseUrl)
-            .client(client)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
+                .baseUrl(oAuthConfiguration.baseUrl)
+                .client(client)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build()
 
-        return restAdapter.create(KeycloakOAuthApi::class.java)
+        return restAdapter.create(OauthApi::class.java)
     }
 
     @Provides
-    internal fun provideOAuthService(
-        apiClinet: KeycloakOAuthApi,
-        oAuthConfiguration: OAuthConfiguration
-    ): OAuthService {
-        return OAuthServiceImpl(apiClinet, oAuthConfiguration)
+    internal fun provideRefreshOAuthApi(
+            client: OkHttpClient,
+            gson: Gson,
+            oAuthConfiguration: OAuthConfiguration
+    ): RefreshOauthApi {
+        val restAdapter = Retrofit.Builder()
+                .baseUrl(oAuthConfiguration.baseUrl)
+                .client(client)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build()
+
+        return restAdapter.create(RefreshOauthApi::class.java)
+    }
+
+
+    @Provides
+    internal fun provideOAuthService(retrofitOauthService: RetrofitOAuthService): OAuthService {
+        return retrofitOauthService
     }
 
     @Provides
-    fun provideAuthManager(
-        oAuthConfiguration: OAuthConfiguration,
-        oauthServce: OAuthService,
-        tokensStorage: TokensStorage,
-        mapper: OAuthTokenMapper
-    ): AuthManager {
-        return DukeconAuthManager(oAuthConfiguration, oauthServce, tokensStorage, mapper)
+    fun provideAuthManager(dukeconAuthManager: DukeconAuthManager): AuthManager {
+        return dukeconAuthManager
     }
 }
 
