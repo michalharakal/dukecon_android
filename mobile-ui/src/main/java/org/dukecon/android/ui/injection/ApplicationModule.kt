@@ -107,11 +107,12 @@ open class ApplicationModule {
             roomEntityMapper: RoomEntityMapper,
             feedbackEntityMapper: FeedbackEntityMapper,
             conferenceConfiguration: ConferenceConfiguration,
-            keycloakEntityMapper: KeycloakEntityMapper
+            keycloakEntityMapper: KeycloakEntityMapper,
+            metaDataEntityMapper: MetaDataEntityMapper
     ): EventRemote {
         return EventRemoteImpl(
                 service, conferenceConfiguration.conferenceId, factory, feedbackEntityMapper,
-                speakerMapper, roomEntityMapper, keycloakEntityMapper
+                speakerMapper, roomEntityMapper, keycloakEntityMapper, metaDataEntityMapper
         )
     }
 

@@ -20,8 +20,23 @@ class EventRemoteImpl @Inject constructor(
         private val feedbackEntityMapper: FeedbackEntityMapper,
         private val speakersEntityMapper: SpeakerEntityMapper,
         private val roomEntityMapper: RoomEntityMapper,
-        private val keycloakEntityMapper: KeycloakEntityMapper
+        private val keycloakEntityMapper: KeycloakEntityMapper,
+        private val metaDataEntityMapper: MetaDataEntityMapper
 ) : EventRemote {
+    override fun getMetaData(): MetaDataEntity {
+        val call = conferenceApi.getMeta(conferenceId)
+        val response = call.execute()
+        if (response.isSuccessful) {
+            if (response.body() != null) {
+                val metaData = response.body()
+                if (metaData != null) {
+                    return metaDataEntityMapper.mapFromRemote(metaData)
+                }
+            }
+        }
+        throw Throwable()
+    }
+
     override fun getKeycloak(): KeycloakEntity {
         val call = conferenceApi.getKeyCloak(conferenceId)
         val response = call.execute()

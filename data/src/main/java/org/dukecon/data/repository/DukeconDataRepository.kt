@@ -23,7 +23,9 @@ class DukeconDataRepository @Inject constructor(
         private val keycloakMapper: KeycloakMapper,
         private val roomMapper: RoomMapper,
         private val feedbackMapper: FeedbackMapper,
-        private val favoriteMapper: FavoriteMapper
+        private val favoriteMapper: FavoriteMapper,
+        private val metadataMapper: MetaDateMapper
+
 ) : ConferenceRepository {
 
     override var onRefreshListeners: List<() -> Unit> = emptyList()
@@ -55,10 +57,11 @@ class DukeconDataRepository @Inject constructor(
     override suspend fun getEvent(id: String): Event {
         val dataStore = localDataStore
 
-        val rooms = dataStore.getRooms().map { roomMapper.mapFromEntity(it) }
         val speakers = dataStore.getSpeakers().map { speakerMapper.mapFromEntity(it) }
         val favorites = dataStore.getFavorites().map { favoriteMapper.mapFromEntity(it) }
-        return eventMapper.mapFromEntity(dataStore.getEvent(id), speakers, rooms, favorites)
+        val metaData = metadataMapper.mapFromEntity(dataStore.getMetaData())
+
+        return eventMapper.mapFromEntity(dataStore.getEvent(id), speakers, favorites, metaData)
     }
 
     override suspend fun getRooms(): List<Room> {
@@ -90,7 +93,7 @@ class DukeconDataRepository @Inject constructor(
                 .distinctBy { it.startTime.dayOfMonth }
                 .map {
                     it.startTime
-                }
+                }.sortedBy { it.dayOfMonth }
     }
 
     override suspend fun saveEvents(events: List<Event>) {
@@ -118,6 +121,7 @@ class DukeconDataRepository @Inject constructor(
     override suspend fun update() {
         localDataStore.saveRooms(remoteDataStore.getRooms())
         localDataStore.saveEvents(remoteDataStore.getEvents())
+        localDataStore.saveMetaData(remoteDataStore.getMetaData())
 /*        remoteDataStore.getFavorites().map {
             localDataStore.saveFavorite(it)
         }
@@ -130,10 +134,10 @@ class DukeconDataRepository @Inject constructor(
     override suspend fun getEvents(day: Int): List<Event> {
         val dataStore = localDataStore
 
-        val rooms = dataStore.getRooms().map { roomMapper.mapFromEntity(it) }
         val speakers = dataStore.getSpeakers().map { speakerMapper.mapFromEntity(it) }
         val favorites = dataStore.getFavorites().map { favoriteMapper.mapFromEntity(it) }
         val events = dataStore.getEvents()
+        val metaData = metadataMapper.mapFromEntity(dataStore.getMetaData())
 
         return events.allBy {
             if (day > 0) {
@@ -142,12 +146,18 @@ class DukeconDataRepository @Inject constructor(
                 true
             }
         }.map {
-            eventMapper.mapFromEntity(it, speakers, rooms, favorites)
+            eventMapper.mapFromEntity(it, speakers, favorites, metaData)
         }.sortedBy {
             it.startTime
         }
-
     }
+
+    override suspend fun getMetaData(): MetaData {
+        val dataStore = localDataStore
+
+        return metadataMapper.mapFromEntity(dataStore.getMetaData())
+    }
+
 
     /**
      * Returns a list containing elements from the given collection by the given [selector] function.

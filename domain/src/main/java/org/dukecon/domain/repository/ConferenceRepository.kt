@@ -33,4 +33,6 @@ interface ConferenceRepository {
     suspend fun submitFeedback(feedback: Feedback): Any
 
     suspend fun getKeyCloak(): Keycloak
+    suspend fun getMetaData(): MetaData
+
 }

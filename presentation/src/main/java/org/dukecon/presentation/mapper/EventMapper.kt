@@ -24,6 +24,6 @@ open class EventMapper @Inject constructor(val speakersMapper: SpeakerMapper) : 
                     speakersMapper.mapToView(it)
                 },
                 type.favorite,
-                type.room)
+                type.room.names["de"] ?: "")
     }
 }
