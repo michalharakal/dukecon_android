@@ -5,5 +5,6 @@ package org.dukecon.presentation
  * BaseView-Presenter pattern.
  */
 interface BaseView {
+    fun showError(throwable: Throwable)
 
 }

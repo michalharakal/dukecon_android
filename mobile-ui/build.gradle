@@ -45,7 +45,7 @@ android {
     defaultConfig {
         minSdkVersion globalConfiguration["androidMinSdkVersion"]
         targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
-        multiDexEnabled = true
+        multiDexEnabled = false
         testInstrumentationRunner "org.buffer.android.boilerplate.ui.test.TestRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -167,17 +167,13 @@ dependencies {
     implementation project(':cache')
     implementation project(':remote')
 
-    implementation 'com.android.support:multidex:1.0.3'
-
     implementation mobileUiDependencies.javaxAnnotation
 
     implementation mobileUiDependencies.kotlin
+    implementation mobileUiDependencies.coroutines
     implementation mobileUiDependencies.javaxInject
-    implementation mobileUiDependencies.rxKotlin
     implementation mobileUiDependencies.androidAnnotations
 
-    implementation mobileUiDependencies.androidSupportV4
-    implementation mobileUiDependencies.androidSupportV13
     implementation mobileUiDependencies.cardview
     implementation mobileUiDependencies.supportRecyclerView
     implementation mobileUiDependencies.material
@@ -185,7 +181,6 @@ dependencies {
     implementation mobileUiDependencies.constraintlayout
     implementation mobileUiDependencies.appCompat
     implementation mobileUiDependencies.timber
-    implementation mobileUiDependencies.rxAndroid
     implementation mobileUiDependencies.picasso
     implementation mobileUiDependencies.dagger
     implementation mobileUiDependencies.daggerSupport
@@ -195,18 +190,13 @@ dependencies {
     implementation mobileUiDependencies.crashlytics
     implementation mobileUiDependencies.okHttp
     implementation mobileUiDependencies.okHttpLogger
-    implementation mobileUiDependencies.jodaTime
     implementation mobileUiDependencies.retrofit
     implementation mobileUiDependencies.retrofitConverter
-    implementation mobileUiDependencies.retrofitAdapter
     implementation mobileUiDependencies.browser
     implementation mobileUiDependencies.androidxCore
-
-    implementation(mobileUiDependencies.jodaGsonSerializer) {
-        exclude group: 'joda-time', module: 'joda-time'
-    }
-
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0-alpha1'
+    implementation mobileUiDependencies.androidThreeTen
+    implementation mobileUiDependencies.threeTenConverters
+    
     testImplementation mobileUiTestDependencies.kotlinJUnit
 
     kapt mobileUiDependencies.daggerCompiler
@@ -218,12 +208,12 @@ dependencies {
     androidTestImplementation mobileUiTestDependencies.mockito
     androidTestImplementation mobileUiTestDependencies.mockitoAndroid
 
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-web:3.1.0'
-    androidTestImplementation 'androidx.test.espresso.idling:idling-concurrent:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-web:3.1.1'
+    androidTestImplementation 'androidx.test.espresso.idling:idling-concurrent:3.1.1'
 
     kaptTest mobileUiDependencies.daggerCompiler
     kaptAndroidTest mobileUiDependencies.daggerCompiler

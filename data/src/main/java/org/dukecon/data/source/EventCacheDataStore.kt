@@ -1,7 +1,5 @@
 package org.dukecon.data.source
 
-import io.reactivex.Completable
-import io.reactivex.Single
 import org.dukecon.data.model.*
 import org.dukecon.data.repository.ConferenceDataCache
 import org.dukecon.data.repository.EventDataStore
@@ -14,55 +12,55 @@ import javax.inject.Inject
  */
 open class EventCacheDataStore @Inject constructor(private val conferenceDataCache: ConferenceDataCache) :
         EventDataStore {
-    override fun getKeycloak(): Single<KeycloakEntity> {
+    override suspend fun getKeycloak(): KeycloakEntity {
         return conferenceDataCache.getKeycloak()
     }
 
-    override fun submitFeedback(feedback: FeedbackEntity): Single<Any> {
+    override suspend fun submitFeedback(feedback: FeedbackEntity): Any {
         throw UnsupportedOperationException()
     }
 
-    override fun saveFavorite(favorite: FavoriteEntity): Single<List<FavoriteEntity>> {
+    override suspend fun saveFavorite(favorite: FavoriteEntity): List<FavoriteEntity> {
         return conferenceDataCache.saveFavorite(favorite)
     }
 
-    override fun getFavorites(): Single<List<FavoriteEntity>> {
+    override suspend fun getFavorites(): List<FavoriteEntity> {
         return conferenceDataCache.getFavorites()
     }
 
-    override fun getSpeaker(id: String): Single<SpeakerEntity> {
+    override suspend fun getSpeaker(id: String): SpeakerEntity {
         return conferenceDataCache.getSpeaker(id)
     }
 
-    override fun getEvent(id: String): Single<EventEntity> {
+    override suspend fun getEvent(id: String): EventEntity {
         return conferenceDataCache.getEvent(id)
     }
 
-    override fun getRooms(): Single<List<RoomEntity>> {
+    override suspend fun getRooms(): List<RoomEntity> {
         return conferenceDataCache.getRooms()
     }
 
-    override fun saveRooms(rooms: List<RoomEntity>): Completable {
+    override suspend fun saveRooms(rooms: List<RoomEntity>) {
         return conferenceDataCache.saveRooms(rooms)
     }
 
-    override fun getSpeakers(): Single<List<SpeakerEntity>> {
+    override suspend fun getSpeakers(): List<SpeakerEntity> {
         return conferenceDataCache.getSpeakers()
     }
 
-    override fun saveSpeakers(speakers: List<SpeakerEntity>): Completable {
+    override suspend fun saveSpeakers(speakers: List<SpeakerEntity>) {
         return conferenceDataCache.saveSpeakers(speakers)
     }
 
-    override fun clearEvents(): Completable {
+    override suspend fun clearEvents() {
         return conferenceDataCache.clearEvents()
     }
 
-    override fun saveEvents(events: List<EventEntity>): Completable {
+    override suspend fun saveEvents(events: List<EventEntity>) {
         return conferenceDataCache.saveEvents(events)
     }
 
-    override fun getEvents(): Single<List<EventEntity>> {
-        return conferenceDataCache.getEvents();
+    override suspend fun getEvents(): List<EventEntity> {
+        return conferenceDataCache.getEvents()
     }
 }

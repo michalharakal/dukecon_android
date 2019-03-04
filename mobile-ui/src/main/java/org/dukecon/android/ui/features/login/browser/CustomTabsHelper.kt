@@ -5,8 +5,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.text.TextUtils
-import android.util.Log
-import java.util.ArrayList
+import timber.log.Timber
+import java.util.*
 
 object CustomTabsHelper {
     private val TAG = "CustomTabsHelper"
@@ -27,7 +27,7 @@ object CustomTabsHelper {
 
     fun addKeepAliveExtra(context: Context, intent: Intent) {
         val keepAliveIntent = Intent().setClassName(
-            context.packageName, KeepAliveService::class.java!!.getCanonicalName()
+                context.packageName, KeepAliveService::class.java.canonicalName
         )
         intent.putExtra(EXTRA_CUSTOM_TABS_KEEP_ALIVE, keepAliveIntent)
     }
@@ -73,8 +73,8 @@ object CustomTabsHelper {
         } else if (packagesSupportingCustomTabs.size == 1) {
             sPackageNameToUse = packagesSupportingCustomTabs[0]
         } else if (!TextUtils.isEmpty(defaultViewHandlerPackageName)
-            && !hasSpecializedHandlerIntents(context, activityIntent)
-            && packagesSupportingCustomTabs.contains(defaultViewHandlerPackageName)
+                && !hasSpecializedHandlerIntents(context, activityIntent)
+                && packagesSupportingCustomTabs.contains(defaultViewHandlerPackageName)
         ) {
             sPackageNameToUse = defaultViewHandlerPackageName
         } else if (packagesSupportingCustomTabs.contains(STABLE_PACKAGE)) {
@@ -98,8 +98,8 @@ object CustomTabsHelper {
         try {
             val pm = context.packageManager
             val handlers = pm.queryIntentActivities(
-                intent,
-                PackageManager.GET_RESOLVED_FILTER
+                    intent,
+                    PackageManager.GET_RESOLVED_FILTER
             )
             if (handlers == null || handlers.size == 0) {
                 return false
@@ -111,7 +111,7 @@ object CustomTabsHelper {
                 return true
             }
         } catch (e: RuntimeException) {
-            Log.e(TAG, "Runtime exception while getting specialized handlers")
+            Timber.e(e)
         }
 
         return false

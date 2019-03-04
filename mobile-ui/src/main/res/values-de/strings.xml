@@ -4,6 +4,7 @@
     <string name="close_drawer">Schließen</string>
     <string name="status_in_progress">Dieses Talk läuft</string>
     <string name="status_over">Dieses Talk wurde beendet</string>
+    <string name="action_favorites">Favoriten</string>
     <string name="action_schedule">Talks</string>
     <string name="action_speakers">Sprecher</string>
     <string name="action_info">Info</string>
@@ -24,5 +25,4 @@
     <string name="logout">Abmelden</string>
     <string name="filters">Filtern</string>
     <string name="login">Anmelden</string>
-
 </resources>

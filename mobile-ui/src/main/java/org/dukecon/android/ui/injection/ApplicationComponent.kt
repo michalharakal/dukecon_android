@@ -6,8 +6,6 @@ import dagger.Component
 import org.dukecon.android.ui.app.DukeconApplication
 import org.dukecon.android.ui.features.eventdetail.di.EventDetailComponent
 import org.dukecon.android.ui.features.eventdetail.di.EventDetailModule
-import org.dukecon.android.ui.features.eventdetail.di.RedirectUriComponent
-import org.dukecon.android.ui.features.eventdetail.di.RedirectUrilModule
 import org.dukecon.android.ui.features.info.InfoComponent
 import org.dukecon.android.ui.features.info.InfoModule
 import org.dukecon.android.ui.features.main.MainComponent
@@ -43,5 +41,4 @@ interface ApplicationComponent {
     fun speakerDetailComponent(): SpeakerDetailComponent
     fun infoComponent(infoModule: InfoModule): InfoComponent
     fun inject(dukeconApplication: SetCustomdateTimeReceiver)
-    fun redirectComponent(redirectUriModule: RedirectUrilModule): RedirectUriComponent
 }

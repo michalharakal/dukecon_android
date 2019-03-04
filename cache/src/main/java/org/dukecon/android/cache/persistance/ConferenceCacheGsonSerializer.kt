@@ -8,76 +8,81 @@ import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import java.io.*
 
-class ConferenceCacheGsonSerializer(private val baseFolder: String, val gson: Gson) : ConferenceCacheSerializer {
+class ConferenceCacheGsonSerializer(private val baseFolder: String,
+                                    private val gson: Gson) : ConferenceCacheSerializer {
 
-    private fun getKeycloakFullName() = baseFolder + "/keycloak.json"
-    private fun getSpeakersFullName() = baseFolder + "/speakers.json"
-    private fun getRoomsFullName() = baseFolder + "/rooms.json"
-    private fun getEventsFullName() = baseFolder + "/events.json"
-    private fun getFavoritesFullName() = baseFolder + "/favorites.json"
+    private fun getKeycloakFullName() = "$baseFolder/keycloak.json"
+    private fun getSpeakersFullName() = "$baseFolder/speakers.json"
+    private fun getRoomsFullName() = "$baseFolder/rooms.json"
+    private fun getEventsFullName() = "$baseFolder/sessions.json"
+    private fun getFavoritesFullName() = "$baseFolder/favorites.json"
 
 
     override fun readSpeakers(): List<SpeakerEntity> {
         val sd = File(getSpeakersFullName())
-        if (sd.exists()) {
+        return if (sd.exists()) {
             val inputStream = FileInputStream(sd)
             val reader = InputStreamReader(inputStream)
-            return gson.fromJson(reader, Array<SpeakerEntity>::class.java).toList()
+            gson.fromJson(reader, Array<SpeakerEntity>::class.java).toList()
         } else {
-            return listOf()
+            listOf()
         }
     }
 
     override fun readEvents(): List<EventEntity> {
-        val sd = File(getEventsFullName())
-        if (sd.exists()) {
-            val inputStream = FileInputStream(sd)
-            val reader = InputStreamReader(inputStream)
+        return try {
+            val sd = File(getEventsFullName())
+            if (sd.exists()) {
+                val inputStream = FileInputStream(sd)
+                val reader = InputStreamReader(inputStream)
 
-            return gson.fromJson(reader, Array<EventEntity>::class.java).toList()
-        } else {
-            return listOf()
+                gson.fromJson(reader, Array<EventEntity>::class.java).toList()
+            } else {
+                listOf()
+            }
+        } catch (e:Exception) {
+            listOf()
         }
     }
 
     override fun readRooms(): List<RoomEntity> {
         val sd = File(getRoomsFullName())
-        if (sd.exists()) {
+        return if (sd.exists()) {
             val inputStream = FileInputStream(sd)
             val reader = InputStreamReader(inputStream)
 
-            return gson.fromJson(reader, Array<RoomEntity>::class.java).toList()
+            gson.fromJson(reader, Array<RoomEntity>::class.java).toList()
         } else {
-            return listOf()
+            listOf()
         }
     }
 
     override fun readFavorites(): List<FavoriteEntity> {
         val sd = File(getFavoritesFullName())
-        if (sd.exists()) {
+        return if (sd.exists()) {
             val inputStream = FileInputStream(sd)
             val reader = InputStreamReader(inputStream)
 
-            return gson.fromJson(reader, Array<FavoriteEntity>::class.java).toList()
+            gson.fromJson(reader, Array<FavoriteEntity>::class.java).toList()
         } else {
-            return listOf()
+            listOf()
         }
     }
 
     override fun readKeyCloack(): KeycloakEntity {
         val sd = File(getKeycloakFullName())
-        if (sd.exists()) {
+        return if (sd.exists()) {
             val inputStream = FileInputStream(sd)
             val reader = InputStreamReader(inputStream)
-            return gson.fromJson(reader, KeycloakEntity::class.java)
+            gson.fromJson(reader, KeycloakEntity::class.java)
         } else {
-            return  KeycloakEntity(
-                "dukecon-latest",
-                "https://keycloak.dukecon.org/auth",
-                "none",
-                "dukecon",
-                "/rest/preferences",
-                false
+            KeycloakEntity(
+                    "dukecon-latest",
+                    "https://keycloak.dukecon.org/auth",
+                    "none",
+                    "dukecon",
+                    "/rest/preferences",
+                    false
             )
         }
     }
@@ -109,7 +114,7 @@ class ConferenceCacheGsonSerializer(private val baseFolder: String, val gson: Gs
         myOutWriter.flush()
     }
 
-    fun writeList(fileName: String, events: List<Any>) {
+    private fun writeList(fileName: String, events: List<Any>) {
         val sd = File(fileName)
         sd.createNewFile()
 

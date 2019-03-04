@@ -1,12 +1,12 @@
 package org.dukecon.data.model
 
-import org.joda.time.DateTime
-import java.util.*
+import org.threeten.bp.OffsetDateTime
 
-/**
- * Representation for a [EventEntity] fetched from an external layer data source
- */
-
-data class EventEntity(val id: String, val title: String, val abstractText: String, val startTime: DateTime,
-                       val endTime: DateTime, val speakerIds: List<String>, val roomId:String)
+data class EventEntity(val id: String,
+                       val title: String,
+                       val abstractText: String,
+                       val startTime: OffsetDateTime,
+                       val endTime: OffsetDateTime,
+                       val speakerIds: List<String>,
+                       val roomId: String)
 

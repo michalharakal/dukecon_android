@@ -1,21 +1,14 @@
 package org.dukecon.data.repository
 
-import com.jakewharton.rxrelay2.PublishRelay
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
 import org.dukecon.data.mapper.*
 import org.dukecon.data.model.EventEntity
-import org.dukecon.data.model.FavoriteEntity
 import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
-import org.dukecon.data.source.EventDataStoreFactory
+import org.dukecon.data.source.EventCacheDataStore
 import org.dukecon.data.source.EventRemoteDataStore
-import org.dukecon.domain.features.networking.NetworkUtils
 import org.dukecon.domain.model.*
 import org.dukecon.domain.repository.ConferenceRepository
-import org.joda.time.DateTime
+import org.threeten.bp.OffsetDateTime
 import javax.inject.Inject
 
 /**
@@ -23,285 +16,137 @@ import javax.inject.Inject
  * data sources
  */
 class DukeconDataRepository @Inject constructor(
-    private val conferenceDataCache: ConferenceDataCache,
-    private val networkUtils : NetworkUtils,
-    private val factory: EventDataStoreFactory,
-    private val eventMapper: EventMapper,
-    private val speakerMapper: SpeakerMapper,
-    private val keycloakMapper: KeycloakMapper,
-    private val roomMapper: RoomMapper,
-    private val feedbackMapper: FeedbackMapper,
-    private val favoriteMapper: FavoriteMapper
-) :
-    ConferenceRepository {
+        private val remoteDataStore: EventRemoteDataStore,
+        private val localDataStore: EventCacheDataStore,
+        private val eventMapper: EventMapper,
+        private val speakerMapper: SpeakerMapper,
+        private val keycloakMapper: KeycloakMapper,
+        private val roomMapper: RoomMapper,
+        private val feedbackMapper: FeedbackMapper,
+        private val favoriteMapper: FavoriteMapper
+) : ConferenceRepository {
 
-    override fun getKeyCloak(): Single<Keycloak> {
-        return getDataStore().getKeycloak().map { keycloakMapper.mapFromEntity(it) }
+    override var onRefreshListeners: List<() -> Unit> = emptyList()
+
+    override suspend fun getKeyCloak(): Keycloak {
+        return keycloakMapper.mapFromEntity(localDataStore.getKeycloak())
     }
 
-    override fun submitFeedback(feedback: Feedback): Single<Any> {
-        return factory.retrieveRemoteDataStore().submitFeedback(feedbackMapper.mapToEntity(feedback))
+    override suspend fun submitFeedback(feedback: Feedback): Any {
+        return remoteDataStore.submitFeedback(feedbackMapper.mapToEntity(feedback))
     }
 
-    private var relay: PublishRelay<Change> = PublishRelay.create<Change>()
-
-    override fun getEventChanges(): Observable<Change> {
-        return relay
+    override suspend fun saveFavorite(favorite: Favorite): List<Favorite> {
+        localDataStore
+                .saveFavorite(favoriteMapper.mapToEntity(favorite))
+        return getFavorites()
     }
 
-    override fun saveFavorite(favorite: Favorite): Single<List<Favorite>> {
-        return factory.retrieveCacheDataStore()
-            .saveFavorite(favoriteMapper.mapToEntity(favorite))
-            .doAfterSuccess {
-                relay.accept(Change(DataChange.FAVORITE))
-            }
-            .map { list ->
-                list.map { listItem ->
-                    favoriteMapper.mapFromEntity(listItem)
-                }
-            }
-    }
-
-    override fun getFavorites(): Single<List<Favorite>> {
-        return factory.retrieveCacheDataStore().getFavorites().map { list ->
-            list.map { listItem ->
-                favoriteMapper.mapFromEntity(listItem)
-            }
+    override suspend fun getFavorites(): List<Favorite> {
+        return localDataStore.getFavorites().map { list ->
+            favoriteMapper.mapFromEntity(list)
         }
     }
 
-    override fun getSpeaker(id: String): Single<Speaker> {
-        return getDataStore().getSpeaker(id).map { speakerMapper.mapFromEntity(it) }
+    override suspend fun getSpeaker(id: String): Speaker {
+        return speakerMapper.mapFromEntity(localDataStore.getSpeaker(id))
     }
 
-    private fun getDataStore(): EventDataStore {
-        return factory.retrieveDataStore(
-            conferenceDataCache.isCached(),
-            networkUtils.isInternetConected
-        )
+    override suspend fun getEvent(id: String): Event {
+        val dataStore = localDataStore
+
+        val rooms = dataStore.getRooms().map { roomMapper.mapFromEntity(it) }
+        val speakers = dataStore.getSpeakers().map { speakerMapper.mapFromEntity(it) }
+        val favorites = dataStore.getFavorites().map { favoriteMapper.mapFromEntity(it) }
+        return eventMapper.mapFromEntity(dataStore.getEvent(id), speakers, rooms, favorites)
     }
 
-    override fun getEvent(id: String): Single<Event> {
-        val dataStore = getDataStore()
-
-        val getEvent = dataStore.getEvent(id).map { eventMapper.mapFromEntity(it) }
-        val getRooms = dataStore.getRooms()
-        val getSpeakers = dataStore.getSpeakers()
-        val getFavorites = factory.retrieveCacheDataStore().getFavorites()
-
-        val eventsWithRooms = Single.zip(getEvent, getRooms, BiFunction { event: Event, rooms: List<RoomEntity> ->
-            combineEvent(event, rooms)
-        })
-        val eventWithRoomsAndSpeaker =
-            Single.zip(eventsWithRooms, getSpeakers, BiFunction { event: Event, rooms: List<SpeakerEntity> ->
-                combineSpeaker(event, rooms)
-            })
-        return Single.zip(
-            eventWithRoomsAndSpeaker,
-            getFavorites,
-            BiFunction { event: Event, favorites: List<FavoriteEntity> ->
-                combineFavorites(event, favorites)
-            })
+    override suspend fun getRooms(): List<Room> {
+        val dataStore = localDataStore
+        return dataStore.getRooms().map { roomMapper.mapFromEntity(it) }
     }
 
-    private fun combineFavorites(event: Event, favorites: List<FavoriteEntity>): Event {
-        val foundEvent = favorites.find { it.id.equals(event.name) }
-
-        if (foundEvent != null) {
-            return Event(
-                event.eventId, event.name, event.title, event.description, event.startTime, event.endTime,
-                event.speakers, Favorite(event.name, true), event.name
-            )
-        } else {
-            return event
-        }
-    }
-
-    private fun combineEvent(event: Event, rooms: List<RoomEntity>): Event {
-        val foundRoom = rooms.find { it.id.equals(event.room) }
-
-        if (foundRoom != null) {
-            return Event(
-                event.eventId, event.name, event.title, event.description, event.startTime, event.endTime,
-                event.speakers, event.favorite, foundRoom.name
-            )
-        } else {
-            return event
-        }
-    }
-
-    private fun combineSpeaker(event: Event, speakers: List<SpeakerEntity>): Event {
-        val foundSpeakers: MutableList<Speaker> = mutableListOf()
-        event.speakers.forEach { eventSpeaker ->
-            run {
-                val found = speakers.find { it.id.equals(eventSpeaker.id) }
-                if (found != null) {
-                    foundSpeakers.add(speakerMapper.mapFromEntity(found))
-                }
-            }
-        }
-
-        if (foundSpeakers.isNotEmpty()) {
-            return Event(
-                event.eventId, event.name, event.title, event.description, event.startTime, event.endTime,
-                foundSpeakers, event.favorite, event.room
-            )
-        } else {
-            return event
-        }
-    }
-
-    override fun getRooms(): Single<List<Room>> {
-        val dataStore = getDataStore()
-        return dataStore.getRooms()
-            .flatMap {
-                if (dataStore is EventRemoteDataStore) {
-                    savRoomsEntities(it).toSingle { it }
-                } else {
-                    Single.just(it)
-                }
-            }.map { list ->
-                list.map { listItem ->
-                    roomMapper.mapFromEntity(listItem)
-                }
-            }
-    }
-
-    override fun saveSpeakers(speakers: List<Speaker>): Completable {
+    override suspend fun saveSpeakers(speakers: List<Speaker>) {
         val eventEntities = speakers.map { speakerMapper.mapToEntity(it) }
         return saveSpeakersEntities(eventEntities)
     }
 
-    override fun saveRooms(rooms: List<Room>): Completable {
+    override suspend fun saveRooms(rooms: List<Room>) {
         val eventEntities = rooms.map { roomMapper.mapToEntity(it) }
         return savRoomsEntities(eventEntities)
     }
 
-    override fun getSpeakers(): Single<List<Speaker>> {
-        val dataStore = getDataStore()
+    override suspend fun getSpeakers(): List<Speaker> {
+        val dataStore = localDataStore
         return dataStore.getSpeakers()
-            .flatMap {
-                if (dataStore is EventRemoteDataStore) {
-                    saveSpeakersEntities(it).toSingle { it }
-                } else {
-                    Single.just(it)
-                }
-            }.map { list ->
-                list.map { listItem ->
-                    speakerMapper.mapFromEntity(listItem)
-                }.sortedBy { it -> it.name }
-            }
+                .map {
+                    speakerMapper.mapFromEntity(it)
+                }.sortedBy { it.name }
     }
 
-    override fun getEventDates(): Single<List<DateTime>> {
-        val dataStore = getDataStore()
+    override suspend fun getEventDates(): List<OffsetDateTime> {
+        val dataStore = localDataStore
         return dataStore.getEvents()
-            .flatMap {
-                if (dataStore is EventRemoteDataStore) {
-                    saveEventEntities(it).toSingle() { it }
-                } else {
-                    Single.just(it.distinctBy {
-                        it.startTime.dayOfMonth()
-                    })
-                }
-            }
-            .map { list ->
-                list.distinctBy {
-                    it.startTime.dayOfMonth()
-                }.sortedBy { it.startTime }
-
-            }
-            .map { list ->
-                list.map {
+                .distinctBy { it.startTime.dayOfMonth }
+                .map {
                     it.startTime
                 }
-            }
     }
 
-    override fun clearEvents(): Completable {
-        return factory.retrieveCacheDataStore().clearEvents()
-    }
-
-    override fun saveEvents(events: List<Event>): Completable {
+    override suspend fun saveEvents(events: List<Event>) {
         val eventEntities = events.map { eventMapper.mapToEntity(it) }
         return saveEventEntities(eventEntities)
     }
 
-    private fun saveEventEntities(events: List<EventEntity>): Completable {
-        return factory.retrieveCacheDataStore().saveEvents(events)
+    private suspend fun saveEventEntities(events: List<EventEntity>) {
+        return localDataStore.saveEvents(events)
     }
 
-    private fun saveSpeakersEntities(speakers: List<SpeakerEntity>): Completable {
-        return factory.retrieveCacheDataStore().saveSpeakers(speakers)
+    private suspend fun saveSpeakersEntities(speakers: List<SpeakerEntity>) {
+        return localDataStore.saveSpeakers(speakers)
     }
 
-    private fun savRoomsEntities(speakers: List<RoomEntity>): Completable {
-        return factory.retrieveCacheDataStore().saveRooms(speakers)
+    private suspend fun savRoomsEntities(speakers: List<RoomEntity>) {
+        return localDataStore.saveRooms(speakers)
     }
 
-    override fun getEvents(day: Int): Single<List<Event>> {
-        val dataStore = getDataStore()
-
-        val getFavorites = factory.retrieveCacheDataStore().getFavorites()
-
-        val getEvents = dataStore.getEvents()
-            .flatMap {
-                if (dataStore is EventRemoteDataStore) {
-                    saveEventEntities(it).toSingle { it }
-                } else {
-                    Single.just(it)
-                }
-            }
-            .map { list ->
-                list.map { listItem ->
-                    eventMapper.mapFromEntity(listItem)
-                }
-            }
-            .map {
-                it.sortedBy { it.startTime }
-            }
-            .map {
-                it.allBy {
-                    if (day > 0) {
-                        it.startTime.dayOfMonth().get() == day
-                    } else {
-                        true
-                    }
-                }
-            }
-        return Single.zip(getEvents, getFavorites, BiFunction { event: List<Event>, favorites: List<FavoriteEntity> ->
-            combineFavoritesList(event, favorites)
-        })
+    private fun callRefreshListeners() {
+        onRefreshListeners.forEach { it() }
     }
 
-    private fun combineFavoritesList(events: List<Event>, favorites: List<FavoriteEntity>): List<Event> {
-        if (favorites.size > 0) {
 
-            val newlist: MutableList<Event> = mutableListOf()
-
-            for (event in events) {
-                val foundEvent = favorites.find { it.id.equals(event.name) }
-
-                if (foundEvent != null) {
-                    newlist.add(
-                        Event(
-                            event.eventId, event.name, event.title, event.description, event.startTime, event.endTime,
-                            event.speakers, Favorite(event.name, true), event.room
-                        )
-                    )
-                } else {
-                    newlist.add(
-                        Event(
-                            event.eventId, event.name, event.title, event.description, event.startTime, event.endTime,
-                            event.speakers, Favorite(event.name, false), event.room
-                        )
-                    )
-                }
-            }
-            return newlist
-        } else {
-            return events
+    override suspend fun update() {
+        localDataStore.saveRooms(remoteDataStore.getRooms())
+        localDataStore.saveEvents(remoteDataStore.getEvents())
+/*        remoteDataStore.getFavorites().map {
+            localDataStore.saveFavorite(it)
         }
+        */
+        localDataStore.saveSpeakers(remoteDataStore.getSpeakers())
+
+        callRefreshListeners()
+    }
+
+    override suspend fun getEvents(day: Int): List<Event> {
+        val dataStore = localDataStore
+
+        val rooms = dataStore.getRooms().map { roomMapper.mapFromEntity(it) }
+        val speakers = dataStore.getSpeakers().map { speakerMapper.mapFromEntity(it) }
+        val favorites = dataStore.getFavorites().map { favoriteMapper.mapFromEntity(it) }
+        val events = dataStore.getEvents()
+
+        return events.allBy {
+            if (day > 0) {
+                it.startTime.dayOfMonth == day
+            } else {
+                true
+            }
+        }.map {
+            eventMapper.mapFromEntity(it, speakers, rooms, favorites)
+        }.sortedBy {
+            it.startTime
+        }
+
     }
 
     /**

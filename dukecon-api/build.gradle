@@ -15,7 +15,7 @@ openApiGenerate {
     configOptions = [
             booleanGetterPrefix: "is",
             serializableModel  : false,
-            dateLibrary        : 'joda'
+            dateLibrary        : 'threetenbp'
     ]
 }
 
@@ -31,7 +31,7 @@ task buildOauthCodeClient(type: org.openapitools.generator.gradle.plugin.tasks.G
     configOptions = [
             booleanGetterPrefix: "is",
             serializableModel  : false,
-            dateLibrary        : 'joda'
+            dateLibrary        : 'threetenbp'
     ]
 }
 
@@ -47,7 +47,7 @@ task buildRefreshTokenClient(type: org.openapitools.generator.gradle.plugin.task
     configOptions = [
             booleanGetterPrefix: "is",
             serializableModel  : false,
-            dateLibrary        : 'joda'
+            dateLibrary        : 'threetenbp'
     ]
 }
 
@@ -64,9 +64,9 @@ dependencies {
     implementation apiDependencies.retrofit
     implementation apiDependencies.retrofitGsonConverter
     implementation apiDependencies.retrofitScalarsConverter
-    implementation apiDependencies.jodaTime
     implementation apiDependencies.jsonFire
-
+    compileOnly apiDependencies.threeTen
+    
     implementation(apiDependencies.oltuOAuth) {
         exclude group: 'org.apache.oltu.oauth2', module: 'org.apache.oltu.oauth2.common'
     }

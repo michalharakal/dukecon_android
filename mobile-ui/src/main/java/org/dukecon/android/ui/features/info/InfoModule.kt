@@ -4,12 +4,10 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import org.dukecon.data.repository.LibrariesListRepository
-import org.dukecon.domain.features.info.GetLibrariesUseCase
 import org.dukecon.domain.repository.LibrariesRepository
 import org.dukecon.presentation.feature.info.InfoContract
 import org.dukecon.presentation.feature.info.InfoPresenter
 import org.dukecon.presentation.feature.info.WebNavigator
-import org.dukecon.presentation.mapper.LibraryMapper
 
 @Module
 class InfoModule(private val context: Context) {
@@ -24,11 +22,8 @@ class InfoModule(private val context: Context) {
     }
 
     @Provides
-    fun infoPresenter(
-        getLibrariesUseCase: GetLibrariesUseCase,
-        libraryMapper: LibraryMapper,
-        webNavigator: WebNavigator
+    fun infoPresenter(impl: InfoPresenter
     ): InfoContract.Presenter {
-        return InfoPresenter(getLibrariesUseCase, libraryMapper, webNavigator)
+        return impl
     }
 }

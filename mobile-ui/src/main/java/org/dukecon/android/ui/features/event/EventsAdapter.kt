@@ -1,6 +1,5 @@
 package org.dukecon.android.ui.features.event
 
-import androidx.core.content.ContextCompat
 import android.text.format.DateUtils
 import android.text.format.DateUtils.formatDateTime
 import android.view.LayoutInflater
@@ -9,25 +8,23 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_session.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.utils.DrawableUtils
 import org.dukecon.domain.features.time.CurrentTimeProvider
 import org.dukecon.presentation.model.EventView
-import org.dukecon.presentation.model.RoomView
-import org.dukecon.presentation.model.SpeakerView
-import org.joda.time.Duration
+import org.threeten.bp.Duration
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneId
 
 internal class EventsAdapter(
-    val currentTimeProvider: CurrentTimeProvider,
-    val onSessionSelectedListener: ((session: EventView) -> Unit)
-) :
-        RecyclerView.Adapter<EventsAdapter.ViewHolder>() {
+        val currentTimeProvider: CurrentTimeProvider,
+        private val onSessionSelectedListener: ((session: EventView) -> Unit)
+) : RecyclerView.Adapter<EventsAdapter.ViewHolder>() {
 
     val sessions: MutableList<EventView> = mutableListOf()
-    val speakers: MutableMap<String, SpeakerView> = mutableMapOf()
-    val rooms: MutableMap<String, RoomView> = mutableMapOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_session, parent, false)
@@ -40,11 +37,12 @@ internal class EventsAdapter(
 
         holder.session = session
 
-        val startTime = formatDateTime(context, session.startTime.millis, DateUtils.FORMAT_SHOW_TIME)
+        val startTime = formatDateTime(context, session.startTime.toInstant().toEpochMilli(), DateUtils.FORMAT_SHOW_TIME)
         holder.timeslot.text = String.format(context.getString(R.string.session_start_time), startTime)
 
         // Dim the session card once hte session is over
-        val now = currentTimeProvider.currentTimeMillis()
+        val instant = Instant.ofEpochMilli(currentTimeProvider.currentTimeMillis())
+        val now = instant.atZone(ZoneId.systemDefault()).toOffsetDateTime()
         if (session.endTime.isAfter(now)) {
             holder.card.setBackgroundColor(ContextCompat.getColor(context, R.color.session_bg))
         } else {
@@ -53,27 +51,24 @@ internal class EventsAdapter(
 
         holder.title.text = session.title
 
-        if (speakers.size > 0) {
-            val sessionSpeakers = session.speakersId.map { speakers[it.id] }
-            if (sessionSpeakers.isEmpty()) {
-                holder.speakers.visibility = View.GONE
-            } else {
-                holder.speakers.visibility = View.VISIBLE
-                holder.speakers.text = sessionSpeakers.map { it?.name }.joinToString()
-                holder.room.setCompoundDrawablesWithIntrinsicBounds(
-                        DrawableUtils.create(context, R.drawable.ic_speaker),
-                        null,
-                        null,
-                        null)
-            }
-        } else {
+        if (session.speakers.isEmpty()) {
             holder.speakers.visibility = View.GONE
+        } else {
+            holder.speakers.visibility = View.VISIBLE
+            holder.speakers.text = session.speakers.joinToString { it.name }
+            holder.room.setCompoundDrawablesWithIntrinsicBounds(
+                    DrawableUtils.create(context, R.drawable.ic_speaker),
+                    null,
+                    null,
+                    null)
         }
 
         if (session.room.isNotEmpty()) {
-            val duration = String.format(context.getString(R.string.session_duration), Duration(session.startTime, session.endTime).standardMinutes)
+            val duration = String.format(
+                    context.getString(R.string.session_duration),
+                    Duration.between(session.startTime, session.endTime).toMinutes())
             holder.room.visibility = View.VISIBLE
-            holder.room.text = rooms.get(session.room)?.name + " " + duration
+            holder.room.text = context.getString(R.string.event_list_room_duration, session.room, duration)
             holder.room.setCompoundDrawablesWithIntrinsicBounds(
                     DrawableUtils.create(context, R.drawable.ic_room),
                     null,
@@ -110,20 +105,14 @@ internal class EventsAdapter(
 
         var session: EventView? = null
 
-        val card: CardView
-        val timeslot: TextView
-        val title: TextView
-        val speakers: TextView
-        val room: TextView
-        val favorite: ImageView
+        val card: CardView = super.itemView.card
+        val timeslot: TextView = super.itemView.timeslot
+        val title: TextView = super.itemView.title
+        val speakers: TextView = super.itemView.speakers
+        val room: TextView = super.itemView.room
+        val favorite: ImageView = super.itemView.favorite
 
         init {
-            card = super.itemView.card
-            timeslot = super.itemView.timeslot
-            title = super.itemView.title
-            speakers = super.itemView.speakers
-            room = super.itemView.room
-            favorite = super.itemView.favorite
             itemView.setOnClickListener(this)
         }
 

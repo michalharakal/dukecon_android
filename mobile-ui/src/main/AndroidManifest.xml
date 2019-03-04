@@ -26,12 +26,11 @@
 
                 <data
                     android:host="redirect2token"
-                    android:scheme="appdoag" />
+                    android:scheme="appdukecon" />
             </intent-filter>
         </activity>
         <activity android:name=".features.eventdetail.EventDetailActivity" />
         <activity android:name=".features.speakerdetail.SpeakerDetailActivity" />
-        <activity android:name=".features.redirect.RedirectUriReceiverActivity"/>
         <activity
             android:name="org.dukecon.android.ui.features.login.browser.WebviewActivity"
             android:label="@string/event_name"

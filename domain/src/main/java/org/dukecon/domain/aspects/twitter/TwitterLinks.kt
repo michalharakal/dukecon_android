@@ -1,6 +1,9 @@
 package org.dukecon.domain.aspects.twitter
 
-class TwitterLinks {
+import javax.inject.Inject
+
+class TwitterLinks @Inject constructor() {
+
     fun getNormalizedTwitterUrl(twitter: String): String {
         if (twitter.length > 0) {
             if (twitter.startsWith("@")) {

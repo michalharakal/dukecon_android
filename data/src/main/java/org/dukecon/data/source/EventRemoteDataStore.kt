@@ -1,7 +1,5 @@
 package org.dukecon.data.source
 
-import io.reactivex.Completable
-import io.reactivex.Single
 import org.dukecon.data.model.*
 import org.dukecon.data.repository.EventDataStore
 import org.dukecon.data.repository.EventRemote
@@ -14,56 +12,56 @@ import javax.inject.Inject
  */
 open class EventRemoteDataStore @Inject constructor(private val eventRemote: EventRemote) :
         EventDataStore {
-    override fun getKeycloak(): Single<KeycloakEntity> {
+    override suspend fun getKeycloak(): KeycloakEntity {
         return eventRemote.getKeycloak()
     }
 
-    override fun submitFeedback(feedback: FeedbackEntity): Single<Any> {
+    override suspend fun submitFeedback(feedback: FeedbackEntity): Any {
         return eventRemote.submitFeedback(feedback)
     }
 
-    override fun saveFavorite(favorite: FavoriteEntity): Single<List<FavoriteEntity>> {
+    override suspend fun saveFavorite(favorite: FavoriteEntity): List<FavoriteEntity> {
         throw UnsupportedOperationException()
     }
 
     // no call to API yet
-    override fun getFavorites(): Single<List<FavoriteEntity>> {
+    override suspend fun getFavorites(): List<FavoriteEntity> {
         throw UnsupportedOperationException()
     }
 
-    override fun getSpeaker(id: String): Single<SpeakerEntity> {
+    override suspend fun getSpeaker(id: String): SpeakerEntity {
         return eventRemote.getSpeaker(id)
     }
 
-    override fun getEvent(id: String): Single<EventEntity> {
+    override suspend fun getEvent(id: String): EventEntity {
         return eventRemote.getEvent(id)
     }
 
-    override fun getRooms(): Single<List<RoomEntity>> {
-        return eventRemote.getRooms();
+    override suspend fun getRooms(): List<RoomEntity> {
+        return eventRemote.getRooms()
     }
 
-    override fun saveRooms(rooms: List<RoomEntity>): Completable {
+    override suspend fun saveRooms(rooms: List<RoomEntity>) {
         throw UnsupportedOperationException()
     }
 
-    override fun getSpeakers(): Single<List<SpeakerEntity>> {
+    override suspend fun getSpeakers(): List<SpeakerEntity> {
         return eventRemote.getSpeakers()
     }
 
-    override fun saveSpeakers(speakers: List<SpeakerEntity>): Completable {
+    override suspend fun saveSpeakers(speakers: List<SpeakerEntity>) {
         throw UnsupportedOperationException()
     }
 
-    override fun saveEvents(events: List<EventEntity>): Completable {
+    override suspend fun saveEvents(events: List<EventEntity>) {
         throw UnsupportedOperationException()
     }
 
-    override fun getEvents(): Single<List<EventEntity>> {
+    override suspend fun getEvents(): List<EventEntity> {
         return eventRemote.getEvents()
     }
 
-    override fun clearEvents(): Completable {
+    override suspend fun clearEvents() {
         throw UnsupportedOperationException()
     }
 }

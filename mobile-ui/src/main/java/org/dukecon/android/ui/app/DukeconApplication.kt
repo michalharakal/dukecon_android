@@ -2,37 +2,26 @@ package org.dukecon.android.ui.app
 
 import android.app.Application
 import android.content.Context
-import com.crashlytics.android.Crashlytics
+import com.jakewharton.threetenabp.AndroidThreeTen
 import org.dukecon.android.ui.BuildConfig
 import org.dukecon.android.ui.injection.ApplicationComponent
 import org.dukecon.android.ui.injection.DaggerApplicationComponent
 import timber.log.Timber
-import io.reactivex.plugins.RxJavaPlugins
-import androidx.multidex.MultiDex
 
 class DukeconApplication : Application() {
 
-    lateinit var component: ApplicationComponent
-
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(base)
-        MultiDex.install(this)
-    }
+    private lateinit var component: ApplicationComponent
 
     override fun onCreate() {
         super.onCreate()
+        AndroidThreeTen.init(this);
         component = DaggerApplicationComponent
-            .builder()
-            .application(this)
-            .build()
+                .builder()
+                .application(this)
+                .build()
 
         component.inject(this)
         setupTimber()
-        setupRxJava()
-    }
-
-    private fun setupRxJava() {
-        RxJavaPlugins.setErrorHandler { e -> Crashlytics.logException(e); }
     }
 
     private fun setupTimber() {
@@ -42,9 +31,9 @@ class DukeconApplication : Application() {
     }
 
     override fun getSystemService(name: String?): Any {
-        when (name) {
-            "component" -> return component
-            else -> return super.getSystemService(name)
+        return when (name) {
+            "component" -> component
+            else -> super.getSystemService(name ?: "")
         }
     }
 }

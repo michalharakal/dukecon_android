@@ -1,16 +1,10 @@
 package org.dukecon.android.cache
 
-import io.reactivex.Completable
-import io.reactivex.Single
 import mu.KotlinLogging
 import org.dukecon.android.cache.persistance.ConferenceCacheSerializer
-import org.dukecon.data.model.EventEntity
-import org.dukecon.data.model.FavoriteEntity
-import org.dukecon.data.model.KeycloakEntity
-import org.dukecon.data.model.RoomEntity
-import org.dukecon.data.model.SpeakerEntity
+import org.dukecon.data.model.*
 import org.dukecon.data.repository.ConferenceDataCache
-import org.joda.time.DateTime
+import org.threeten.bp.OffsetDateTime
 import javax.inject.Inject
 
 private val logger = KotlinLogging.logger {}
@@ -21,16 +15,12 @@ private val logger = KotlinLogging.logger {}
  * operations in which data store implementation layers can carry out. Just simple in memory chache
  */
 class ConferenceDataCacheImpl @Inject constructor(
-    val conferenceCacheSerializer: ConferenceCacheSerializer,
-    val preferencesHelper: PreferencesHelper
+        private val conferenceCacheSerializer: ConferenceCacheSerializer,
+        private val preferencesHelper: PreferencesHelper
 ) : ConferenceDataCache {
-    override fun getKeycloak(): Single<KeycloakEntity> {
+    override suspend fun getKeycloak(): KeycloakEntity {
         logger.info { "reading getRooms from memory cache" }
-        return Single.create { s ->
-            s.onSuccess(
-                keycloakEntity
-            )
-        }
+        return keycloakEntity
     }
 
     var cachedRooms: List<RoomEntity> = listOf()
@@ -38,16 +28,13 @@ class ConferenceDataCacheImpl @Inject constructor(
     var cacheSpeakers: List<SpeakerEntity> = listOf()
     var cacheFavorites: List<FavoriteEntity> = listOf()
     var keycloakEntity = KeycloakEntity(
-        "dukecon-latest",
-        "https://keycloak.dukecon.org/auth",
-        "none",
-        "dukecon",
-        "/rest/preferences",
-        false
+            "dukecon-latest",
+            "https://keycloak.dukecon.org/auth",
+            "none",
+            "dukecon",
+            "/rest/preferences",
+            false
     )
-
-    // 1 hour cache
-    private val EXPIRATION_TIME = (60 * 60 * 1000).toLong()
 
     init {
         if (preferencesHelper.lastCacheTime > 0) {
@@ -62,97 +49,68 @@ class ConferenceDataCacheImpl @Inject constructor(
         }
     }
 
-    override fun clearEvents(): Completable {
+    override suspend fun clearEvents() {
         preferencesHelper.lastCacheTime = 0
         cachedEvents = listOf()
         cacheSpeakers = listOf()
         cachedRooms = listOf()
         cacheFavorites = listOf()
-        return Completable.complete()
     }
 
-    override fun isCached(): Boolean {
+    override suspend fun isCached(): Boolean {
         val cached = cachedEvents.isNotEmpty() && cacheSpeakers.isNotEmpty() && cachedRooms.isNotEmpty()
         return cached
     }
 
-    override fun saveRooms(rooms: List<RoomEntity>): Completable {
+    override suspend fun saveRooms(rooms: List<RoomEntity>) {
         cachedRooms = rooms
         conferenceCacheSerializer.writeRooms(cachedRooms)
         preferencesHelper.lastCacheTime = System.currentTimeMillis()
-        return Completable.complete()
     }
 
-    override fun getRooms(): Single<List<RoomEntity>> {
+    override suspend fun getRooms(): List<RoomEntity> {
         logger.info { "reading getRooms from memory cache" }
-        return Single.create { s ->
-            s.onSuccess(
-                cachedRooms
-            )
-        }
+        return cachedRooms
     }
 
-    override fun saveEvents(events: List<EventEntity>): Completable {
+
+    override suspend fun saveEvents(events: List<EventEntity>) {
         cachedEvents = events
         conferenceCacheSerializer.writeEvents(events)
         preferencesHelper.lastCacheTime = System.currentTimeMillis()
-        return Completable.complete()
     }
 
-    override fun getEvents(): Single<List<EventEntity>> {
+    override suspend fun getEvents(): List<EventEntity> {
         logger.info { "reading getEvents from memory cache" }
-        return Single.create { s ->
-            s.onSuccess(
-                cachedEvents
-            )
-        }
+        return cachedEvents
     }
 
-    override fun getEvent(id: String): Single<EventEntity> {
+    override suspend fun getEvent(id: String): EventEntity {
         logger.info { "reading getEvent with id= ${id} from memory cache" }
-        return Single.create { s ->
-            val found = cachedEvents.find { event ->
-                event.id.equals(id)
-            } ?: emptyEntity()
-            s.onSuccess(found)
-        }
+        return cachedEvents.find { event -> event.id == id } ?: emptyEntity()
     }
 
-    override fun saveSpeakers(speakers: List<SpeakerEntity>): Completable {
+    override suspend fun saveSpeakers(speakers: List<SpeakerEntity>) {
         cacheSpeakers = speakers
         conferenceCacheSerializer.writeSpeakers(speakers)
         preferencesHelper.lastCacheTime = System.currentTimeMillis()
-        return Completable.complete()
     }
 
-    override fun getSpeakers(): Single<List<SpeakerEntity>> {
-        return Single.create { s ->
-            s.onSuccess(
-                cacheSpeakers
-            )
-        }
+    override suspend fun getSpeakers(): List<SpeakerEntity> {
+        return cacheSpeakers
     }
 
-    override fun getSpeaker(id: String): Single<SpeakerEntity> {
+    override suspend fun getSpeaker(id: String): SpeakerEntity {
         logger.info { "reading speaker with id= ${id} from memory cache" }
-        return Single.create { s ->
-            val found = cacheSpeakers.find { speaker ->
-                speaker.id.equals(id)
-            } ?: emptySpeakerEntity()
-            s.onSuccess(found)
-        }
+        return cacheSpeakers.find { speaker -> speaker.id == id } ?: emptySpeakerEntity()
     }
 
-    override fun getFavorites(): Single<List<FavoriteEntity>> {
+    override suspend fun getFavorites(): List<FavoriteEntity> {
         logger.info { "reading favorites from memory cache" }
-        return Single.create { s ->
-            s.onSuccess(
-                cacheFavorites
-            )
-        }
+        return cacheFavorites
     }
 
-    override fun saveFavorite(favorite: FavoriteEntity): Single<List<FavoriteEntity>> {
+    override suspend fun saveFavorite(favorite: FavoriteEntity): List<FavoriteEntity> {
         val foundFavorite = cacheFavorites.find { it.id.equals(favorite.id) }
         var changed = false
         if (foundFavorite == null) {
@@ -167,7 +125,7 @@ class ConferenceDataCacheImpl @Inject constructor(
             if (!favorite.selected) {
                 val newlist: MutableList<FavoriteEntity> = cacheFavorites.toMutableList()
                 for (i in cacheFavorites.indices) {
-                    if (cacheFavorites[i].id.equals(favorite.id)) {
+                    if (cacheFavorites[i].id == favorite.id) {
                         newlist.removeAt(i)
                         break
                     }
@@ -180,11 +138,8 @@ class ConferenceDataCacheImpl @Inject constructor(
             conferenceCacheSerializer.writeFavorites(cacheFavorites)
             preferencesHelper.lastCacheTime = System.currentTimeMillis()
         }
-        return Single.create { s ->
-            s.onSuccess(
-                cacheFavorites
-            )
-        }
+        return cacheFavorites
+
     }
 
     private fun emptySpeakerEntity(): SpeakerEntity {
@@ -192,7 +147,7 @@ class ConferenceDataCacheImpl @Inject constructor(
     }
 
     private fun emptyEntity(): EventEntity {
-        val event = EventEntity("", "", "", DateTime(), DateTime(), listOf(), "")
+        val event = EventEntity("", "", "", OffsetDateTime.now(), OffsetDateTime.now(), listOf(), "")
         return event
     }
 }

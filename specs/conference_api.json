@@ -380,11 +380,9 @@
             "type": "string"
           },
           "start": {
-            "type": "string",
-            "format": "date-time"
+            "type": "string"
           },
           "end": {
-            "format": "date-time",
             "type": "string"
           },
           "title": {

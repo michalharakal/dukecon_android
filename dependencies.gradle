@@ -5,22 +5,15 @@ ext {
     androidTargetSdkVersion = 28
     androidCompileSdkVersion = 28
 
-    // support libraries
-    multiDexVersion = '1.0.3'
-
     //Libraries
-    kotlinVersion = '1.3.10'
+    kotlinVersion = '1.3.21'
+    coroutinesVersion = '1.1.0'
     butterKnifeVersion = '7.0.1'
-    rxKotlinVersion = '2.3.0'
-    rxAndroidVersion = '2.1.0'
-    rxJavaVersion = '2.1.3'
-    rxRelayVersion = '2.0.0'
     javaxAnnotationVersion = '1.0'
     javaxInjectVersion = '1'
     gsonVersion = '2.8.1'
     okHttpVersion = '3.8.1'
     androidxAnnotationVersion = '1.0.0'
-    androidxLegacyVersion = '1.0.0'
     androidxAppCompatVersion = '1.0.0'
     androidxCardviewVersion = '1.0.0'
     androidxRecyclerviewVersion = '1.0.0'
@@ -31,8 +24,9 @@ ext {
     swaggerAnnotationsVersion = '1.5.21'
     oltuVersion = '1.0.1'
     json_fire_version = '1.8.0'
-    jodaTimeVersion = '2.9.9'
-    jodaGsonSerializerVersion = '1.6.0'
+    threeTenVersion = '1.3.8'
+    threeTenConverterVersion = '1.1.1'
+    androidThreeTenVersion = '1.1.2'
     retrofitVersion = '2.3.0'
     timberVersion = '4.7.1'
     glideVersion = '4.8.0'
@@ -66,9 +60,8 @@ ext {
     domainDependencies = [
             javaxAnnotation: "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject    : "javax.inject:javax.inject:${javaxInjectVersion}",
-            rxKotlin       : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
             kotlin         : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
-            jodaTime       : "joda-time:joda-time:${jodaTimeVersion}"
+            threeTen       : "org.threeten:threetenbp:${threeTenVersion}"
     ]
 
     domainTestDependencies = [
@@ -80,10 +73,10 @@ ext {
     presentationDependencies = [
             daggerCompiler    : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger            : "com.google.dagger:dagger:${daggerVersion}",
-            rxKotlin          : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
             kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
+            coroutines        : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutinesVersion}",
+            threeTen          : "org.threeten:threetenbp:${threeTenVersion}",
             kotlinLogging     : "io.github.microutils:kotlin-logging:${kotlinLoggingVersion}",
-            rxAndroid         : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
             javaxAnnotation   : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject       : "javax.inject:javax.inject:${javaxInjectVersion}",
             androidAnnotations: "androidx.annotation:annotation:${androidxAnnotationVersion}",
@@ -104,15 +97,13 @@ ext {
             okHttp            : "com.squareup.okhttp3:okhttp:${okHttpVersion}",
             okHttpLogger      : "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}",
             gson              : "com.google.code.gson:gson:${gsonVersion}",
-            rxKotlin          : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
             kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
-            rxRelay           : "com.jakewharton.rxrelay2:rxrelay:${rxRelayVersion}",
             javaxAnnotation   : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject       : "javax.inject:javax.inject:${javaxInjectVersion}",
             retrofit          : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
             retrofitConverter : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
-            retrofitAdapter   : "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
-            jodaTime          : "joda-time:joda-time:${jodaTimeVersion}"
+            threeTen          : "org.threeten:threetenbp:${threeTenVersion}"
+
     ]
 
     dataTestDependencies = [
@@ -127,13 +118,12 @@ ext {
             daggerCompiler    : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger            : "com.google.dagger:dagger:${daggerVersion}",
             gson              : "com.google.code.gson:gson:${gsonVersion}",
-            rxKotlin          : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
             kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
             kotlinLogging     : "io.github.microutils:kotlin-logging:${kotlinLoggingVersion}",
             javaxAnnotation   : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject       : "javax.inject:javax.inject:${javaxInjectVersion}",
             androidAnnotations: "androidx.annotation:annotation:${androidxAnnotationVersion}",
-            jodaTime          : "joda-time:joda-time:${jodaTimeVersion}"
+            threeTen          : "org.threeten:threetenbp:${threeTenVersion}"
     ]
 
     cacheTestDependencies = [
@@ -150,7 +140,6 @@ ext {
             daggerCompiler   : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger           : "com.google.dagger:dagger:${daggerVersion}",
             gson             : "com.google.code.gson:gson:${gsonVersion}",
-            rxKotlin         : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
             kotlin           : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
             javaxAnnotation  : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject      : "javax.inject:javax.inject:${javaxInjectVersion}",
@@ -158,8 +147,7 @@ ext {
             okHttpLogger     : "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}",
             retrofit         : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
             retrofitConverter: "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
-            retrofitAdapter  : "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
-            jodaTime         : "joda-time:joda-time:${jodaTimeVersion}"
+            threeTen         : "org.threeten:threetenbp:${threeTenVersion}"
     ]
 
     remoteTestDependencies = [
@@ -176,8 +164,8 @@ ext {
             retrofit                : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
             retrofitGsonConverter   : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
             retrofitScalarsConverter: "com.squareup.retrofit2:converter-scalars:${retrofitVersion}",
-            jodaTime                : "joda-time:joda-time:${jodaTimeVersion}",
             oltuOAuth               : "org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:${oltuVersion}",
+            threeTen                : "org.threeten:threetenbp:${threeTenVersion}",
             jsonFire                : "io.gsonfire:gson-fire:$json_fire_version"
 
     ]
@@ -190,18 +178,15 @@ ext {
     mobileUiDependencies = [
             daggerCompiler       : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger               : "com.google.dagger:dagger:${daggerVersion}",
-            rxKotlin             : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
-            rxAndroid            : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
             picasso              : "com.squareup.picasso:picasso:${picassoVersion}",
             kotlinLogging        : "io.github.microutils:kotlin-logging:${kotlinLoggingVersion}",
             slf4jAndroid         : "org.slf4j:slf4j-android:${slf4jAndroidVersion}",
             kotlin               : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
+            coroutines           : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutinesVersion}",
             javaxAnnotation      : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject          : "javax.inject:javax.inject:${javaxInjectVersion}",
             androidAnnotations   : "androidx.annotation:annotation:${androidxAnnotationVersion}",
             appCompat            : "androidx.appcompat:appcompat:${androidxAppCompatVersion}",
-            androidSupportV4     : "androidx.legacy:legacy-support-v4:${androidxLegacyVersion}",
-            androidSupportV13    : "androidx.legacy:legacy-support-v13:${androidxLegacyVersion}",
             cardview             : "androidx.cardview:cardview:${androidxCardviewVersion}",
             supportRecyclerView  : "androidx.recyclerview:recyclerview:${androidxRecyclerviewVersion}",
             constraintlayout     : "androidx.constraintlayout:constraintlayout:${androidxConstraintLayoutVersion}",
@@ -211,20 +196,19 @@ ext {
             firebaseMessaging    : "com.google.firebase:firebase-messaging:${firebaseVersion}",
             firebaseJobDispatcher: "com.firebase:firebase-jobdispatcher:${firebaseDispatcherVersion}",
             crashlytics          : "com.crashlytics.sdk.android:crashlytics:${crashlyticsVersion}",
-            mutidex              : "com.android.support:multidex:${multiDexVersion}",
             timber               : "com.jakewharton.timber:timber:${timberVersion}",
             daggerSupport        : "com.google.dagger:dagger-android-support:${daggerVersion}",
             daggerProcessor      : "com.google.dagger:dagger-android-processor:${daggerVersion}",
             glassfishAnnotation  : "org.glassfish:javax.annotation:${glassfishAnnotationVersion}",
             okHttp               : "com.squareup.okhttp3:okhttp:${okHttpVersion}",
             okHttpLogger         : "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}",
-            jodaTime             : "joda-time:joda-time:${jodaTimeVersion}",
-            jodaGsonSerializer   : "com.fatboyindustrial.gson-jodatime-serialisers:gson-jodatime-serialisers:${jodaGsonSerializerVersion}",
+            androidThreeTen      : "com.jakewharton.threetenabp:threetenabp:${androidThreeTenVersion}",
+            threeTenConverters   : "com.fatboyindustrial.gson-javatime-serialisers:gson-javatime-serialisers:${threeTenConverterVersion}",
             retrofit             : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
             retrofitConverter    : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
-            retrofitAdapter      : "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
             browser              : "androidx.browser:browser:${androidxBrowserVersion}",
             androidxCore         : "androidx.core:core-ktx:${androidXVersion}"
+
 
     ]
 
@@ -246,7 +230,6 @@ ext {
     authDependencies = [
             daggerCompiler    : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger            : "com.google.dagger:dagger:${daggerVersion}",
-            rxKotlin          : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
             daggerSupport     : "com.google.dagger:dagger-android-support:${daggerVersion}",
             daggerProcessor   : "com.google.dagger:dagger-android-processor:${daggerVersion}",
             kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
@@ -257,6 +240,4 @@ ext {
             openIdApi         : "net.openid:appauth:${openIdApiVersion}",
             browser           : "androidx.browser:browser:${androidxBrowserVersion}",
     ]
-
-
 }

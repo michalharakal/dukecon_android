@@ -18,6 +18,9 @@ import javax.inject.Inject
 
 class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
         ConstraintLayout(context, attrs, defStyle), SpeakerDetailContract.View {
+    override fun showError(throwable: Throwable) {
+
+    }
 
     @Inject
     lateinit var presenter: SpeakerDetailContract.Presenter

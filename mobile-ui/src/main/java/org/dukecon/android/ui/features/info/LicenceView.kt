@@ -10,6 +10,9 @@ import org.dukecon.presentation.model.LibraryView
 import javax.inject.Inject
 
 class LicenceView(context: Context, attrs: AttributeSet? = null) : RecyclerView(context, attrs), InfoContract.View {
+    override fun showError(throwable: Throwable) {
+
+    }
 
     @Inject
     lateinit var presenter: InfoContract.Presenter

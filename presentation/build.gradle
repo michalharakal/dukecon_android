@@ -10,15 +10,15 @@ configurations.all {
 }
 
 dependencies {
-    def presentationDependencies = rootProject.ext.cacheDependencies
-    def presentationTestDependencies = rootProject.ext.cacheTestDependencies
+    def presentationDependencies = rootProject.ext.presentationDependencies
+    def presentationTestDependencies = rootProject.ext.presentationTestDependencies
 
     compile presentationDependencies.javaxAnnotation
 
     implementation presentationDependencies.kotlin
+    implementation presentationDependencies.coroutines
     implementation presentationDependencies.javaxInject
-    implementation presentationDependencies.rxKotlin
-    implementation presentationDependencies.jodaTime
+    compileOnly presentationDependencies.threeTen
     implementation presentationDependencies.kotlinLogging
 
 

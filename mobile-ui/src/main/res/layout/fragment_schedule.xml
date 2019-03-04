@@ -21,7 +21,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/a11y_min_touch_target"
                 android:layout_gravity="center_vertical|start"
-                android:foreground="?selectableItemBackground"
                 android:padding="@dimen/spacing_micro"
                 android:scaleType="fitStart"
                 app:srcCompat="@drawable/ac_logo" />

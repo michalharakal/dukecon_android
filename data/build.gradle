@@ -8,10 +8,8 @@ dependencies {
 
     implementation dataDependencies.javaxAnnotation
     implementation dataDependencies.javaxInject
-    implementation dataDependencies.rxKotlin
-    implementation dataDependencies.rxRelay
     implementation dataDependencies.kotlin
-    implementation dataDependencies.jodaTime
+    compileOnly dataDependencies.threeTen
 
     testImplementation dataTestDependencies.junit
 

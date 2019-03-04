@@ -1,29 +1,25 @@
 package org.dukecon.data.repository
 
-import io.reactivex.Completable
-import io.reactivex.Single
 import org.dukecon.data.model.*
-import org.dukecon.domain.model.Favorite
-import org.dukecon.domain.model.Feedback
 
 interface EventDataStore {
 
-    fun clearEvents(): Completable
+    suspend fun clearEvents()
 
-    fun getEvents(): Single<List<EventEntity>>
-    fun getEvent(id: String): Single<EventEntity>
-    fun saveEvents(events: List<EventEntity>): Completable
+    suspend fun getEvents(): List<EventEntity>
+    suspend fun getEvent(id: String): EventEntity
+    suspend fun saveEvents(events: List<EventEntity>)
 
-    fun getSpeakers(): Single<List<SpeakerEntity>>
-    fun getSpeaker(id: String): Single<SpeakerEntity>
-    fun saveSpeakers(speakers: List<SpeakerEntity>): Completable
+    suspend fun getSpeakers(): List<SpeakerEntity>
+    suspend fun getSpeaker(id: String): SpeakerEntity
+    suspend fun saveSpeakers(speakers: List<SpeakerEntity>)
 
-    fun getRooms(): Single<List<RoomEntity>>
-    fun saveRooms(rooms: List<RoomEntity>): Completable
+    suspend fun getRooms(): List<RoomEntity>
+    suspend fun saveRooms(rooms: List<RoomEntity>)
 
-    fun getFavorites(): Single<List<FavoriteEntity>>
-    fun saveFavorite(favorite: FavoriteEntity): Single<List<FavoriteEntity>>
-    fun submitFeedback(feedback: FeedbackEntity): Single<Any>
+    suspend fun getFavorites(): List<FavoriteEntity>
+    suspend fun saveFavorite(favorite: FavoriteEntity): List<FavoriteEntity>
+    suspend fun submitFeedback(feedback: FeedbackEntity): Any
 
-    fun getKeycloak():Single<KeycloakEntity>
+    suspend fun getKeycloak(): KeycloakEntity
 }

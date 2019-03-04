@@ -1,12 +1,6 @@
 package org.dukecon.data.repository
 
-import io.reactivex.Completable
-import io.reactivex.Single
-import org.dukecon.data.model.EventEntity
-import org.dukecon.data.model.FavoriteEntity
-import org.dukecon.data.model.KeycloakEntity
-import org.dukecon.data.model.RoomEntity
-import org.dukecon.data.model.SpeakerEntity
+import org.dukecon.data.model.*
 
 
 /**
@@ -18,34 +12,33 @@ interface ConferenceDataCache {
     /**
      * Clear all Events from the cache
      */
-    fun clearEvents(): Completable
+    suspend fun clearEvents()
 
     /**
      * Save a given list of EventEntity to the cache
      */
-    fun saveEvents(events: List<EventEntity>): Completable
+    suspend fun saveEvents(events: List<EventEntity>)
 
     /**
      * Retrieve a list of Events, from the cache
      */
-    fun getEvents(): Single<List<EventEntity>>
+    suspend fun getEvents(): List<EventEntity>
 
-    fun isCached(): Boolean
+    suspend fun isCached(): Boolean
 
-    fun getSpeakers(): Single<List<SpeakerEntity>>
-    fun getSpeaker(id: String): Single<SpeakerEntity>
+    suspend fun getSpeakers(): List<SpeakerEntity>
+    suspend fun getSpeaker(id: String): SpeakerEntity
 
-    fun saveSpeakers(speakers: List<SpeakerEntity>): Completable
+    suspend fun saveSpeakers(speakers: List<SpeakerEntity>)
 
-    fun getRooms(): Single<List<RoomEntity>>
-    fun saveRooms(rooms: List<RoomEntity>): Completable
+    suspend fun getRooms(): List<RoomEntity>
+    suspend fun saveRooms(rooms: List<RoomEntity>)
 
-    fun getEvent(id: String): Single<EventEntity>
+    suspend fun getEvent(id: String): EventEntity
 
-    fun getFavorites(): Single<List<FavoriteEntity>>
-    fun saveFavorite(favorite: FavoriteEntity): Single<List<FavoriteEntity>>
+    suspend fun getFavorites(): List<FavoriteEntity>
+    suspend fun saveFavorite(favorite: FavoriteEntity): List<FavoriteEntity>
 
-    fun getKeycloak():Single<KeycloakEntity>
-
+    suspend fun getKeycloak(): KeycloakEntity
 
 }

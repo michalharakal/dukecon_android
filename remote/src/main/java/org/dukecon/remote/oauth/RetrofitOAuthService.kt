@@ -11,7 +11,6 @@ import javax.inject.Inject
 class RetrofitOAuthService @Inject constructor(
         private val oauthApi: OauthApi,
         private val refreshApi: RefreshOauthApi,
-
         private val oAuthConfiguration: OAuthConfiguration
 ) : OAuthService {
     override fun refresh(refreshToken: String): OAuthToken {
@@ -45,7 +44,7 @@ class RetrofitOAuthService @Inject constructor(
         val call = oauthApi.postCode(
                 oAuthConfiguration.clientId,
                 "authorization_code",
-                "appdoag://redirect2token",
+                oAuthConfiguration.redirectUri,
                 code
         )
         try {

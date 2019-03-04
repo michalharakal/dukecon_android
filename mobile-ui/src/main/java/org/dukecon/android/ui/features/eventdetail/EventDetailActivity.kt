@@ -25,9 +25,9 @@ class EventDetailActivity : AppCompatActivity(), SpeakerNavigator {
     }
 
     override fun getSystemService(name: String?): Any {
-        when (name) {
-            "component" -> return component
-            else -> return super.getSystemService(name)
+        return when (name) {
+            "component" -> component
+            else -> super.getSystemService(name ?: "")
         }
     }
 

@@ -11,11 +11,16 @@ import org.dukecon.android.ui.ext.getComponent
 import org.dukecon.android.ui.features.main.MainComponent
 import org.dukecon.domain.features.time.CurrentTimeProvider
 import org.dukecon.presentation.feature.event.EventDateListContract
-import org.joda.time.DateTime
+import org.threeten.bp.Instant
+import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.ZoneId
 import javax.inject.Inject
 
 class EventDateView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
     FrameLayout(context, attrs, defStyle), EventDateListContract.View {
+    override fun showError(throwable: Throwable) {
+
+    }
 
     @Inject
     lateinit var currentTimeProvider: CurrentTimeProvider
@@ -24,6 +29,8 @@ class EventDateView @JvmOverloads constructor(context: Context, attrs: Attribute
     lateinit var presenter: EventDateListContract.Presenter
 
     private val adapter: SessionPagerAdapter
+
+    var showFavoritesOnly: Boolean = false
 
     init {
         context.getComponent<MainComponent>().sessionListComponent().inject(this)
@@ -51,19 +58,21 @@ class EventDateView @JvmOverloads constructor(context: Context, attrs: Attribute
         adapter.notifyDataSetChanged()
     }
 
-    override fun showSessionDates(sessioDates: List<DateTime>) {
-        adapter.showEventDates(sessioDates)
+    override fun showSessionDates(sessionDates: List<OffsetDateTime>) {
+        adapter.showEventDates(sessionDates, showFavoritesOnly)
         adapter.notifyDataSetChanged()
 
-        if (sessioDates.size > 1) {
+        if (sessionDates.size > 1) {
             tabs.visibility = View.VISIBLE
         }
     }
 
     override fun scrollToCurrentDay() {
         if (adapter.dates.isNotEmpty()) {
-            val now = DateTime(currentTimeProvider.currentTimeMillis())
-            val index = adapter.dates.indexOfFirst { now.dayOfMonth() == it.dayOfMonth() }
+
+            val instant = Instant.ofEpochMilli(currentTimeProvider.currentTimeMillis())
+            val now = instant.atZone(ZoneId.systemDefault()).toOffsetDateTime()
+            val index = adapter.dates.indexOfFirst { now.dayOfMonth == it.dayOfMonth }
             if (index >= 0) {
                 pager.setCurrentItem(index, false)
             }

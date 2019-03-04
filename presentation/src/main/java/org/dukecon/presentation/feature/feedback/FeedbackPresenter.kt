@@ -1,25 +1,22 @@
 package org.dukecon.presentation.feature.feedback
 
-import io.reactivex.observers.DisposableSingleObserver
-import org.dukecon.domain.features.feedback.SubmitFeedbackUseCase
+import kotlinx.coroutines.launch
 import org.dukecon.domain.model.Feedback
+import org.dukecon.domain.repository.ConferenceRepository
+import org.dukecon.presentation.CoroutinePresenter
+import javax.inject.Inject
 
-class FeedbackPresenter(private val submitFeedbackUseCase: SubmitFeedbackUseCase) : FeedbackMvp.Presenter {
+class FeedbackPresenter @Inject constructor(private val conferenceRepository: ConferenceRepository) :
+        CoroutinePresenter<FeedbackMvp.View>(), FeedbackMvp.Presenter {
+    override fun showError(error: Throwable) {
+        view?.dismiss()
+    }
+
     private var view: FeedbackMvp.View? = null
     private var sessionId: String? = null
 
     override fun onAttach(view: FeedbackMvp.View) {
         this.view = view
-    }
-
-    inner class FeedSubscriber : DisposableSingleObserver<Any>() {
-        override fun onSuccess(t: Any) {
-            view?.dismiss()
-        }
-
-        override fun onError(e: Throwable) {
-            view?.dismiss()
-        }
     }
 
     override fun onDetach() {
@@ -33,7 +30,9 @@ class FeedbackPresenter(private val submitFeedbackUseCase: SubmitFeedbackUseCase
     override fun submit(overall: Int, comment: String) {
         val sessionId = this.sessionId
         if (sessionId != null) {
-            submitFeedbackUseCase.execute(FeedSubscriber(), Feedback(sessionId, overall, comment))
+            launch {
+                conferenceRepository.submitFeedback(Feedback(sessionId, overall, comment))
+            }
         }
     }
 }

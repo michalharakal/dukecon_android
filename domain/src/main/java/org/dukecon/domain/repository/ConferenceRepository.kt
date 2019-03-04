@@ -1,10 +1,7 @@
 package org.dukecon.domain.repository
 
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
 import org.dukecon.domain.model.*
-import org.joda.time.DateTime
+import org.threeten.bp.OffsetDateTime
 
 /**
  * Interface defining methods for how the data layer can pass data to and from the Domain layer.
@@ -12,29 +9,28 @@ import org.joda.time.DateTime
  * operations that need to be implemented
  */
 interface ConferenceRepository {
+    var onRefreshListeners: List<() -> Unit>
 
-    fun clearEvents(): Completable
+    suspend fun update()
 
-    fun saveEvents(events: List<Event>): Completable
+    suspend fun saveEvents(events: List<Event>)
 
-    fun getEvents(day: Int): Single<List<Event>>
-    fun getEventDates(): Single<List<DateTime>>
+    suspend fun getEvents(day: Int): List<Event>
+    suspend fun getEventDates(): List<OffsetDateTime>
 
-    fun getSpeakers(): Single<List<Speaker>>
-    fun getSpeaker(id: String): Single<Speaker>
-    fun saveSpeakers(speakers: List<Speaker>): Completable
+    suspend fun getSpeakers(): List<Speaker>
+    suspend fun getSpeaker(id: String): Speaker
+    suspend fun saveSpeakers(speakers: List<Speaker>)
 
-    fun getRooms(): Single<List<Room>>
-    fun saveRooms(rooms: List<Room>): Completable
+    suspend fun getRooms(): List<Room>
+    suspend fun saveRooms(rooms: List<Room>)
 
-    fun getEvent(id: String): Single<Event>
+    suspend fun getEvent(id: String): Event
 
-    fun saveFavorite(favorite: Favorite): Single<List<Favorite>>
-    fun getFavorites(): Single<List<Favorite>>
+    suspend fun saveFavorite(favorite: Favorite): List<Favorite>
+    suspend fun getFavorites(): List<Favorite>
 
-    fun getEventChanges():Observable<Change>
+    suspend fun submitFeedback(feedback: Feedback): Any
 
-    fun submitFeedback(feedback: Feedback): Single<Any>
-
-    fun getKeyCloak():Single<Keycloak>
+    suspend fun getKeyCloak(): Keycloak
 }

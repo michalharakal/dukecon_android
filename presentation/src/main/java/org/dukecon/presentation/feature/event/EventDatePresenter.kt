@@ -1,46 +1,35 @@
 package org.dukecon.presentation.feature.event
 
-import io.reactivex.observers.DisposableSingleObserver
-import org.dukecon.domain.interactor.SingleUseCase
-import org.joda.time.DateTime
+import kotlinx.coroutines.launch
+import org.dukecon.domain.repository.ConferenceRepository
+import org.dukecon.presentation.CoroutinePresenter
 import javax.inject.Inject
 
 
-class EventDatePresenter @Inject constructor(val getEventDateUseCase: SingleUseCase<List<DateTime>, Void>)
-    : EventDateListContract.Presenter {
+class EventDatePresenter @Inject constructor(val conferenceRepository: ConferenceRepository)
+    : CoroutinePresenter<EventDateListContract.View>(), EventDateListContract.Presenter {
 
-    private var view: EventDateListContract.View? = null
+    override fun showError(error: Throwable) {
+    }
+
+    private lateinit var view: EventDateListContract.View
 
     override fun onAttach(view: EventDateListContract.View) {
         this.view = view
+        launch {
+            val dates = conferenceRepository.getEventDates()
 
-        getEventDateUseCase.execute(EventSubscriber())
-    }
-
-    override fun onDetach() {
-        this.view = null
-        getEventDateUseCase.dispose()
-    }
-
-    internal fun handleGetEventsSuccess(events: List<DateTime>) {
-        if (events.isEmpty()) {
-            this.view?.showNoSessionDates()
-        } else {
-            this.view?.let {
-                it.showSessionDates(events)
-                it.scrollToCurrentDay()
+            if (dates.isEmpty()) {
+                view.showNoSessionDates()
+            } else {
+                view.let {
+                    it.showSessionDates(dates)
+                    it.scrollToCurrentDay()
+                }
             }
         }
     }
 
-    inner class EventSubscriber : DisposableSingleObserver<List<DateTime>>() {
-
-        override fun onSuccess(t: List<DateTime>) {
-            handleGetEventsSuccess(t)
-        }
-
-        override fun onError(exception: Throwable) {
-            view?.showNoSessionDates()
-        }
+    override fun onDetach() {
     }
 }

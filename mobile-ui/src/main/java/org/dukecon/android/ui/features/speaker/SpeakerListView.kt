@@ -15,6 +15,9 @@ import javax.inject.Inject
 class SpeakerListView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
     RecyclerView(context, attrs, defStyle),
     SpeakerListContract.View {
+    override fun showError(throwable: Throwable) {
+
+    }
 
     private val adapter: SpeakerAdapter
 

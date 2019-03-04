@@ -12,9 +12,8 @@ dependencies {
 
     implementation domainDependencies.javaxAnnotation
     implementation domainDependencies.javaxInject
-    implementation domainDependencies.rxKotlin
     implementation domainDependencies.kotlin
-    implementation domainDependencies.jodaTime
+    compileOnly domainDependencies.threeTen
 
 
     testImplementation domainTestDependencies.junit

@@ -1,4 +1,4 @@
-package com.chicagoroboto.features.sessiondetail.feedback
+package org.dukecon.android.ui.features.feedback
 
 import android.app.Dialog
 import android.content.Context
@@ -13,6 +13,9 @@ import org.dukecon.presentation.feature.feedback.FeedbackMvp
 import javax.inject.Inject
 
 class FeedbackDialog(context: Context, val sessionId: String) : Dialog(context, true, null), FeedbackMvp.View {
+    override fun showError(throwable: Throwable) {
+
+    }
 
     @Inject
     lateinit var presenter: FeedbackMvp.Presenter

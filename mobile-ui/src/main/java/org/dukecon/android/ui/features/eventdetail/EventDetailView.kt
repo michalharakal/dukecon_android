@@ -2,18 +2,18 @@ package org.dukecon.android.ui.features.eventdetail
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.appcompat.app.AppCompatActivity
 import android.text.format.DateUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.chicagoroboto.features.sessiondetail.feedback.FeedbackDialog
 import kotlinx.android.synthetic.main.view_session_detail.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getComponent
 import org.dukecon.android.ui.features.eventdetail.di.EventDetailComponent
+import org.dukecon.android.ui.features.feedback.FeedbackDialog
 import org.dukecon.android.ui.features.speaker.SpeakerAdapter
 import org.dukecon.android.ui.features.speakerdetail.SpeakerNavigator
 import org.dukecon.android.ui.utils.DrawableUtils
@@ -22,11 +22,16 @@ import org.dukecon.domain.features.time.CurrentTimeProvider
 import org.dukecon.presentation.feature.eventdetail.EventDetailContract
 import org.dukecon.presentation.model.EventView
 import org.dukecon.presentation.model.SpeakerView
-import org.joda.time.DateTime
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneId
 import javax.inject.Inject
 
 class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
         CoordinatorLayout(context, attrs, defStyle), EventDetailContract.View {
+    override fun showError(throwable: Throwable) {
+
+    }
+
     @Inject
     lateinit var presenter: EventDetailContract.Presenter
 
@@ -96,13 +101,14 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
             activity.finish()
         }
 
-        val startTime = DateUtils.formatDateTime(context, session.startTime.millis, DateUtils.FORMAT_SHOW_TIME)
-        val endTime = DateUtils.formatDateTime(context, session.endTime.millis, DateUtils.FORMAT_SHOW_TIME)
+        val startTime = DateUtils.formatDateTime(context, session.startTime.toInstant().toEpochMilli(), DateUtils.FORMAT_SHOW_TIME)
+        val endTime = DateUtils.formatDateTime(context, session.endTime.toInstant().toEpochMilli(), DateUtils.FORMAT_SHOW_TIME)
         banner.text = String.format(context.getString(R.string.session_detail_time), session.room,
                 startTime, endTime)
 
         description.text = session.description
-        val now = DateTime(currentTimeProvider.currentTimeMillis())
+        val instant = Instant.ofEpochMilli(currentTimeProvider.currentTimeMillis())
+        val now = instant.atZone(ZoneId.systemDefault()).toOffsetDateTime()
 
         if (session.startTime.isAfter(now)) {
             status.visibility = GONE

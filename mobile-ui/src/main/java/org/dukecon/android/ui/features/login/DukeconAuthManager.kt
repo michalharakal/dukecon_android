@@ -1,7 +1,6 @@
 package org.dukecon.android.ui.features.login
 
 import android.app.Activity
-import android.content.Context
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 import org.dukecon.android.ui.features.login.browser.CustomTabActivityHelper
@@ -17,26 +16,26 @@ import javax.inject.Singleton
 
 @Singleton
 class DukeconAuthManager @Inject constructor(
-    private val oAuthConfiguration: OAuthConfiguration,
-    private val oAuthService: OAuthService,
-    private val tokensStorage: TokensStorage,
-    private val oAuthTokenMapper: OAuthTokenMapper
+        private val oAuthConfiguration: OAuthConfiguration,
+        private val oAuthService: OAuthService,
+        private val tokensStorage: TokensStorage,
+        private val oAuthTokenMapper: OAuthTokenMapper
 ) : AuthManager {
     override fun hasSession(token: OAuthToken): Boolean {
         return token.refreshToken.isNotEmpty()
     }
 
-    override fun exchangeToken(code: String) {
+    override suspend fun exchangeToken(code: String) {
         val token = oAuthService.code2token(code)
         tokensStorage.setToken(oAuthTokenMapper.map(token))
     }
 
-    override fun login(activity: Object) {
+    override suspend fun login(activity: Any) {
         val uri =
-            "${oAuthConfiguration.baseUrl}auth?client_id=${oAuthConfiguration.clientId}&redirect_uri=appdoag://redirect2token&response_type=code&scope=openid%20offline_access".toUri()
+                "${oAuthConfiguration.baseUrl}auth?client_id=${oAuthConfiguration.clientId}&redirect_uri=${oAuthConfiguration.redirectUri}&response_type=code&scope=openid%20offline_access".toUri()
         val customTabsIntent = CustomTabsIntent.Builder().build()
         CustomTabActivityHelper.openCustomTab(
-            activity as Activity, customTabsIntent, uri, WebviewFallback()
+                activity as Activity, customTabsIntent, uri, WebviewFallback()
         )
     }
 }

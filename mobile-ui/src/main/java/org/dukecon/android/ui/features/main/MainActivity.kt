@@ -1,14 +1,18 @@
 package org.dukecon.android.ui.features.main
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import io.reactivex.observers.DisposableSingleObserver
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import mu.KotlinLogging
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getAppComponent
+import org.dukecon.android.ui.features.event.FavoritesFragment
 import org.dukecon.android.ui.features.event.ScheduleFragment
 import org.dukecon.android.ui.features.event.SessionNavigator
 import org.dukecon.android.ui.features.eventdetail.EventDetailActivity
@@ -20,31 +24,40 @@ import org.dukecon.android.ui.features.speakerdetail.SpeakerNavigator
 import org.dukecon.android.ui.utils.consume
 import org.dukecon.android.ui.utils.inTransaction
 import org.dukecon.domain.aspects.auth.AuthManager
-import org.dukecon.domain.features.login.ExchangeCodeForToken
+import org.dukecon.domain.repository.ConferenceRepository
 import org.dukecon.presentation.model.EventView
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
+
+private val logger = KotlinLogging.logger {}
 
 class MainActivity : AppCompatActivity(), SessionNavigator,
-    SpeakerNavigator {
+        SpeakerNavigator, CoroutineScope {
+
+    private lateinit var mJob: Job
+    override val coroutineContext: CoroutineContext
+        get() = mJob + Dispatchers.Main
 
     companion object {
         private const val FRAGMENT_ID = R.id.content
     }
 
-    lateinit var component: MainComponent
+    private lateinit var component: MainComponent
 
     @Inject
     lateinit var networkOfflineChecker: NetworkOfflineChecker
 
     @Inject
-    lateinit var exchangeCodeForToken: ExchangeCodeForToken
-
+    lateinit var exchangeCodeForToken: AuthManager
 
     @Inject
-    lateinit var authManager: AuthManager
+    lateinit var conferenceRepository: ConferenceRepository
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        mJob = Job()
 
         component = getAppComponent().mainComponent(MainModule(this, this))
         component.inject(this)
@@ -57,6 +70,9 @@ class MainActivity : AppCompatActivity(), SessionNavigator,
             when (it.itemId) {
                 R.id.action_schedule -> consume {
                     replaceFragment(ScheduleFragment())
+                }
+                R.id.action_favorites -> consume {
+                    replaceFragment(FavoritesFragment())
                 }
                 R.id.action_speakers -> consume {
                     // Scroll to current event next time the schedule is opened.
@@ -75,20 +91,38 @@ class MainActivity : AppCompatActivity(), SessionNavigator,
 
         if (savedInstanceState == null) {
             // Show Schedule on first creation
+            updateData()
             navigation.selectedItemId = R.id.action_schedule
             replaceFragment(ScheduleFragment())
         } else {
             // Find the current fragment
             currentFragment =
-                supportFragmentManager.findFragmentById(FRAGMENT_ID)
-                ?: throw IllegalStateException("Activity recreated, but no fragment found!")
+                    supportFragmentManager.findFragmentById(FRAGMENT_ID)
+                            ?: throw IllegalStateException("Activity recreated, but no fragment found!")
         }
 
         val uri = intent.data
-        if (intent.data != null) {
-            exchangeCodeForToken.execute(ExchangeCodeSubscriber(), uri?.getQueryParameter("code") ?: "")
+        if (uri != null) {
+            val code = uri.getQueryParameter("code") ?: ""
+            launch(Dispatchers.IO) {
+                logger.debug {
+                    "exchnaging $code"
+                }
+                try {
+                    exchangeCodeForToken.exchangeToken(code)
+                } catch (e: Exception) {
+                    logger.debug {
+                        "exception $code"
+                    }
+                }
+            }
         }
+    }
 
+    private fun updateData() {
+        launch(Dispatchers.IO) {
+            conferenceRepository.update()
+        }
     }
 
     override fun onResume() {
@@ -113,7 +147,7 @@ class MainActivity : AppCompatActivity(), SessionNavigator,
     override fun getSystemService(name: String?): Any {
         return when (name) {
             "component" -> component
-            else -> super.getSystemService(name)
+            else -> super.getSystemService(name ?: "")
         }
     }
 
@@ -125,14 +159,5 @@ class MainActivity : AppCompatActivity(), SessionNavigator,
 
     override fun navigateToSpeaker(id: String) {
         SpeakerDetailActivity.navigate(this, id)
-    }
-
-    inner class ExchangeCodeSubscriber : DisposableSingleObserver<String>() {
-        override fun onSuccess(t: String) {
-            //mainNavigator.startMain()
-        }
-
-        override fun onError(e: Throwable) {
-        }
     }
 }
