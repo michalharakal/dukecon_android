@@ -53,7 +53,7 @@ open class EventMapper @Inject constructor() {
     }
 
     private fun mapFavorite(id: String, favorites: List<Favorite>): Favorite {
-        return favorites.firstOrNull { it.id == id } ?: Favorite("0", false)
+        return favorites.firstOrNull { it.id == id } ?: Favorite("0", 0, false)
     }
 
     private fun mapRoomId(locationId: String, rooms: List<Location>): Location {

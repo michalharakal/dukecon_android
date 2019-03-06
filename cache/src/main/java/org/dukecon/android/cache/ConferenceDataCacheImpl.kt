@@ -116,34 +116,11 @@ class ConferenceDataCacheImpl @Inject constructor(
         return cacheFavorites
     }
 
-    override fun saveFavorite(favorite: FavoriteEntity): List<FavoriteEntity> {
-        val foundFavorite = cacheFavorites.find { it.id.equals(favorite.id) }
-        var changed = false
-        if (foundFavorite == null) {
-            // add
-            if (favorite.selected) {
-                val newlist: MutableList<FavoriteEntity> = cacheFavorites.toMutableList()
-                newlist.add(favorite)
-                cacheFavorites = newlist
-                changed = true
-            }
-        } else {
-            if (!favorite.selected) {
-                val newlist: MutableList<FavoriteEntity> = cacheFavorites.toMutableList()
-                for (i in cacheFavorites.indices) {
-                    if (cacheFavorites[i].id == favorite.id) {
-                        newlist.removeAt(i)
-                        break
-                    }
-                }
-                cacheFavorites = newlist
-                changed = true
-            }
-        }
-        if (changed) {
-            conferenceCacheSerializer.writeFavorites(cacheFavorites)
-            preferencesHelper.lastCacheTime = System.currentTimeMillis()
-        }
+    override fun saveFavorites(favorite: List<FavoriteEntity>): List<FavoriteEntity> {
+
+        conferenceCacheSerializer.writeFavorites(cacheFavorites)
+        preferencesHelper.lastCacheTime = System.currentTimeMillis()
+
         return cacheFavorites
     }
 
@@ -158,7 +135,6 @@ class ConferenceDataCacheImpl @Inject constructor(
         conferenceCacheSerializer.writeMetaData(metaDataEntity)
         preferencesHelper.lastCacheTime = System.currentTimeMillis()
     }
-
 
 
     private fun emptySpeakerEntity(): SpeakerEntity {

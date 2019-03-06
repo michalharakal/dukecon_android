@@ -41,7 +41,7 @@ class EventDetailPresenter @Inject constructor(
         launch {
             val favorites =
                     conferenceRepository.saveFavorite(
-                            Favorite(sessionId, !currentFavouriteStatus))
+                            Favorite(sessionId, 0, !currentFavouriteStatus))
             handleSetFavoriteSuccess(favorites)
         }
     }

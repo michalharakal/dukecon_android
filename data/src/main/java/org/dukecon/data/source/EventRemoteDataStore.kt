@@ -24,13 +24,13 @@ open class EventRemoteDataStore @Inject constructor(private val eventRemote: Eve
         return eventRemote.submitFeedback(feedback)
     }
 
-    override fun saveFavorite(favorite: FavoriteEntity): List<FavoriteEntity> {
-        throw UnsupportedOperationException()
+    override fun saveFavorites(favorites: List<FavoriteEntity>): List<FavoriteEntity> {
+        return eventRemote.saveFavorites(favorites)
     }
 
     // no call to API yet
     override fun getFavorites(): List<FavoriteEntity> {
-        throw UnsupportedOperationException()
+        return eventRemote.getFavorites()
     }
 
     override fun getSpeaker(id: String): SpeakerEntity {

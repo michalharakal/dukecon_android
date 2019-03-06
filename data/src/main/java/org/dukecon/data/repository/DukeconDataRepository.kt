@@ -2,6 +2,7 @@ package org.dukecon.data.repository
 
 import org.dukecon.data.mapper.*
 import org.dukecon.data.model.EventEntity
+import org.dukecon.data.model.FavoriteEntity
 import org.dukecon.data.model.RoomEntity
 import org.dukecon.data.model.SpeakerEntity
 import org.dukecon.data.source.EventCacheDataStore
@@ -39,8 +40,20 @@ class DukeconDataRepository @Inject constructor(
     }
 
     override suspend fun saveFavorite(favorite: Favorite): List<Favorite> {
-        localDataStore
-                .saveFavorite(favoriteMapper.mapToEntity(favorite))
+
+        // merge local list
+        val localFavorites = localDataStore.getFavorites().toMutableList()
+
+        localFavorites.removeAll { it.id == favorite.id }
+        if (favorite.selected) {
+            localFavorites.add(FavoriteEntity(favorite.id, favorite.version))
+        }
+
+        // save to remote
+        val favorites = remoteDataStore.saveFavorites(localFavorites)
+
+        // save result to cache
+        localDataStore.saveFavorites(favorites)
         return getFavorites()
     }
 

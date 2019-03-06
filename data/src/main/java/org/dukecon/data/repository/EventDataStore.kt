@@ -18,7 +18,7 @@ interface EventDataStore {
     fun saveRooms(rooms: List<RoomEntity>)
 
     fun getFavorites(): List<FavoriteEntity>
-    fun saveFavorite(favorite: FavoriteEntity): List<FavoriteEntity>
+    fun saveFavorites(favorite: List<FavoriteEntity>): List<FavoriteEntity>
     fun submitFeedback(feedback: FeedbackEntity): Any
 
     fun getKeycloak(): KeycloakEntity

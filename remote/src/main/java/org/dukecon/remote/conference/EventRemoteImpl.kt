@@ -21,8 +21,36 @@ class EventRemoteImpl @Inject constructor(
         private val speakersEntityMapper: SpeakerEntityMapper,
         private val roomEntityMapper: RoomEntityMapper,
         private val keycloakEntityMapper: KeycloakEntityMapper,
-        private val metaDataEntityMapper: MetaDataEntityMapper
+        private val metaDataEntityMapper: MetaDataEntityMapper,
+        private val favoritesEntityMapper:FavoritesEntityMapper
 ) : EventRemote {
+
+    override fun getFavorites(): List<FavoriteEntity> {
+        val call = conferenceApi.getFavorites(conferenceId)
+        val response = call.execute()
+        if (response.isSuccessful) {
+            if (response.body() != null) {
+                val metaData = response.body()
+                if (metaData != null) {
+                    return metaData.map {
+                        favoritesEntityMapper.mapFromRemote(it)
+                    }
+                }
+            }
+        }
+        throw Throwable()
+    }
+
+    override fun saveFavorites(favorite: List<FavoriteEntity>): List<FavoriteEntity> {
+        val call = conferenceApi.sendFavorites(conferenceId, favorite.map { favoritesEntityMapper.mapToRemote(it) })
+        val response = call.execute()
+        if (response.isSuccessful) {
+            return getFavorites()
+        } else {
+            throw  Throwable()
+        }
+    }
+
     override fun getMetaData(): MetaDataEntity {
         val call = conferenceApi.getMeta(conferenceId)
         val response = call.execute()

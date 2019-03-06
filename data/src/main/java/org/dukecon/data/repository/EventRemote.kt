@@ -11,4 +11,6 @@ interface EventRemote {
     fun submitFeedback(feedback: FeedbackEntity): Any
     fun getKeycloak(): KeycloakEntity
     fun getMetaData(): MetaDataEntity
+    fun getFavorites(): List<FavoriteEntity>
+    fun saveFavorites(favorite: List<FavoriteEntity>): List<FavoriteEntity>
 }

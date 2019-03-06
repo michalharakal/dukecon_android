@@ -24,8 +24,8 @@ open class EventCacheDataStore @Inject constructor(private val conferenceDataCac
         throw UnsupportedOperationException()
     }
 
-    override fun saveFavorite(favorite: FavoriteEntity): List<FavoriteEntity> {
-        return conferenceDataCache.saveFavorite(favorite)
+    override fun saveFavorites(favorites: List<FavoriteEntity>): List<FavoriteEntity> {
+        return conferenceDataCache.saveFavorites(favorites)
     }
 
     override fun getFavorites(): List<FavoriteEntity> {
