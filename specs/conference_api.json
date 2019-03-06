@@ -176,6 +176,79 @@
         }
       }
     },
+    "/conferences/{id}/preferences": {
+      "get": {
+        "tags": [
+          "conferences"
+        ],
+        "summary": "returns list of favorites",
+        "description": "",
+        "operationId": "getFavorites",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Favorite"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "conferences"
+        ],
+        "summary": "submit feedback to talk",
+        "description": "",
+        "operationId": "sendFavorites",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "conferenceId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful operation"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Favorite"
+                }
+              }
+            }
+          },
+          "description": "Feedback object that needs to be updated",
+          "required": true
+        }
+      }
+    },
     "/feedback/event/{id}/{sessionId}": {
       "put": {
         "tags": [
@@ -642,6 +715,18 @@
           },
           "useAccountManagement": {
             "type": "string"
+          }
+        }
+      },
+      "Favorite":  {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       }

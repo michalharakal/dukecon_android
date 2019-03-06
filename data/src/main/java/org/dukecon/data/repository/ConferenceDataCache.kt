@@ -35,7 +35,7 @@ interface ConferenceDataCache {
     fun getEvent(id: String): EventEntity
 
     fun getFavorites(): List<FavoriteEntity>
-    fun saveFavorite(favorite: FavoriteEntity): List<FavoriteEntity>
+    fun saveFavorites(favorite: List<FavoriteEntity>): List<FavoriteEntity>
 
     fun getKeycloak(): KeycloakEntity
 
