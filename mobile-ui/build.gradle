@@ -185,8 +185,7 @@ dependencies {
     implementation mobileUiDependencies.browser
     implementation mobileUiDependencies.androidxCore
     implementation mobileUiDependencies.androidThreeTen
-    implementation mobileUiDependencies.threeTenConverters
-    
+
     testImplementation mobileUiTestDependencies.kotlinJUnit
 
     kapt mobileUiDependencies.daggerCompiler
