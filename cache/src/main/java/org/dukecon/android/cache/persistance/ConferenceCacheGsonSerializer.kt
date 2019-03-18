@@ -1,11 +1,7 @@
 package org.dukecon.android.cache.persistance
 
 import com.google.gson.Gson
-import org.dukecon.data.model.EventEntity
-import org.dukecon.data.model.FavoriteEntity
-import org.dukecon.data.model.KeycloakEntity
-import org.dukecon.data.model.RoomEntity
-import org.dukecon.data.model.SpeakerEntity
+import org.dukecon.data.model.*
 import java.io.*
 
 class ConferenceCacheGsonSerializer(private val baseFolder: String,
@@ -16,6 +12,7 @@ class ConferenceCacheGsonSerializer(private val baseFolder: String,
     private fun getRoomsFullName() = "$baseFolder/rooms.json"
     private fun getEventsFullName() = "$baseFolder/sessions.json"
     private fun getFavoritesFullName() = "$baseFolder/favorites.json"
+    private fun getMetaDataFullName() = "$baseFolder/metaData.json"
 
 
     override fun readSpeakers(): List<SpeakerEntity> {
@@ -40,7 +37,7 @@ class ConferenceCacheGsonSerializer(private val baseFolder: String,
             } else {
                 listOf()
             }
-        } catch (e:Exception) {
+        } catch (e: Exception) {
             listOf()
         }
     }
@@ -67,6 +64,24 @@ class ConferenceCacheGsonSerializer(private val baseFolder: String,
         } else {
             listOf()
         }
+    }
+
+    override fun readMetaData(): MetaDataEntity {
+        val sd = File(getMetaDataFullName())
+        return if (sd.exists()) {
+            val inputStream = FileInputStream(sd)
+            val reader = InputStreamReader(inputStream)
+
+            gson.fromJson(reader, MetaDataEntity::class.java)
+        } else {
+            emptyMetaDataEntity()
+        }
+    }
+
+    private fun emptyMetaDataEntity(): MetaDataEntity {
+        return MetaDataEntity("", emptyList(), emptyList(), emptyList(),
+                LanguageEntity("", "", 0, emptyMap(), ""),
+                emptyList(), emptyList(), "")
     }
 
     override fun readKeyCloack(): KeycloakEntity {
@@ -103,6 +118,17 @@ class ConferenceCacheGsonSerializer(private val baseFolder: String,
         writeList(getFavoritesFullName(), favorites)
     }
 
+    override fun writeMetaData(metaData: MetaDataEntity) {
+        val sd = File(getMetaDataFullName())
+        sd.createNewFile()
+
+        val fOut = FileOutputStream(sd)
+        val myOutWriter = OutputStreamWriter(fOut)
+        val json = gson.toJson(metaData)
+        myOutWriter.write(json)
+        myOutWriter.flush()
+    }
+
     override fun writeKeyCloack(keycloakEntity: KeycloakEntity) {
         val sd = File(getKeycloakFullName())
         sd.createNewFile()
@@ -137,4 +163,6 @@ interface ConferenceCacheSerializer {
     fun writeFavorites(favorites: List<FavoriteEntity>)
     fun readKeyCloack(): KeycloakEntity
     fun writeKeyCloack(keycloakEntity: KeycloakEntity)
+    fun readMetaData(): MetaDataEntity
+    fun writeMetaData(metaData: MetaDataEntity)
 }

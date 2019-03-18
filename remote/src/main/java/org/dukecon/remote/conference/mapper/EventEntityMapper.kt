@@ -15,6 +15,15 @@ open class EventEntityMapper @Inject constructor() : EntityMapper<Event, EventEn
                 type.start.toOffsetDateTime(),
                 type.end.toOffsetDateTime(),
                 type.speakerIds,
-                type.locationId)
+                type.locationId,
+                type.languageId,
+                type.trackId ?: "",
+                type.audienceId ?: "",
+                type.typeId ?: "",
+                type.isDemo,
+                type.isSimultan,
+                type.isVeryPopular,
+                type.isFullyBooked,
+                type.numberOfFavorites)
     }
 }

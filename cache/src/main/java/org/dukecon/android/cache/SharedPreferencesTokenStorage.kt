@@ -39,9 +39,9 @@ class SharedPreferencesTokenStorage @Inject constructor(context: Context) : Toke
         oauthTokenPref.edit().remove(PREF_KEY_EXPIRES_AT).apply()
     }
 
-    override fun setToken(token: OAuthToken) {
-        oauthTokenPref.edit().putString(PREF_KEY_ACCESS_TOKEN, token.accessToken).apply()
-        oauthTokenPref.edit().putString(PREF_KEY_REFRESH_TOKEN, token.refreshToken).apply()
-        oauthTokenPref.edit().putLong(PREF_KEY_EXPIRES_AT, token.expiresAt).apply()
+    override fun setToken(refreshedToken: OAuthToken) {
+        oauthTokenPref.edit().putString(PREF_KEY_ACCESS_TOKEN, refreshedToken.accessToken).apply()
+        oauthTokenPref.edit().putString(PREF_KEY_REFRESH_TOKEN, refreshedToken.refreshToken).apply()
+        oauthTokenPref.edit().putLong(PREF_KEY_EXPIRES_AT, refreshedToken.expiresAt).apply()
     }
 }
