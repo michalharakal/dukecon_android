@@ -1,14 +1,18 @@
 package org.dukecon.presentation.feature.speakerdetail
 
-import io.reactivex.observers.DisposableSingleObserver
-import org.dukecon.domain.features.speaker.GetSpeakerDetailUseCase
+import kotlinx.coroutines.launch
 import org.dukecon.domain.model.Speaker
+import org.dukecon.domain.repository.ConferenceRepository
+import org.dukecon.presentation.CoroutinePresenter
 import org.dukecon.presentation.mapper.SpeakerDetailMapper
 import javax.inject.Inject
 
-class SpeakerDetailPresenter @Inject constructor(val speakerDetailUseCase: GetSpeakerDetailUseCase,
-                                                 val speakerDetailMapper: SpeakerDetailMapper) :
-        SpeakerDetailContract.Presenter {
+class SpeakerDetailPresenter @Inject constructor(
+        val conferenceRepository: ConferenceRepository,
+        val speakerDetailMapper: SpeakerDetailMapper
+) : CoroutinePresenter<SpeakerDetailContract.View>(), SpeakerDetailContract.Presenter {
+    override fun showError(error: Throwable) {
+    }
 
     private var view: SpeakerDetailContract.View? = null
 
@@ -18,12 +22,14 @@ class SpeakerDetailPresenter @Inject constructor(val speakerDetailUseCase: GetSp
 
     override fun onDetach() {
         this.view = null
-        speakerDetailUseCase.dispose()
 
     }
 
     override fun setSpeakerId(speakerId: String) {
-        speakerDetailUseCase.execute(SpeakerDetailsSubscriber(), speakerId)
+        launch {
+            val speaker = conferenceRepository.getSpeaker(speakerId)
+            handleGetSpeakerSuccess(speaker)
+        }
     }
 
     private fun handleGetSpeakerSuccess(event: Speaker) {
@@ -31,15 +37,4 @@ class SpeakerDetailPresenter @Inject constructor(val speakerDetailUseCase: GetSp
             it.showSpeaker(speakerDetailMapper.mapToView(event))
         }
     }
-
-    inner class SpeakerDetailsSubscriber : DisposableSingleObserver<Speaker>() {
-
-        override fun onSuccess(t: Speaker) {
-            handleGetSpeakerSuccess(t)
-        }
-
-        override fun onError(exception: Throwable) {
-        }
-    }
-
 }

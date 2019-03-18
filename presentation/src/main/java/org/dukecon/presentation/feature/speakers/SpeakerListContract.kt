@@ -14,8 +14,5 @@ interface SpeakerListContract {
         fun showNoSpeakers()
     }
 
-    interface Presenter : BasePresenter<View> {
-
-    }
-
+    interface Presenter : BasePresenter<View>
 }

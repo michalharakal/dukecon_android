@@ -19,6 +19,4 @@ open class BuildTypeModule {
     fun currentTimeProvider(provider: CustomizableCurrentTimeProvider): CurrentTimeProvider {
         return provider
     }
-
-
 }

@@ -1,10 +1,10 @@
 package org.dukecon.android.ui.features.speaker
 
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.dukecon.android.ui.ext.getComponent
 import org.dukecon.android.ui.features.main.MainComponent
 import org.dukecon.android.ui.features.speakerdetail.SpeakerNavigator
@@ -12,9 +12,12 @@ import org.dukecon.presentation.feature.speakers.SpeakerListContract
 import org.dukecon.presentation.model.SpeakerView
 import javax.inject.Inject
 
-class SpeakerListView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
-        RecyclerView(context, attrs, defStyle),
-        SpeakerListContract.View {
+class SpeakerListView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
+    RecyclerView(context, attrs, defStyle),
+    SpeakerListContract.View {
+    override fun showError(throwable: Throwable) {
+
+    }
 
     private val adapter: SpeakerAdapter
 
@@ -29,9 +32,9 @@ class SpeakerListView(context: Context, attrs: AttributeSet? = null, defStyle: I
         layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         layoutManager = LinearLayoutManager(context, VERTICAL, false)
         addItemDecoration(DividerItemDecoration(context))
-        adapter = SpeakerAdapter(false, { speaker, _ ->
+        adapter = SpeakerAdapter(false) { speaker ->
             speakerNavigator.navigateToSpeaker(speaker.id)
-        })
+        }
         super.setAdapter(adapter)
     }
 
@@ -52,6 +55,5 @@ class SpeakerListView(context: Context, attrs: AttributeSet? = null, defStyle: I
     }
 
     override fun showNoSpeakers() {
-
     }
 }

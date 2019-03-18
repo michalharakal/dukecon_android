@@ -1,10 +1,11 @@
 package org.dukecon.android.ui.features.timemachine
 
 import org.dukecon.domain.features.time.CurrentTimeProvider
-import org.joda.time.DateTime
+import org.threeten.bp.OffsetDateTime
 
 class ReleaseCurrentTimeProvider : CurrentTimeProvider {
+
     override fun currentTimeMillis(): Long {
-        return DateTime().millis
+        return OffsetDateTime.now().toInstant().toEpochMilli()
     }
 }

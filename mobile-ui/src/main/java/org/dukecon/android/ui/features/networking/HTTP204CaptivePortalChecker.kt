@@ -1,9 +1,7 @@
 package org.dukecon.android.ui.features.networking
 
-
 import java.io.IOException
 import java.net.*
-
 
 object HTTP204CaptivePortalChecker {
 
@@ -11,13 +9,11 @@ object HTTP204CaptivePortalChecker {
 
     private val DEFAULT_SERVER = "clients3.google.com"
 
-
     val isCaptivePortal: Boolean
         get() {
             val server = lookupHost(DEFAULT_SERVER)
             return isCaptivePortal(server)
         }
-
 
     /**
      * Do a URL fetch on a known server to see if we get the data we expect
@@ -53,7 +49,6 @@ object HTTP204CaptivePortalChecker {
         }
     }
 
-
     private fun lookupHost(hostname: String): InetAddress? {
         val inetAddress: Array<InetAddress>
         try {
@@ -68,5 +63,4 @@ object HTTP204CaptivePortalChecker {
         }
         return null
     }
-
 }

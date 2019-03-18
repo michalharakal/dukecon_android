@@ -1,8 +1,5 @@
 apply plugin: 'kotlin'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
-
 configurations.all {
     resolutionStrategy {
         force "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -15,13 +12,11 @@ dependencies {
 
     implementation domainDependencies.javaxAnnotation
     implementation domainDependencies.javaxInject
-    implementation domainDependencies.rxKotlin
     implementation domainDependencies.kotlin
-    implementation domainDependencies.jodaTime
+    compileOnly domainDependencies.threeTen
 
 
     testImplementation domainTestDependencies.junit
     testImplementation domainTestDependencies.mockito
     testImplementation domainTestDependencies.assertj
-
 }

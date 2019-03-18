@@ -2,53 +2,127 @@ package org.dukecon.android.ui.features.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v4.view.GravityCompat
-import android.support.v7.app.AppCompatActivity
-import android.view.MenuItem
-import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import mu.KotlinLogging
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getAppComponent
-import org.dukecon.android.ui.features.event.EventDateView
+import org.dukecon.android.ui.features.event.FavoritesFragment
+import org.dukecon.android.ui.features.event.ScheduleFragment
 import org.dukecon.android.ui.features.event.SessionNavigator
 import org.dukecon.android.ui.features.eventdetail.EventDetailActivity
-import org.dukecon.android.ui.features.info.InfoView
+import org.dukecon.android.ui.features.info.InfoFragment
 import org.dukecon.android.ui.features.networking.NetworkOfflineChecker
-import org.dukecon.android.ui.features.speaker.SpeakerListView
+import org.dukecon.android.ui.features.speaker.SpeakersFragment
 import org.dukecon.android.ui.features.speakerdetail.SpeakerDetailActivity
 import org.dukecon.android.ui.features.speakerdetail.SpeakerNavigator
+import org.dukecon.android.ui.utils.consume
+import org.dukecon.android.ui.utils.inTransaction
+import org.dukecon.domain.aspects.auth.AuthManager
+import org.dukecon.domain.repository.ConferenceRepository
 import org.dukecon.presentation.model.EventView
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
-class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNavigationItemSelectedListener, SpeakerNavigator {
+private val logger = KotlinLogging.logger {}
 
-    lateinit var component: MainComponent
+class MainActivity : AppCompatActivity(), SessionNavigator,
+        SpeakerNavigator, CoroutineScope {
+
+    private lateinit var mJob: Job
+    override val coroutineContext: CoroutineContext
+        get() = mJob + Dispatchers.Main
+
+    companion object {
+        private const val FRAGMENT_ID = R.id.content
+    }
+
+    private lateinit var component: MainComponent
 
     @Inject
     lateinit var networkOfflineChecker: NetworkOfflineChecker
 
+    @Inject
+    lateinit var exchangeCodeForToken: AuthManager
+
+    @Inject
+    lateinit var conferenceRepository: ConferenceRepository
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        mJob = Job()
 
         component = getAppComponent().mainComponent(MainModule(this, this))
         component.inject(this)
 
         setContentView(R.layout.activity_main)
 
-        setSupportActionBar(toolbar)
-
-        supportActionBar?.let {
-            it.setHomeAsUpIndicator(R.drawable.ic_menu)
-            it.setDisplayHomeAsUpEnabled(true)
-        }
-
         setTitle(R.string.event_name)
 
-        showView(R.id.action_schedule)
+        navigation.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.action_schedule -> consume {
+                    replaceFragment(ScheduleFragment())
+                }
+                R.id.action_favorites -> consume {
+                    replaceFragment(FavoritesFragment())
+                }
+                R.id.action_speakers -> consume {
+                    // Scroll to current event next time the schedule is opened.
+                    replaceFragment(SpeakersFragment())
+                }
+                R.id.action_info -> consume {
+                    // Scroll to current event next time the schedule is opened.
+                    replaceFragment(InfoFragment())
+                }
+                else -> false
+            }
+        }
 
-        nav_view.setNavigationItemSelectedListener(this)
-        nav_view.setCheckedItem(R.id.action_schedule)
+        // Add a listener to prevent reselects from being treated as selects.
+        navigation.setOnNavigationItemReselectedListener {}
+
+        if (savedInstanceState == null) {
+            // Show Schedule on first creation
+            updateData()
+            navigation.selectedItemId = R.id.action_schedule
+            replaceFragment(ScheduleFragment())
+        } else {
+            // Find the current fragment
+            currentFragment =
+                    supportFragmentManager.findFragmentById(FRAGMENT_ID)
+                            ?: throw IllegalStateException("Activity recreated, but no fragment found!")
+        }
+
+        val uri = intent.data
+        if (uri != null) {
+            val code = uri.getQueryParameter("code") ?: ""
+            launch(Dispatchers.IO) {
+                logger.debug {
+                    "exchnaging $code"
+                }
+                try {
+                    exchangeCodeForToken.exchangeToken(code)
+                } catch (e: Exception) {
+                    logger.debug {
+                        "exception $code"
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateData() {
+        launch(Dispatchers.IO) {
+            conferenceRepository.update()
+        }
     }
 
     override fun onResume() {
@@ -61,44 +135,19 @@ class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNav
         networkOfflineChecker.disable()
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        if (showView(item.itemId)) {
-            drawer_layout.closeDrawers()
-            return true
-        } else {
-            return false
-        }
-    }
+    private lateinit var currentFragment: Fragment
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            android.R.id.home -> {
-                drawer_layout.openDrawer(GravityCompat.START)
-                return true
-            }
+    private fun <F> replaceFragment(fragment: F) where F : Fragment {
+        supportFragmentManager.inTransaction {
+            currentFragment = fragment
+            replace(FRAGMENT_ID, fragment)
         }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun showView(viewId: Int): Boolean {
-        val view: View? = when (viewId) {
-            R.id.action_schedule -> EventDateView(this)
-            R.id.action_speakers -> SpeakerListView(this)
-            R.id.action_info -> InfoView(this)
-            else -> null
-        }
-        if (view != null) {
-            content.removeAllViews()
-            content.addView(view)
-            return true
-        }
-        return false
     }
 
     override fun getSystemService(name: String?): Any {
-        when (name) {
-            "component" -> return component
-            else -> return super.getSystemService(name)
+        return when (name) {
+            "component" -> component
+            else -> super.getSystemService(name ?: "")
         }
     }
 
@@ -111,13 +160,4 @@ class MainActivity : AppCompatActivity(), SessionNavigator, NavigationView.OnNav
     override fun navigateToSpeaker(id: String) {
         SpeakerDetailActivity.navigate(this, id)
     }
-
-    override fun onBackPressed() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
-    }
-
 }

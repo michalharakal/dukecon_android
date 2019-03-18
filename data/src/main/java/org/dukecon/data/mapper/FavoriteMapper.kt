@@ -16,13 +16,13 @@ open class FavoriteMapper @Inject constructor() : Mapper<FavoriteEntity, Favorit
      * Map a [FavoriteEntity] instance to a [Favorite] instance
      */
     override fun mapFromEntity(type: FavoriteEntity): Favorite {
-        return Favorite(type.id, type.selected)
+        return Favorite(type.id, type.version, true)
     }
 
     /**
      * Map a [Speaker] instance to a [FavoriteEntity] instance
      */
     override fun mapToEntity(type: Favorite): FavoriteEntity {
-        return FavoriteEntity(type.id, type.selected)
+        return FavoriteEntity(type.id, type.version)
     }
 }

@@ -11,7 +11,8 @@ interface EventDetailContract {
         fun showSessionDetail(sessionDetail: EventView)
         fun showSpeakerInfo(speakers: List<SpeakerView>)
         fun setIsFavorite(isFavorite: Boolean)
-        fun showNoSession()
+        fun showNoEvent()
+        fun setHasSession(hasSession: Boolean)
     }
 
     interface Presenter : BasePresenter<View> {

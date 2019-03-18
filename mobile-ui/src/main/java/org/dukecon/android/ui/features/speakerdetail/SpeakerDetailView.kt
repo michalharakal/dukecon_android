@@ -4,9 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.view_speaker_detail.view.*
 import org.dukecon.android.ui.R
@@ -16,9 +16,11 @@ import org.dukecon.android.ui.utils.DrawableUtils
 import org.dukecon.presentation.feature.speakerdetail.SpeakerDetailContract
 import javax.inject.Inject
 
-
 class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
         ConstraintLayout(context, attrs, defStyle), SpeakerDetailContract.View {
+    override fun showError(throwable: Throwable) {
+
+    }
 
     @Inject
     lateinit var presenter: SpeakerDetailContract.Presenter
@@ -58,7 +60,7 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
         name.text = speaker.name
         bio.text = speaker.bio
 
-        if (speaker.twitter.isNotEmpty()) {
+        if (speaker.twitterHandle.isNotEmpty()) {
             val twitterIntent = Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse("${speaker.twitter}")
             }
@@ -74,7 +76,6 @@ class SpeakerDetailView(context: Context, attrs: AttributeSet? = null, defStyle:
 
                 twitter.setOnClickListener {
                     context.startActivity(twitterIntent)
-
                 }
             }
         } else {

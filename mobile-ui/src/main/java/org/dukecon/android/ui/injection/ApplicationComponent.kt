@@ -16,7 +16,15 @@ import org.dukecon.android.ui.features.timemachine.SetCustomdateTimeReceiver
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(ApplicationModule::class, DataModule::class, ConferenceModule::class, BuildTypeModule::class))
+@Component(
+    modules = arrayOf(
+        ApplicationModule::class,
+        DataModule::class,
+        AuthModule::class,
+        ConferenceModule::class,
+        BuildTypeModule::class
+    )
+)
 interface ApplicationComponent {
 
     @Component.Builder
@@ -33,5 +41,4 @@ interface ApplicationComponent {
     fun speakerDetailComponent(): SpeakerDetailComponent
     fun infoComponent(infoModule: InfoModule): InfoComponent
     fun inject(dukeconApplication: SetCustomdateTimeReceiver)
-
 }

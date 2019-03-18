@@ -1,26 +1,26 @@
 package org.dukecon.data.source
 
-import org.dukecon.data.repository.ConferenceDataCache
 import org.dukecon.data.repository.EventDataStore
-import org.dukecon.domain.features.networking.NetworkUtils
 import javax.inject.Inject
 
-
 open class EventDataStoreFactory @Inject constructor(
-        private val conferenceDataCache: ConferenceDataCache,
-        private val eventCacheDataStore: EventCacheDataStore,
-        private val eventRemoteDataStore: EventRemoteDataStore,
-        private val networkUtils: NetworkUtils) {
+    private val eventCacheDataStore: EventCacheDataStore,
+    private val eventRemoteDataStore: EventRemoteDataStore
+) {
 
     /**
      * Returns a DataStore based on whether or not there is content in the cache and the cache
      * has not expired
      */
-    open fun retrieveDataStore(): EventDataStore {
-        if ((conferenceDataCache.isCached() && !conferenceDataCache.isExpired()) || (conferenceDataCache.isCached() && networkUtils.isOffline)) {
-            return retrieveCacheDataStore()
+    open fun retrieveDataStore(isCached: Boolean, hasInternetConnected: Boolean): EventDataStore {
+        if (hasInternetConnected) {
+            if (isCached) {
+                return retrieveCacheDataStore()
+            } else {
+                return retrieveRemoteDataStore()
+            }
         }
-        return retrieveRemoteDataStore()
+        return retrieveCacheDataStore()
     }
 
     /**
@@ -36,5 +36,4 @@ open class EventDataStoreFactory @Inject constructor(
     open fun retrieveRemoteDataStore(): EventDataStore {
         return eventRemoteDataStore
     }
-
 }

@@ -1,11 +1,6 @@
 package org.dukecon.data.repository
 
-import io.reactivex.Completable
-import io.reactivex.Single
-import org.dukecon.data.model.EventEntity
-import org.dukecon.data.model.FavoriteEntity
-import org.dukecon.data.model.RoomEntity
-import org.dukecon.data.model.SpeakerEntity
+import org.dukecon.data.model.*
 
 
 /**
@@ -17,35 +12,34 @@ interface ConferenceDataCache {
     /**
      * Clear all Events from the cache
      */
-    fun clearEvents(): Completable
+    fun clearEvents()
 
     /**
      * Save a given list of EventEntity to the cache
      */
-    fun saveEvents(events: List<EventEntity>): Completable
+    fun saveEvents(events: List<EventEntity>)
 
     /**
      * Retrieve a list of Events, from the cache
      */
-    fun getEvents(): Single<List<EventEntity>>
+    fun getEvents(): List<EventEntity>
 
-    fun isCached(): Boolean
+    fun getSpeakers(): List<SpeakerEntity>
+    fun getSpeaker(id: String): SpeakerEntity
 
-    fun setLastCacheTime(lastCache: Long)
+    fun saveSpeakers(speakers: List<SpeakerEntity>)
 
-    fun isExpired(): Boolean
+    fun getRooms(): List<RoomEntity>
+    fun saveRooms(rooms: List<RoomEntity>)
 
-    fun getSpeakers(): Single<List<SpeakerEntity>>
-    fun getSpeaker(id: String): Single<SpeakerEntity>
+    fun getEvent(id: String): EventEntity
 
-    fun saveSpeakers(speakers: List<SpeakerEntity>): Completable
+    fun getFavorites(): List<FavoriteEntity>
+    fun saveFavorites(favorite: List<FavoriteEntity>): List<FavoriteEntity>
 
-    fun getRooms(): Single<List<RoomEntity>>
-    fun saveRooms(rooms: List<RoomEntity>): Completable
+    fun getKeycloak(): KeycloakEntity
 
-    fun getEvent(id: String): Single<EventEntity>
-
-    fun getFavorites(): Single<List<FavoriteEntity>>
-    fun saveFavorite(favorite: FavoriteEntity): Single<List<FavoriteEntity>>
+    fun getMetaData(): MetaDataEntity
+    fun saveMetaData(metaDataEntity: MetaDataEntity)
 
 }

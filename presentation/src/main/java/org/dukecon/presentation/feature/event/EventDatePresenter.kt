@@ -1,46 +1,43 @@
 package org.dukecon.presentation.feature.event
 
-import io.reactivex.observers.DisposableSingleObserver
-import org.dukecon.domain.interactor.SingleUseCase
-import org.joda.time.DateTime
+import kotlinx.coroutines.launch
+import org.dukecon.domain.repository.ConferenceRepository
+import org.dukecon.presentation.CoroutinePresenter
 import javax.inject.Inject
 
 
-class EventDatePresenter @Inject constructor(val getEventDateUseCase: SingleUseCase<List<DateTime>, Void>)
-    : EventDateListContract.Presenter {
+class EventDatePresenter @Inject constructor(val conferenceRepository: ConferenceRepository)
+    : CoroutinePresenter<EventDateListContract.View>(), EventDateListContract.Presenter {
 
-    private var view: EventDateListContract.View? = null
+    override fun showError(error: Throwable) {
+    }
+
+    private lateinit var view: EventDateListContract.View
+
+    private val onRefreshListener: () -> Unit = this::refreshDataFromRepo
 
     override fun onAttach(view: EventDateListContract.View) {
+        conferenceRepository.onRefreshListeners += onRefreshListener
         this.view = view
-
-        getEventDateUseCase.execute(EventSubscriber())
+        refreshDataFromRepo()
     }
 
     override fun onDetach() {
-        this.view = null
-        getEventDateUseCase.dispose()
+        conferenceRepository.onRefreshListeners -= onRefreshListener
     }
 
-    internal fun handleGetEventsSuccess(events: List<DateTime>) {
-        if (events.isEmpty()) {
-            this.view?.showNoSessionDates()
-        } else {
-            this.view?.let {
-                it.showSessionDates(events)
-                it.scrollToCurrentDay()
+    private fun refreshDataFromRepo() {
+        launch {
+            val dates = conferenceRepository.getEventDates()
+
+            if (dates.isEmpty()) {
+                view.showNoSessionDates()
+            } else {
+                view.let {
+                    it.showSessionDates(dates)
+                    it.scrollToCurrentDay()
+                }
             }
-        }
-    }
-
-    inner class EventSubscriber : DisposableSingleObserver<List<DateTime>>() {
-
-        override fun onSuccess(t: List<DateTime>) {
-            handleGetEventsSuccess(t)
-        }
-
-        override fun onError(exception: Throwable) {
-            view?.showNoSessionDates()
         }
     }
 }

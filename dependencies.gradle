@@ -1,53 +1,46 @@
-allprojects {
-    repositories {
-        jcenter()
-    }
-}
-
 ext {
     //Android
-    androidBuildToolsVersion = "27.0.3"
+    androidBuildToolsVersion = "28.0.3"
     androidMinSdkVersion = 15
-    androidTargetSdkVersion = 26
-    androidCompileSdkVersion = 27
-
-    // support libraries
-    multiDexVersion = '1.0.3'
-    recyclerViewVersion = '21.0.3'
-    supportLibraryVersion = '27.1.0'
-    constraintLayoutVersion = '1.0.2'
-
-
+    androidTargetSdkVersion = 28
+    androidCompileSdkVersion = 28
 
     //Libraries
-    kotlinVersion = '1.2.40'
+    kotlinVersion = '1.3.21'
+    coroutinesVersion = '1.1.0'
     butterKnifeVersion = '7.0.1'
-    rxJavaVersion = '2.1.3'
-    rxKotlinVersion = '2.1.0'
-    rxAndroidVersion = '2.0.1'
-    rxRelayVersion = '2.0.0'
     javaxAnnotationVersion = '1.0'
     javaxInjectVersion = '1'
     gsonVersion = '2.8.1'
     okHttpVersion = '3.8.1'
-    androidAnnotationsVersion = '21.0.3'
-    swaggerAnnotationsVersion = '1.5.15'
+    androidxAnnotationVersion = '1.0.0'
+    androidxAppCompatVersion = '1.0.0'
+    androidxCardviewVersion = '1.0.0'
+    androidxRecyclerviewVersion = '1.0.0'
+    androidxConstraintLayoutVersion = '2.0.0-alpha2'
+    androidxCoordinatorlayoutVersion = '1.0.0'
+    androidxSupportDesign = '28.0.0'
+    materialVersion = '1.1.0-alpha01'
+    swaggerAnnotationsVersion = '1.5.21'
     oltuVersion = '1.0.1'
-    jodaTimeVersion = '2.9.9'
-    jodaGsonSerializerVersion = '1.6.0'
+    json_fire_version = '1.8.0'
+    threeTenVersion = '1.3.8'
+    threeTenConverterVersion = '1.1.1'
+    androidThreeTenVersion = '1.1.2'
     retrofitVersion = '2.3.0'
-    roomVersion = '1.0.0-alpha6'
-    timberVersion = '4.5.1'
-    glideVersion = '4.6.1'
+    timberVersion = '4.7.1'
+    glideVersion = '4.8.0'
     picassoVersion = '2.5.2'
-    daggerVersion = '2.11'
+    daggerVersion = '2.16'
     glassfishAnnotationVersion = '10.0-b28'
     kotlinLoggingVersion = '1.5.3'
     slf4jAndroidVersion = '1.7.25'
-    circularViewVersion = '3.0.2'
-    firebaseVersion = '15.0.0'
+    firebaseVersion = '15.0.2'
     firebaseDispatcherVersion = '0.8.5'
     crashlyticsVersion = '2.9.1'
+    openIdApiVersion = '0.7.1'
+    androidxBrowserVersion = '1.0.0'
+    androidXVersion = '1.0.0'
 
     //Testing
     robolectricVersion = '3.4.2'
@@ -67,9 +60,8 @@ ext {
     domainDependencies = [
             javaxAnnotation: "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject    : "javax.inject:javax.inject:${javaxInjectVersion}",
-            rxKotlin       : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
-            kotlin         : "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}",
-            jodaTime       : "joda-time:joda-time:${jodaTimeVersion}"
+            kotlin         : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
+            threeTen       : "org.threeten:threetenbp:${threeTenVersion}"
     ]
 
     domainTestDependencies = [
@@ -81,12 +73,13 @@ ext {
     presentationDependencies = [
             daggerCompiler    : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger            : "com.google.dagger:dagger:${daggerVersion}",
-            rxKotlin          : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
-            kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}",
-            rxAndroid         : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
+            kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
+            coroutines        : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutinesVersion}",
+            threeTen          : "org.threeten:threetenbp:${threeTenVersion}",
+            kotlinLogging     : "io.github.microutils:kotlin-logging:${kotlinLoggingVersion}",
             javaxAnnotation   : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject       : "javax.inject:javax.inject:${javaxInjectVersion}",
-            androidAnnotations: "com.android.support:support-annotations:${androidAnnotationsVersion}"
+            androidAnnotations: "androidx.annotation:annotation:${androidxAnnotationVersion}",
     ]
 
     presentationTestDependencies = [
@@ -104,17 +97,13 @@ ext {
             okHttp            : "com.squareup.okhttp3:okhttp:${okHttpVersion}",
             okHttpLogger      : "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}",
             gson              : "com.google.code.gson:gson:${gsonVersion}",
-            rxKotlin          : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
-            kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}",
-            rxAndroid         : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
-            rxRelay           : "com.jakewharton.rxrelay2:rxrelay:${rxRelayVersion}",
+            kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
             javaxAnnotation   : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject       : "javax.inject:javax.inject:${javaxInjectVersion}",
-            androidAnnotations: "com.android.support:support-annotations:${androidAnnotationsVersion}",
             retrofit          : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
             retrofitConverter : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
-            retrofitAdapter   : "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
-            jodaTime          : "joda-time:joda-time:${jodaTimeVersion}"
+            threeTen          : "org.threeten:threetenbp:${threeTenVersion}"
+
     ]
 
     dataTestDependencies = [
@@ -129,16 +118,12 @@ ext {
             daggerCompiler    : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger            : "com.google.dagger:dagger:${daggerVersion}",
             gson              : "com.google.code.gson:gson:${gsonVersion}",
-            rxKotlin          : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
-            kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}",
+            kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
             kotlinLogging     : "io.github.microutils:kotlin-logging:${kotlinLoggingVersion}",
             javaxAnnotation   : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject       : "javax.inject:javax.inject:${javaxInjectVersion}",
-            androidAnnotations: "com.android.support:support-annotations:${androidAnnotationsVersion}",
-            roomRuntime       : "android.arch.persistence.room:runtime:${roomVersion}",
-            roomCompiler      : "android.arch.persistence.room:compiler:${roomVersion}",
-            roomRxJava        : "android.arch.persistence.room:rxjava2:${roomVersion}",
-            jodaTime          : "joda-time:joda-time:${jodaTimeVersion}"
+            androidAnnotations: "androidx.annotation:annotation:${androidxAnnotationVersion}",
+            threeTen          : "org.threeten:threetenbp:${threeTenVersion}"
     ]
 
     cacheTestDependencies = [
@@ -147,27 +132,22 @@ ext {
             assertj      : "org.assertj:assertj-core:${assertJVersion}",
             mockito      : "com.nhaarman:mockito-kotlin:${mockitoKotlinVersion}",
             robolectric  : "org.robolectric:robolectric:${robolectricVersion}",
-            roomTesting  : "android.arch.persistence.room:testing:${roomVersion}",
-            archTesting  : "android.arch.core:core-testing:${roomVersion}",
             supportRunner: "com.android.support.test:runner:${androidSupportRunnerVersion}",
             supportRules : "com.android.support.test:rules:${androidSupportRulesVersion}"
     ]
 
     remoteDependencies = [
-            daggerCompiler    : "com.google.dagger:dagger-compiler:${daggerVersion}",
-            dagger            : "com.google.dagger:dagger:${daggerVersion}",
-            gson              : "com.google.code.gson:gson:${gsonVersion}",
-            rxKotlin          : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
-            kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}",
-            javaxAnnotation   : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
-            javaxInject       : "javax.inject:javax.inject:${javaxInjectVersion}",
-            androidAnnotations: "com.android.support:support-annotations:${androidAnnotationsVersion}",
-            okHttp            : "com.squareup.okhttp3:okhttp:${okHttpVersion}",
-            okHttpLogger      : "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}",
-            retrofit          : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
-            retrofitConverter : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
-            retrofitAdapter   : "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
-            jodaTime          : "joda-time:joda-time:${jodaTimeVersion}"
+            daggerCompiler   : "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger           : "com.google.dagger:dagger:${daggerVersion}",
+            gson             : "com.google.code.gson:gson:${gsonVersion}",
+            kotlin           : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
+            javaxAnnotation  : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+            javaxInject      : "javax.inject:javax.inject:${javaxInjectVersion}",
+            okHttp           : "com.squareup.okhttp3:okhttp:${okHttpVersion}",
+            okHttpLogger     : "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}",
+            retrofit         : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
+            retrofitConverter: "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
+            threeTen         : "org.threeten:threetenbp:${threeTenVersion}"
     ]
 
     remoteTestDependencies = [
@@ -184,8 +164,10 @@ ext {
             retrofit                : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
             retrofitGsonConverter   : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
             retrofitScalarsConverter: "com.squareup.retrofit2:converter-scalars:${retrofitVersion}",
-            jodaTime                : "joda-time:joda-time:${jodaTimeVersion}",
-            oltuOAuth               : "org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:${oltuVersion}"
+            oltuOAuth               : "org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:${oltuVersion}",
+            threeTen                : "org.threeten:threetenbp:${threeTenVersion}",
+            jsonFire                : "io.gsonfire:gson-fire:$json_fire_version"
+
     ]
 
     apiTestDependencies = [
@@ -196,40 +178,36 @@ ext {
     mobileUiDependencies = [
             daggerCompiler       : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger               : "com.google.dagger:dagger:${daggerVersion}",
-            rxKotlin             : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
-            rxAndroid            : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
             picasso              : "com.squareup.picasso:picasso:${picassoVersion}",
             kotlinLogging        : "io.github.microutils:kotlin-logging:${kotlinLoggingVersion}",
             slf4jAndroid         : "org.slf4j:slf4j-android:${slf4jAndroidVersion}",
-            kotlin               : "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}",
+            kotlin               : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
+            coroutines           : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutinesVersion}",
             javaxAnnotation      : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject          : "javax.inject:javax.inject:${javaxInjectVersion}",
-            androidAnnotations   : "com.android.support:support-annotations:${supportLibraryVersion}",
-            androidSupportV4     : "com.android.support:support-v4:${supportLibraryVersion}",
-            androidSupportV13    : "com.android.support:support-v13:${supportLibraryVersion}",
-            appCompatV7          : "com.android.support:appcompat-v7:${supportLibraryVersion}",
-            appCardViewV7        : "com.android.support:cardview-v7:${supportLibraryVersion}",
-            supportRecyclerView  : "com.android.support:recyclerview-v7:${supportLibraryVersion}",
-            constrantLayout      : "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
+            androidAnnotations   : "androidx.annotation:annotation:${androidxAnnotationVersion}",
+            appCompat            : "androidx.appcompat:appcompat:${androidxAppCompatVersion}",
+            cardview             : "androidx.cardview:cardview:${androidxCardviewVersion}",
+            supportRecyclerView  : "androidx.recyclerview:recyclerview:${androidxRecyclerviewVersion}",
+            constraintlayout     : "androidx.constraintlayout:constraintlayout:${androidxConstraintLayoutVersion}",
+            coordinatorlayout    : "androidx.coordinatorlayout:coordinatorlayout:${androidxCoordinatorlayoutVersion}",
+            material             : "com.google.android.material:material:${materialVersion}",
             firebaseCore         : "com.google.firebase:firebase-core:${firebaseVersion}",
             firebaseMessaging    : "com.google.firebase:firebase-messaging:${firebaseVersion}",
             firebaseJobDispatcher: "com.firebase:firebase-jobdispatcher:${firebaseDispatcherVersion}",
             crashlytics          : "com.crashlytics.sdk.android:crashlytics:${crashlyticsVersion}",
-
-
-            supportDesign        : "com.android.support:design:${supportLibraryVersion}",
             timber               : "com.jakewharton.timber:timber:${timberVersion}",
             daggerSupport        : "com.google.dagger:dagger-android-support:${daggerVersion}",
             daggerProcessor      : "com.google.dagger:dagger-android-processor:${daggerVersion}",
             glassfishAnnotation  : "org.glassfish:javax.annotation:${glassfishAnnotationVersion}",
-            circularView         : "com.mikhaellopez:circularimageview:${circularViewVersion}",
             okHttp               : "com.squareup.okhttp3:okhttp:${okHttpVersion}",
             okHttpLogger         : "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}",
-            jodaTime             : "joda-time:joda-time:${jodaTimeVersion}",
-            jodaGsonSerializer   : "com.fatboyindustrial.gson-jodatime-serialisers:gson-jodatime-serialisers:${jodaGsonSerializerVersion}",
-            retrofit          : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
-            retrofitConverter : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
-            retrofitAdapter   : "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}"
+            androidThreeTen      : "com.jakewharton.threetenabp:threetenabp:${androidThreeTenVersion}",
+            threeTenConverters   : "com.fatboyindustrial.gson-javatime-serialisers:gson-javatime-serialisers:${threeTenConverterVersion}",
+            retrofit             : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
+            retrofitConverter    : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
+            browser              : "androidx.browser:browser:${androidxBrowserVersion}",
+            androidxCore         : "androidx.core:core-ktx:${androidXVersion}"
 
 
     ]
@@ -247,5 +225,19 @@ ext {
             espressoContrib: "com.android.support.test.espresso:espresso-contrib:${espressoVersion}",
             androidRunner  : "com.android.support.test:runner:${runnerVersion}",
             androidRules   : "com.android.support.test:rules:${runnerVersion}"
+    ]
+
+    authDependencies = [
+            daggerCompiler    : "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger            : "com.google.dagger:dagger:${daggerVersion}",
+            daggerSupport     : "com.google.dagger:dagger-android-support:${daggerVersion}",
+            daggerProcessor   : "com.google.dagger:dagger-android-processor:${daggerVersion}",
+            kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
+            kotlinLogging     : "io.github.microutils:kotlin-logging:${kotlinLoggingVersion}",
+            javaxAnnotation   : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+            javaxInject       : "javax.inject:javax.inject:${javaxInjectVersion}",
+            androidAnnotations: "androidx.annotation:annotation:${androidxAnnotationVersion}",
+            openIdApi         : "net.openid:appauth:${openIdApiVersion}",
+            browser           : "androidx.browser:browser:${androidxBrowserVersion}",
     ]
 }

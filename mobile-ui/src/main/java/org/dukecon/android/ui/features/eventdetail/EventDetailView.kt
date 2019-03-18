@@ -1,18 +1,19 @@
 package org.dukecon.android.ui.features.eventdetail
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.support.design.widget.CoordinatorLayout
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.text.format.DateUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import com.chicagoroboto.features.sessiondetail.feedback.FeedbackDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.view_session_detail.view.*
 import org.dukecon.android.ui.R
 import org.dukecon.android.ui.ext.getComponent
 import org.dukecon.android.ui.features.eventdetail.di.EventDetailComponent
+import org.dukecon.android.ui.features.feedback.FeedbackDialog
 import org.dukecon.android.ui.features.speaker.SpeakerAdapter
 import org.dukecon.android.ui.features.speakerdetail.SpeakerNavigator
 import org.dukecon.android.ui.utils.DrawableUtils
@@ -21,11 +22,16 @@ import org.dukecon.domain.features.time.CurrentTimeProvider
 import org.dukecon.presentation.feature.eventdetail.EventDetailContract
 import org.dukecon.presentation.model.EventView
 import org.dukecon.presentation.model.SpeakerView
-import org.joda.time.DateTime
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneId
 import javax.inject.Inject
 
 class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
         CoordinatorLayout(context, attrs, defStyle), EventDetailContract.View {
+    override fun showError(throwable: Throwable) {
+
+    }
+
     @Inject
     lateinit var presenter: EventDetailContract.Presenter
 
@@ -38,10 +44,8 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
     @Inject
     lateinit var conferenceConfiguration: ConferenceConfiguration
 
-
     private val speakerAdapter: SpeakerAdapter
     private var sessionId: String? = null
-
 
     constructor(context: Context) : this(context, null, 0)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -51,14 +55,14 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
 
         LayoutInflater.from(context).inflate(R.layout.view_session_detail, this, true)
 
-        speakerAdapter = SpeakerAdapter(true, { speaker, _ ->
+        speakerAdapter = SpeakerAdapter(true) { speaker ->
             speakerNavigator.navigateToSpeaker(speaker.id)
-        })
+        }
         speakers.adapter = speakerAdapter
         speakers.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         // initially hide the feedback button until we get a session
-        feedback.visibility = GONE
+        feedback.hide()
         feedback.setOnClickListener {
             FeedbackDialog(context, sessionId!!).show()
         }
@@ -79,10 +83,16 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
         presenter.setSessionId(sessionId)
     }
 
-    override fun showNoSession() {
+    private var hasSession: Boolean = false
 
+    override fun setHasSession(hasSession: Boolean) {
+        this.hasSession = hasSession
     }
 
+    override fun showNoEvent() {
+    }
+
+    @SuppressLint("RestrictedApi")
     override fun showSessionDetail(session: EventView) {
         toolbar.title = session.title
         val activity = context as AppCompatActivity
@@ -91,20 +101,24 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
             activity.finish()
         }
 
-        val startTime = DateUtils.formatDateTime(context, session.startTime.millis, DateUtils.FORMAT_SHOW_TIME)
-        val endTime = DateUtils.formatDateTime(context, session.endTime.millis, DateUtils.FORMAT_SHOW_TIME)
+        val startTime = DateUtils.formatDateTime(context, session.startTime.toInstant().toEpochMilli(), DateUtils.FORMAT_SHOW_TIME)
+        val endTime = DateUtils.formatDateTime(context, session.endTime.toInstant().toEpochMilli(), DateUtils.FORMAT_SHOW_TIME)
         banner.text = String.format(context.getString(R.string.session_detail_time), session.room,
                 startTime, endTime)
 
         description.text = session.description
-        val now = DateTime(currentTimeProvider.currentTimeMillis())
+        val instant = Instant.ofEpochMilli(currentTimeProvider.currentTimeMillis())
+        val now = instant.atZone(ZoneId.systemDefault()).toOffsetDateTime()
 
         if (session.startTime.isAfter(now)) {
             status.visibility = GONE
-            favorite.visibility = VISIBLE
+            favorite.visibility = View.VISIBLE
+            feedback.visibility = View.GONE
+            favorite.show()
         } else {
             status.visibility = VISIBLE
-            favorite.visibility = GONE
+            favorite.visibility = View.GONE
+            favorite.hide()
 
             val statusString = if (session.endTime.isAfter(now)) {
                 R.string.status_in_progress
@@ -113,7 +127,8 @@ class EventDetailView(context: Context, attrs: AttributeSet? = null, defStyle: I
             }
             status.setText(statusString)
 
-            if (conferenceConfiguration.supportsFeedback) {
+            if (conferenceConfiguration.supportsFeedback and hasSession) {
+                feedback.show()
                 feedback.visibility = View.VISIBLE
             }
         }

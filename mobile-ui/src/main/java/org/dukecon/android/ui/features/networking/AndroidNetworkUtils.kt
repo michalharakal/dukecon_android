@@ -8,7 +8,6 @@ import org.dukecon.domain.features.networking.NetworkUtils
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
-
 private val logger = KotlinLogging.logger {}
 
 /**
@@ -19,7 +18,6 @@ constructor(private val context: Context) : NetworkUtils {
     override val isOffline: Boolean
         get() = !isInternetConected
 
-
     private val connectedToCaptivePortal = AtomicBoolean(false)
 
     init {
@@ -28,7 +26,6 @@ constructor(private val context: Context) : NetworkUtils {
 
     protected val isCaptivePortal: Boolean
         get() = connectedToCaptivePortal.get()
-
 
     override val isWiFiConected: Boolean
         get() {
@@ -45,7 +42,6 @@ constructor(private val context: Context) : NetworkUtils {
             }
         }
 
-
     override val isMobileNetworkConected: Boolean
         get() {
             val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -61,7 +57,6 @@ constructor(private val context: Context) : NetworkUtils {
             }
         }
 
-
     override val isInternetConected: Boolean
         get() {
             val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -72,7 +67,6 @@ constructor(private val context: Context) : NetworkUtils {
 
             return (connectedToNetwork || wifiConnected) && !isCaptivePortal
         }
-
 
     override var isConnectedToCaptivePortal: Boolean
         get() = connectedToCaptivePortal.get()

@@ -1,14 +1,16 @@
 package org.dukecon.data.repository
 
-import io.reactivex.Single
 import org.dukecon.data.model.*
 
 interface EventRemote {
-
-    fun getEvents(): Single<List<EventEntity>>
-    fun getSpeakers(): Single<List<SpeakerEntity>>
-    fun getRooms(): Single<List<RoomEntity>>
-    fun getEvent(id: String): Single<EventEntity>
-    fun getSpeaker(id: String): Single<SpeakerEntity>
-    fun submitFeedback(feedback: FeedbackEntity): Single<Any>
+    fun getEvents(): List<EventEntity>
+    fun getSpeakers(): List<SpeakerEntity>
+    fun getRooms(): List<RoomEntity>
+    fun getEvent(id: String): EventEntity
+    fun getSpeaker(id: String): SpeakerEntity
+    fun submitFeedback(feedback: FeedbackEntity): Any
+    fun getKeycloak(): KeycloakEntity
+    fun getMetaData(): MetaDataEntity
+    fun getFavorites(): List<FavoriteEntity>
+    fun saveFavorites(favorite: List<FavoriteEntity>): List<FavoriteEntity>
 }

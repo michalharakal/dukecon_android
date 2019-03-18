@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name" translatable="false">APACHECON</string>
+    <string name="event_name" translatable="false">APACHECON Nord America 2018</string>
+</resources>

@@ -1,12 +1,11 @@
 package org.dukecon.data.repository
 
-import io.reactivex.Single
 import org.dukecon.domain.model.Library
 import org.dukecon.domain.repository.LibrariesRepository
 
 class LibrariesListRepository : LibrariesRepository {
-    override fun getLibraries(): Single<List<Library>> {
-        return Single.just(libraries)
+    override suspend fun getLibraries(): List<Library> {
+        return libraries
     }
 
     val libraries = listOf(

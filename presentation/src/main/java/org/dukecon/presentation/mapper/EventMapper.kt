@@ -14,7 +14,16 @@ open class EventMapper @Inject constructor(val speakersMapper: SpeakerMapper) : 
      * Map a [Event] instance to a [EventView] instance
      */
     override fun mapToView(type: Event): EventView {
-        return EventView(type.name, type.title, type.description, type.startTime, type.endTime,
-                type.speakers.map { speakersMapper.mapToView(it) }, type.favorite, type.room)
+        return EventView(
+                type.eventId,
+                type.title,
+                type.description,
+                type.startTime,
+                type.endTime,
+                type.speakers.map {
+                    speakersMapper.mapToView(it)
+                },
+                type.favorite,
+                type.room.names["de"] ?: "")
     }
 }

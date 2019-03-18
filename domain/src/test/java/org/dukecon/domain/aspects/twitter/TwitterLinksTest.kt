@@ -30,6 +30,12 @@ class TwitterLinksTest {
     }
 
     @Test
+    fun getsEmptyHandleFromBrokenLink() {
+        val handle = twitterLinks.getHandle("http://http://")
+        assert(handle.equals(""))
+    }
+
+    @Test
     fun getsHandleFromHandle() {
         val handle = twitterLinks.getHandle("@joespeaker")
         assert(handle.equals("@joespeaker"))

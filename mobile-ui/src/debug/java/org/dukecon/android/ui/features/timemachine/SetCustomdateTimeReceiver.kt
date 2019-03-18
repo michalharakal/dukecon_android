@@ -1,13 +1,12 @@
 package org.dukecon.android.ui.features.timemachine
 
-import android.app.IntentService
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import mu.KotlinLogging
 import org.dukecon.android.ui.ext.getAppComponent
-import org.joda.time.DateTime
+import org.threeten.bp.OffsetDateTime
 import javax.inject.Inject
 
 private val logger = KotlinLogging.logger {}
@@ -31,9 +30,11 @@ class SetCustomdateTimeReceiver : BroadcastReceiver() {
 
             if (intent != null) {
                 val action = intent.action
-                if ("org.dukecon.android.ui.intent.TIME".equals(action)) {
+                if ("org.dukecon.android.ui.intent.TIME" == action) {
                     val extras = intent.extras
-                    handleSendText(extras) // Handle text being sent
+                    if (extras != null) {
+                        handleSendText(extras) // Handle text being sent
+                    }
                 }
             }
         }
@@ -43,12 +44,12 @@ class SetCustomdateTimeReceiver : BroadcastReceiver() {
      * adb shell am broadcast -a org.dukecon.android.ui.intent.TIME --es set_time "12:33:00 "
      * @param intent
      */
-    internal fun handleSendText(intent: Bundle) {
+    private fun handleSendText(intent: Bundle) {
         val sharedText = intent.getString("set_time")
         if (sharedText != null) {
             logger.info { sharedText }
             try {
-                currentTimeProvider.setCustomMillis(DateTime.parse(sharedText).millis)
+                currentTimeProvider.setCustomMillis(OffsetDateTime.parse(sharedText).toInstant().toEpochMilli())
             } catch (e: IllegalArgumentException) {
                 // ignore
             }
