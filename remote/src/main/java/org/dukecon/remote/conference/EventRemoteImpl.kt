@@ -1,5 +1,6 @@
 package org.dukecon.remote.conference
 
+import com.google.gson.stream.MalformedJsonException
 import org.dukecon.android.api.ConferencesApi
 import org.dukecon.android.api.model.Event
 import org.dukecon.android.api.model.Speaker
@@ -26,19 +27,24 @@ class EventRemoteImpl @Inject constructor(
 ) : EventRemote {
 
     override fun getFavorites(): List<FavoriteEntity> {
-        val call = conferenceApi.getFavorites(conferenceId)
-        val response = call.execute()
-        if (response.isSuccessful) {
-            if (response.body() != null) {
-                val metaData = response.body()
-                if (metaData != null) {
-                    return metaData.map {
-                        favoritesEntityMapper.mapFromRemote(it)
+        try {
+            val call = conferenceApi.getFavorites()
+            val response = call.execute()
+            if (response.isSuccessful) {
+                if (response.body() != null) {
+                    val favorites = response.body()
+                    if (favorites != null) {
+                        return favorites.map {
+                            favoritesEntityMapper.mapFromRemote(it)
+                        }
                     }
                 }
             }
+        } catch (ex: MalformedJsonException) {
+            // TODO app proper error handling for user logged out
+            return emptyList()
         }
-        throw Throwable()
+        return emptyList()
     }
 
     override fun saveFavorites(favorite: List<FavoriteEntity>): List<FavoriteEntity> {

@@ -10,6 +10,7 @@ import org.dukecon.data.source.EventRemoteDataStore
 import org.dukecon.domain.model.*
 import org.dukecon.domain.repository.ConferenceRepository
 import org.threeten.bp.OffsetDateTime
+import java.lang.Exception
 import javax.inject.Inject
 
 /**
@@ -50,10 +51,13 @@ class DukeconDataRepository @Inject constructor(
         }
 
         // save to remote
-        val favorites = remoteDataStore.saveFavorites(localFavorites)
+        try {
+            val favorites = mergeRemoteFavoritesWithLocal(localFavorites)
+            localDataStore.saveFavorites(favorites)
+            remoteDataStore.saveFavorites(favorites)
+        } catch (e:Exception) {
 
-        // save result to cache
-        localDataStore.saveFavorites(favorites)
+        }
         return getFavorites()
     }
 
@@ -135,13 +139,28 @@ class DukeconDataRepository @Inject constructor(
         localDataStore.saveRooms(remoteDataStore.getRooms())
         localDataStore.saveEvents(remoteDataStore.getEvents())
         localDataStore.saveMetaData(remoteDataStore.getMetaData())
-/*        remoteDataStore.getFavorites().map {
-            localDataStore.saveFavorite(it)
-        }
-        */
+        val merged = mergeRemoteFavoritesWithLocal(remoteDataStore.getFavorites())
+        localDataStore.saveFavorites(merged)
         localDataStore.saveSpeakers(remoteDataStore.getSpeakers())
 
         callRefreshListeners()
+    }
+
+    private fun mergeRemoteFavoritesWithLocal(favorites: List<FavoriteEntity>): List<FavoriteEntity> {
+        val result = ArrayList<FavoriteEntity>()
+        for (e in favorites) {
+            if (!result.contains(e)) {
+                result.add(e)
+            }
+        }
+        for (e in localDataStore.getFavorites()) {
+            if (!result.contains(e)) {
+                result.add(e)
+            }
+        }
+        return result
+
+
     }
 
     override suspend fun getEvents(day: Int): List<Event> {

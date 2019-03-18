@@ -59,7 +59,6 @@ class ConferenceDataCacheImpl @Inject constructor(
         }
     }
 
-
     override fun clearEvents() {
         preferencesHelper.lastCacheTime = 0
         cachedEvents = listOf()
@@ -117,7 +116,7 @@ class ConferenceDataCacheImpl @Inject constructor(
     }
 
     override fun saveFavorites(favorite: List<FavoriteEntity>): List<FavoriteEntity> {
-
+        cacheFavorites = favorite
         conferenceCacheSerializer.writeFavorites(cacheFavorites)
         preferencesHelper.lastCacheTime = System.currentTimeMillis()
 
