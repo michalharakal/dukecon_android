@@ -136,14 +136,18 @@ class DukeconDataRepository @Inject constructor(
 
 
     override suspend fun update() {
-        localDataStore.saveRooms(remoteDataStore.getRooms())
-        localDataStore.saveEvents(remoteDataStore.getEvents())
-        localDataStore.saveMetaData(remoteDataStore.getMetaData())
-        val merged = mergeRemoteFavoritesWithLocal(remoteDataStore.getFavorites())
-        localDataStore.saveFavorites(merged)
-        localDataStore.saveSpeakers(remoteDataStore.getSpeakers())
+        try {
+            localDataStore.saveRooms(remoteDataStore.getRooms())
+            localDataStore.saveEvents(remoteDataStore.getEvents())
+            localDataStore.saveMetaData(remoteDataStore.getMetaData())
+            val merged = mergeRemoteFavoritesWithLocal(remoteDataStore.getFavorites())
+            localDataStore.saveFavorites(merged)
+            localDataStore.saveSpeakers(remoteDataStore.getSpeakers())
 
-        callRefreshListeners()
+            callRefreshListeners()
+        } catch () {
+            
+        }
     }
 
     private fun mergeRemoteFavoritesWithLocal(favorites: List<FavoriteEntity>): List<FavoriteEntity> {
