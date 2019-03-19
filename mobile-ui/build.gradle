@@ -48,7 +48,7 @@ android {
         versionName buildConfig.version.name
         multiDexEnabled = false
         testInstrumentationRunner "org.buffer.android.boilerplate.ui.test.TestRunner"
-        vectorDrawables.useSupportLibrary = true
+        vectorDrawables.useSupportLibrary = false
     }
 
     signingConfigs {
