@@ -37,7 +37,11 @@ class DukeconDataRepository @Inject constructor(
     }
 
     override suspend fun submitFeedback(feedback: Feedback): Any {
-        return remoteDataStore.submitFeedback(feedbackMapper.mapToEntity(feedback))
+        return try {
+            remoteDataStore.submitFeedback(feedbackMapper.mapToEntity(feedback))
+        } catch (e:Exception) {
+            Any()
+        }
     }
 
     override suspend fun saveFavorite(favorite: Favorite): List<Favorite> {
@@ -52,12 +56,19 @@ class DukeconDataRepository @Inject constructor(
 
         // save to remote
         try {
-            val favorites = mergeRemoteFavoritesWithLocal(localFavorites)
+            val remoteFavorites = remoteDataStore.getFavorites().toMutableList()
+            remoteFavorites.removeAll { it.id == favorite.id }
+
+            val favorites = mergeFavorites(localFavorites, remoteFavorites)
             localDataStore.saveFavorites(favorites)
             remoteDataStore.saveFavorites(favorites)
         } catch (e:Exception) {
-
+            val favorites = mergeFavorites(localFavorites, emptyList())
+            localDataStore.saveFavorites(favorites)
         }
+
+        callRefreshListeners()
+
         return getFavorites()
     }
 
@@ -140,31 +151,27 @@ class DukeconDataRepository @Inject constructor(
             localDataStore.saveRooms(remoteDataStore.getRooms())
             localDataStore.saveEvents(remoteDataStore.getEvents())
             localDataStore.saveMetaData(remoteDataStore.getMetaData())
-            val merged = mergeRemoteFavoritesWithLocal(remoteDataStore.getFavorites())
+            val merged = mergeFavorites(localDataStore.getFavorites(), remoteDataStore.getFavorites())
             localDataStore.saveFavorites(merged)
             localDataStore.saveSpeakers(remoteDataStore.getSpeakers())
 
             callRefreshListeners()
-        } catch () {
-            
+        } catch (e: Exception) {
+
         }
     }
 
-    private fun mergeRemoteFavoritesWithLocal(favorites: List<FavoriteEntity>): List<FavoriteEntity> {
+    private fun mergeFavorites(favorites1: List<FavoriteEntity>, favorites2: List<FavoriteEntity>): List<FavoriteEntity> {
         val result = ArrayList<FavoriteEntity>()
-        for (e in favorites) {
-            if (!result.contains(e)) {
-                result.add(e)
-            }
+        for (e in favorites1) {
+            result.add(e)
         }
-        for (e in localDataStore.getFavorites()) {
+        for (e in favorites2) {
             if (!result.contains(e)) {
                 result.add(e)
             }
         }
         return result
-
-
     }
 
     override suspend fun getEvents(day: Int): List<Event> {
