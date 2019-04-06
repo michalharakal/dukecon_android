@@ -10,6 +10,7 @@ import org.dukecon.data.source.EventRemoteDataStore
 import org.dukecon.domain.model.*
 import org.dukecon.domain.repository.ConferenceRepository
 import org.threeten.bp.OffsetDateTime
+import java.io.IOException
 import java.lang.Exception
 import javax.inject.Inject
 
